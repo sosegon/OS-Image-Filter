@@ -243,7 +243,7 @@ function DoWin(win, winContentLoaded) {
                 }
                 DoHidden(this, true);
                 DoImgSrc(this, true)
-                if (this.parentElement.tagName == 'PICTURE') {
+                if (this.parentElement && this.parentElement.tagName == 'PICTURE') {
                     for (var i = 0; i < this.parentElement.childNodes.length; i++) {
                         var node = this.parentElement.childNodes[i];
                         if (node.tagName == 'SOURCE')
@@ -472,7 +472,7 @@ function DoWin(win, winContentLoaded) {
         if (this.tagName == 'IMG') {
             DoLoadEventListener(this, false);
             DoImgSrc(this, false);
-            if (this.parentElement.tagName == 'PICTURE') {
+            if (this.parentElement && this.parentElement.tagName == 'PICTURE') {
                 for (var i = 0; i < this.parentElement.childNodes.length; i++) {
                     var node = this.parentElement.childNodes[i];
                     if (node.tagName == 'SOURCE')
