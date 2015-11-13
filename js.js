@@ -242,7 +242,7 @@ function DoWin(win, winContentLoaded) {
                     this.wzmHasTitleAndSizeSetup = true;
                 }
                 DoHidden(this, true);
-                DoImgSrc(this, true)
+                DoImgSrc(this, true);
                 if (this.parentElement && this.parentElement.tagName == 'PICTURE') {
                     for (var i = 0; i < this.parentElement.childNodes.length; i++) {
                         var node = this.parentElement.childNodes[i];
@@ -300,16 +300,14 @@ function DoWin(win, winContentLoaded) {
         }
     }
     function DoImgSrc(el, toggle) {
-        if (toggle && !el.wzmDidImgSrc) {
+        if (toggle) {
             el.oldsrc = el.src;
             el.oldsrcset = el.srcset;
             el.src = el.srcset = '';
-            el.wzmDidImgSrc = true;
         }
         else {
             el.src = el.oldsrc;
             el.srcset = el.oldsrcset;
-            el.wzmDidImgSrc = false;
         }
     }
     function DoHidden(el, toggle) {
@@ -450,7 +448,7 @@ function DoWin(win, winContentLoaded) {
                     if (el.wzmHasWizmageBG)
                         useThis = true;
                 }
-                else if (foundSize > rect.width * rect.height)
+                else if ((foundSize > rect.width * rect.height) && foundEl.wzmHasWizmageBG == el.wzmHasWizmageBG)
                     useThis = true;
                 if (useThis) {
                     foundEl = el;
