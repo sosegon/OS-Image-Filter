@@ -42,9 +42,13 @@ function ShowImages() {
     if (window == top)
         chrome.runtime.sendMessage({ r: 'setColorIcon', toggle: false });
     window.wzmShowImages();
-    for (var i = 0, max = iframes.length; i < max; i++)
-        if (iframes[i].contentWindow && iframes[i].contentWindow.wzmShowImages)
-            iframes[i].contentWindow.wzmShowImages();
+    for (var i = 0, max = iframes.length; i < max; i++) {
+        try {
+            if (iframes[i].contentWindow && iframes[i].contentWindow.wzmShowImages)
+                iframes[i].contentWindow.wzmShowImages();
+        }
+        catch (err) { }
+    }
 }
 
 function DoWin(win, winContentLoaded) {
@@ -86,11 +90,16 @@ function DoWin(win, winContentLoaded) {
     function DocMouseMove(e) { mouseEvent = e; mouseMoved = true; };
     function WindowScroll() { mouseMoved = true; UpdateElRects(); CheckMousePosition(); }
     function DocKeyDown(e) {
-        if (mouseOverEl && e.altKey) {
-            if (e.keyCode == 65 && mouseOverEl.wzmHasWizmageBG) {
+        if (e.altKey && e.keyCode == 80 && !settings.isPaused) { //ALT-p
+            settings.isPaused = true;
+            chrome.runtime.sendMessage({ r: 'pause', toggle: true });
+            ShowImages();
+        }
+        else if (mouseOverEl && e.altKey) {
+            if (e.keyCode == 65 && mouseOverEl.wzmHasWizmageBG) { //ALT-a
                 ShowEl.call(mouseOverEl);
                 eye.style.display = 'none';
-            } else if (e.keyCode == 90 && !mouseOverEl.wzmHasWizmageBG) {
+            } else if (e.keyCode == 90 && !mouseOverEl.wzmHasWizmageBG) { //ALT-z
                 DoElement.call(mouseOverEl);
                 eye.style.display = 'none';
             }
@@ -261,7 +270,7 @@ function DoWin(win, winContentLoaded) {
             DoWizmageBG(this, true);
         } else {
             var compStyle = getComputedStyle(this), bgimg = compStyle['background-image'], width = parseInt(compStyle['width']) || this.clientWidth, height = parseInt(compStyle['height']) || this.clientHeight; //as per https://developer.mozilla.org/en/docs/Web/API/window.getComputedStyle, getComputedStyle will return the 'used values' for width and height, which is always in px. We also use clientXXX, since sometimes compStyle returns NaN.
-            if (bgimg != 'none' && (width == 0 || width > settings.maxSafe) && (height == 0 || height > settings.maxSafe) && bgimg.slice(0, 3) == 'url') { //we need to catch 0 too, as sometimes elements start off as zero
+            if (bgimg != 'none' && (width == 0 || width > settings.maxSafe) && (height == 0 || height > settings.maxSafe) && bgimg.indexOf('url(')!=-1) { //we need to catch 0 too, as sometimes elements start off as zero
                 AddAsSuspect(this);
                 DoWizmageBG(this, true);
                 DoMouseEventListeners(this, true);
@@ -270,7 +279,9 @@ function DoWin(win, winContentLoaded) {
                     var i = new Image();
                     i.owner = this;
                     i.onload = CheckBgImg;
-                    i.src = bgimg.replace(/^url\((.*)\)$/, '$1');
+                    var urlMatch = /\burl\(["']?(.*?)["']?\)/.exec(bgimg);
+                    if (urlMatch)
+                        i.src = urlMatch[1];
                 }
                 this.wzmBeenBlocked = true;
             }
