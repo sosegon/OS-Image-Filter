@@ -1,7 +1,9 @@
 //global variables
 var showAll = false,
     extensionUrl = chrome.extension.getURL(''),
+    urlExtensionUrl = 'url("' + extensionUrl,
     blankImg = 'data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==',
+    urlBlankImg = 'url("' + blankImg + '")',
     patternCSSUrl = 'url(' + extensionUrl + "pattern.png" + ')',
     patternLightUrl = extensionUrl + "pattern-light.png",
     patternLightCSSUrl = 'url(' + patternLightUrl + ')',
@@ -12,7 +14,7 @@ var showAll = false,
     iframes = [],
     contentLoaded = false,
     settings = null,
-    wzmClassRegex = /\bwzm/;
+    quotesRegex = /['"]/g;
 
 //keep track of contentLoaded
 window.addEventListener('DOMContentLoaded', function () { contentLoaded = true; });
@@ -47,7 +49,7 @@ function ShowImages() {
             if (iframes[i].contentWindow && iframes[i].contentWindow.wzmShowImages)
                 iframes[i].contentWindow.wzmShowImages();
         }
-        catch (err) { }
+        catch (err) { /*iframe may have been rewritten*/ }
     }
 }
 
@@ -73,7 +75,7 @@ function DoWin(win, winContentLoaded) {
             if (!hasStarted) AddHeadStyle('body', '{opacity: 0 !important; }');
             AddHeadStyle('body ', '{background-image: none !important;}');
             AddHeadStyle('.wzmHide', '{opacity: 0 !important;}');
-            AddHeadStyle('.wzmPatternBgImg', '{ background-repeat: repeat !important;text-indent:0 !important;}');
+            AddHeadStyle('.wzmPatternBgImg', '{ background-repeat: repeat !important;text-indent:0 !important;}'); //text-indent to show alt text
             for (var i = 0; i < 8; i++) {
                 AddHeadStyle('.wzmPatternBgImg.wzmShade' + i, '{background-image: ' + (settings.isNoPattern ? 'none' : 'url(' + extensionUrl + "pattern" + i + ".png" + ')') + ' !important; }');
                 AddHeadStyle('.wzmPatternBgImg.wzmPatternBgImgLight.wzmShade' + i, '{background-image: ' + (settings.isNoPattern ? 'none' : 'url(' + extensionUrl + "pattern-light" + i + ".png" + ')') + ' !important; }');
@@ -115,8 +117,8 @@ function DoWin(win, winContentLoaded) {
     }
     //process all elements with background-image, and observe mutations for new ones
     function Start() {
-        //when viewing an image (not a webpage)
         if (!doc.body) return; //with iFrames it happens
+        //when viewing an image (not a webpage)
         if (win == top && doc.body.children.length == 1 && doc.body.children[0].tagName == 'IMG') {
             ShowImages();
             return;
@@ -149,44 +151,40 @@ function DoWin(win, winContentLoaded) {
             for (var i = 0; i < mutations.length; i++) {
                 var m = mutations[i];
                 if (m.type == 'attributes') {
-                    if (m.attributeName == 'style' && !m.target.wzmBeenBlocked
-                            && (m.oldValue == null || m.oldValue.indexOf('background-image') == -1) && m.target.style.backgroundImage.slice(0, 3) == 'url')
-                        DoElement.call(m.target);
-                    /*if (m.attributeName == 'class') {
-                        console.log(m.target.wzmOldClassName + ':' + m.target.className + ':' + (m.target.wzmOldClassName == m.target.className));
-                        var ignore = false;
-                        if (m.target.wzmOldClassName != undefined) {
-                            if (m.target.className == m.target.wzmOldClassName)
-                                ignore=true;
-                            else {
-                                var oldWzmClassRegexResult = m.target.wzmOldClassName.match(wzmClassRegex) || [], newWzmClassRegexResult = m.target.className.match(wzmClassRegex) || [];
-                                if (oldWzmClassRegexResult.length != newWzmClassRegexResult.length)
-                                    ignore = true;
-                            }
-                        }
-                        m.target.wzmOldClassName = m.target.className;
-                        if (!ignore) {
+                    if (m.attributeName == 'style' && m.target.style.backgroundImage.slice(0, 3) == 'url') {
+                        var oldBgImg, oldBgImgMatch;
+                        if (m.oldValue == null || !(oldBgImgMatch = /background(?:-image)?:\s*(url\(.+?\))/.exec(m.oldValue)))
+                            oldBgImg = '';
+                        else
+                            oldBgImg = oldBgImgMatch[1].replace(quotesRegex, '');
+                        if (oldBgImg != m.target.style.backgroundImage.replace(quotesRegex, ''))
                             DoElement.call(m.target);
-                        }
-                    }*/
+                    }
+                    if (m.attributeName == 'class') {
+                        var oldHasLazy = m.oldValue != null && m.oldValue.indexOf('lazy') > -1, newHasLazy = m.target.className != null && m.target.className.indexOf('lazy') > -1;
+                        if (oldHasLazy != newHasLazy)
+                            DoElements(m.target, true);
+                    }
                 }
                 else if (m.addedNodes != null && m.addedNodes.length > 0)
                     for (var j = 0; j < m.addedNodes.length; j++) {
                         var el = m.addedNodes[j];
-                        if (tagList.indexOf(el.tagName) >= 0)
-                            DoElements(el, true);
-                        else if (el.tagName == 'IFRAME')
+                        if (!el.tagName) //eg text nodes
+                            continue;
+                        if (el.tagName == 'IFRAME')
                             DoIframe(el);
+                        else
+                            DoElements(el, true);
                     }
             }
         });
-        observer.observe(doc, { subtree: true, childList: true, attributes: true });
+        observer.observe(doc, { subtree: true, childList: true, attributes: true, attributeOldValue: true });
         //CheckMousePosition every so often
         setInterval(CheckMousePosition, 250);
         setInterval(UpdateElRects, 3000);
-        for (var i = 1; i < 10; i++)
-            if ((i % 3) > 0)
-                setTimeout(UpdateElRects, i * 1000);
+        for (var i = 1; i < 7; i++)
+            if ((i % 2) > 0)
+                setTimeout(UpdateElRects, i * 1500);
         //empty iframes
         var iframes = doc.getElementsByTagName('iframe');
         for (var i = 0, max = iframes.length; i < max; i++) {
@@ -196,7 +194,7 @@ function DoWin(win, winContentLoaded) {
         hasStarted = true;
     }
     function DoElements(el, includeEl) {
-        if (includeEl)
+        if (includeEl && tagList.indexOf(el.tagName) > -1)
             DoElement.call(el);
         var all = el.querySelectorAll(tagListCSS);
         for (var i = 0, max = all.length; i < max; i++)
@@ -270,7 +268,10 @@ function DoWin(win, winContentLoaded) {
             DoWizmageBG(this, true);
         } else {
             var compStyle = getComputedStyle(this), bgimg = compStyle['background-image'], width = parseInt(compStyle['width']) || this.clientWidth, height = parseInt(compStyle['height']) || this.clientHeight; //as per https://developer.mozilla.org/en/docs/Web/API/window.getComputedStyle, getComputedStyle will return the 'used values' for width and height, which is always in px. We also use clientXXX, since sometimes compStyle returns NaN.
-            if (bgimg != 'none' && (width == 0 || width > settings.maxSafe) && (height == 0 || height > settings.maxSafe) && bgimg.indexOf('url(')!=-1) { //we need to catch 0 too, as sometimes elements start off as zero
+            if (bgimg != 'none' && (width == 0 || width > settings.maxSafe) && (height == 0 || height > settings.maxSafe) /*we need to catch 0 too, as sometimes elements start off as zero*/
+                    && bgimg.indexOf('url(') != -1
+                    && !bgimg.startsWith(urlExtensionUrl) && bgimg != urlBlankImg
+                    ) {
                 AddAsSuspect(this);
                 DoWizmageBG(this, true);
                 DoMouseEventListeners(this, true);
@@ -293,10 +294,10 @@ function DoWin(win, winContentLoaded) {
     };
 
     function AddAsSuspect(el) {
-        if (elList.indexOf(el) == -1)
+        if (elList.indexOf(el) == -1) {
             elList.push(el);
-        el.wzmRect = el.getBoundingClientRect();
-        //el.wzmOldClassName = el.className;
+            el.wzmRect = el.getBoundingClientRect();
+        }
     }
     function DoWizmageBG(el, toggle) {
         if (toggle && !el.wzmHasWizmageBG) {
