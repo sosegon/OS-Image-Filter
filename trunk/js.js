@@ -151,19 +151,19 @@ function DoWin(win, winContentLoaded) {
             for (var i = 0; i < mutations.length; i++) {
                 var m = mutations[i];
                 if (m.type == 'attributes') {
-                    if (m.attributeName == 'style' && m.target.style.backgroundImage.slice(0, 3) == 'url') {
-                        var oldBgImg, oldBgImgMatch;
-                        if (m.oldValue == null || !(oldBgImgMatch = /background(?:-image)?:\s*(url\(.+?\))/.exec(m.oldValue)))
-                            oldBgImg = '';
-                        else
-                            oldBgImg = oldBgImgMatch[1].replace(quotesRegex, '');
-                        if (oldBgImg != m.target.style.backgroundImage.replace(quotesRegex, ''))
-                            DoElement.call(m.target);
-                    }
                     if (m.attributeName == 'class') {
                         var oldHasLazy = m.oldValue != null && m.oldValue.indexOf('lazy') > -1, newHasLazy = m.target.className != null && m.target.className.indexOf('lazy') > -1;
                         if (oldHasLazy != newHasLazy)
                             DoElements(m.target, true);
+                    } else if (m.attributeName == 'style' && m.target.style.backgroundImage.indexOf('url(') >- 1) {
+                        var oldBgImg, oldBgImgMatch;
+                        if (m.oldValue == null || !(oldBgImgMatch = /background(?:-image)?:[^;]*url\(['"]?(.+?)['"]?\)/.exec(m.oldValue)))
+                            oldBgImg = '';
+                        else
+                            oldBgImg = oldBgImgMatch[1];
+                        if (oldBgImg != /url\(['"]?(.+?)['"]?\)/.exec(m.target.style.backgroundImage)[1]) {
+                            DoElement.call(m.target);
+                        }
                     }
                 }
                 else if (m.addedNodes != null && m.addedNodes.length > 0)
