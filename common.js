@@ -411,6 +411,14 @@ var common = (function() {
 // Listen for the DOM content to be loaded. This event is fired when parsing of
 // the page's document has finished.
 document.addEventListener('DOMContentLoaded', function() {
+  document.body.setAttribute("data-tools", "pnacl glibc clang-newlib");
+  document.body.setAttribute("data-configs", "Debug Release");
+  document.body.setAttribute("data-path", "{tc}/{config}");
+
+  listener_nacl = document.createElement('div');
+  listener_nacl.setAttribute("id", "listener");
+  document.body.appendChild(listener_nacl);
+  
   var body = document.body;
 
   // The data-* attributes on the body can be referenced via body.dataset.
