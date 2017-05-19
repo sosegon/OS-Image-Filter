@@ -217,6 +217,7 @@ function DoWin(win, winContentLoaded) {
     function DoElement() {
         if (showAll) return;
         if (this.tagName == 'IMG') {
+            AddRandomWizId(this);
             AddAsSuspect(this);
 
             //attach load event - needed 1) as we need to catch it after it is switched for the blankImg, 2) in case the img gets changed to something else later
@@ -530,6 +531,20 @@ function DoWin(win, winContentLoaded) {
     }
     function AddClass(el, c) {
         el.className += ' ' + c;
+    }
+    function AddRandomWizId(el) {
+        var uuid = guid();
+        el.setAttribute("wiz-uuid", uuid);
+    }
+    // from https://stackoverflow.com/a/105074/1065981
+    function guid() {
+      function s4() {
+        return Math.floor((1 + Math.random()) * 0x10000)
+          .toString(16)
+          .substring(1);
+      }
+      return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+        s4() + '-' + s4() + s4() + s4();
     }
 
     win.wzmShowImages = function () {
