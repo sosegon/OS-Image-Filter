@@ -9,15 +9,6 @@
 using namespace std;
 
 namespace {
-
-// The expected string sent by the browser.
-//const char* const kHelloString = "hello";
-// The string sent back to the browser upon receipt of a message
-// containing "hello".
-//const char* const kReplyDictionary = "Dictionary received";
-const char* const kReplyNotDictionary = "Dictionary not received";
-//const char* const kMessageKey = "image";
-
 }  // namespace
 
 class HelloTutorialInstance : public pp::Instance {
@@ -31,32 +22,27 @@ class HelloTutorialInstance : public pp::Instance {
       pp::VarDictionary dictionary(var_message);
       pp::VarArray keys = dictionary.GetKeys();
 
-      auto width = dictionary.Get("width").AsInt();
+      auto width  = dictionary.Get("width").AsInt();
       auto height = dictionary.Get("height").AsInt();
-      auto data = pp::VarArrayBuffer(dictionary.Get("data"));
+      auto uuid = dictionary.Get("uuid").AsString();
 
-      uint8_t* byteData = static_cast<uint8_t*>(data.Map());
-      auto img = cv::Mat(height, width, CV_8UC3, byteData);
-      auto result = Mat(img.size(), CV_8UC3);
-      hideSkin(img, result);
+      auto original_data      = pp::VarArrayBuffer(dictionary.Get("data"));
+      uint8_t* original_bytes = static_cast<uint8_t*>(original_data.Map());
+      auto original_img       = cv::Mat(height, width, CV_8UC4, original_bytes);
 
-      auto nBytes = result.elemSize() * result.total();
+      auto processed_img = Mat(original_img.size(), CV_8UC4);
+      hideSkin(original_img, processed_img);
+
+      auto processed_bytes = processed_img.elemSize() * processed_img.total();
+      pp::VarArrayBuffer processed_data(processed_bytes);
+      uint8_t* copy = static_cast<uint8_t*>( processed_data.Map());
+      memcpy( copy, processed_img.data, processed_bytes );
+
       pp::VarDictionary msg;
-      pp::VarArrayBuffer data2(nBytes);
-      uint8_t* copy = static_cast<uint8_t*>( data2.Map());
-      memcpy( copy, result.data, nBytes );
-
-      msg.Set( "Type", "completed" );
-      msg.Set( "Data", data2 );
-      PostMessage( msg );
-
-      // for (int i = 0; i < keys.GetLength(); i++){
-      //   pp::Var var_reply(keys.Get(i).AsString());
-      //   PostMessage(var_reply);
-      // }
-    } else {
-      pp::Var var_reply = pp::Var(kReplyNotDictionary);
-      PostMessage(var_reply);
+      msg.Set("type", "processed");
+      msg.Set("data", processed_data);
+      msg.Set("uuid", uuid);
+      PostMessage(msg);
     }
   }
 };

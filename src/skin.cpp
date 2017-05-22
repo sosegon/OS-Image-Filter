@@ -9,12 +9,12 @@
 void hideSkin(Mat srcColor, Mat dstColor) {
 
 	Size size = srcColor.size();
-	Mat yuv = Mat(size, CV_8UC3);
-	cvtColor(srcColor, yuv, CV_BGR2YCrCb);
+	Mat yuv = Mat(size, CV_8UC4);
+	cvtColor(srcColor, yuv, CV_RGB2YCrCb);
 
 	Mat mask = Mat(yuv.size(), CV_8UC1);
 	colorSegmentation(yuv, mask);
-	densityRegularization(yuv, mask);
+	//densityRegularization(yuv, mask); // TODO: Fix this function for 4 channels
 
 	const int EDGES_THRESHOLD = 80;
 	threshold(mask, mask, EDGES_THRESHOLD, 255, THRESH_BINARY_INV);
@@ -30,7 +30,7 @@ void colorSegmentation(Mat img, Mat imgFilter) {
 		min_Cb = MINCB,
 		max_Cb = MAXCB;
 
-	inRange(img, Scalar(0, min_Cr, min_Cb), Scalar(255, max_Cr, max_Cb), imgFilter);
+	inRange(img, Scalar(0, min_Cr, min_Cb, 0), Scalar(255, max_Cr, max_Cb, 255), imgFilter);
 }
 
 void densityRegularization(Mat img, Mat imgFilter) {
