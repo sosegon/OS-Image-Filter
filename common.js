@@ -127,7 +127,9 @@ var common = (function() {
     moduleEl.setAttribute('width', width);
     moduleEl.setAttribute('height', height);
     moduleEl.setAttribute('path', path);
-    moduleEl.setAttribute('src', path + '/' + name + '.nmf');
+
+    path_nmf = chrome.runtime.getURL('clang-newlib/Release/skin_hidder.nmf');
+    moduleEl.setAttribute('src', path_nmf);
 
     // Add any optional arguments
     if (attrs) {
@@ -144,7 +146,7 @@ var common = (function() {
     // instead of attaching the event listeners directly to the <EMBED> element
     // to ensure that the listeners are active before the NaCl module 'load'
     // event fires.
-    var listenerDiv = document.getElementById('listener');
+    var listenerDiv = document.getElementById('listener_wizimage');
     listenerDiv.appendChild(moduleEl);
 
     // Request the offsetTop property to force a relayout. As of Apr 10, 2014
@@ -188,7 +190,7 @@ var common = (function() {
    * C++).
    */
   function attachDefaultListeners() {
-    var listenerDiv = document.getElementById('listener');
+    var listenerDiv = document.getElementById('listener_wizimage');
     listenerDiv.addEventListener('load', moduleDidLoad, true);
     listenerDiv.addEventListener('message', handleMessage, true);
     listenerDiv.addEventListener('error', handleError, true);
@@ -408,17 +410,25 @@ var common = (function() {
 
 }());
 
-// Listen for the DOM content to be loaded. This event is fired when parsing of
-// the page's document has finished.
-document.addEventListener('DOMContentLoaded', function() {
-  document.body.setAttribute("data-tools", "pnacl glibc clang-newlib");
+function setNaClDOM() {
+
+  document.body.setAttribute("data-tools", "clang-newlib");
   document.body.setAttribute("data-configs", "Debug Release");
   document.body.setAttribute("data-path", "{tc}/{config}");
 
   listener_nacl = document.createElement('div');
-  listener_nacl.setAttribute("id", "listener");
+  listener_nacl.setAttribute('id', 'listener_wizimage');
   document.body.appendChild(listener_nacl);
-  
+
+  canvas_nacl = document.createElement('canvas');
+  canvas_nacl.setAttribute('id', 'canvas_wizimage');
+  document.body.appendChild(canvas_nacl);
+}
+
+// Listen for the DOM content to be loaded. This event is fired when parsing of
+// the page's document has finished.
+document.addEventListener('DOMContentLoaded', function() {
+  setNaClDOM();
   var body = document.body;
 
   // The data-* attributes on the body can be referenced via body.dataset.
