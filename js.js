@@ -214,54 +214,87 @@ function DoWin(win, winContentLoaded) {
                 clearInterval(pollID);
         }, 10);
     }
+    function ProcessImage() {
+        console.log("processImage");
+        var canvas = AddCanvasSibling(this);
+        if(canvas) {
+            canvas.setAttribute("width", this.width);
+            canvas.setAttribute("height", this.height);
+            var uuid = this.getAttribute("wiz-uuid")
+            var ctx = canvas.getContext("2d");
+            ctx.drawImage(this, 0, 0); // at this point the img is loaded
+            var width = this.width;
+            var height = this.height;
+            var imageData = ctx.getImageData(0, 0, width, height);
+            common.naclModule.postMessage({
+                "message": "image",
+                "uuid": uuid,
+                "width": width,
+                "height": height,
+                "data": imageData.data.buffer
+            });
+        }
+    }
+    function AddCanvasSibling(el) {
+        var uuid = el.getAttribute("wiz-uuid") + "-canvas";
+        if(document.getElementById(uuid)) {
+            return;
+        }
+        var canvas = document.createElement("canvas");
+        canvas.setAttribute("id", uuid);
+        el.parentNode.insertBefore(canvas, el.nextSibling);
+        return canvas;
+    }
     function DoElement() {
         if (showAll) return;
         if (this.tagName == 'IMG') {
             AddRandomWizId(this);
-            AddAsSuspect(this);
+            AddClass(this, "wiz-to-process")
+            this.addEventListener('onNaclModuleReady', ProcessImage);
+            // AddAsSuspect(this);
 
-            //attach load event - needed 1) as we need to catch it after it is switched for the blankImg, 2) in case the img gets changed to something else later
-            DoLoadEventListener(this, true);
+            // //attach load event - needed 1) as we need to catch it after it is switched for the blankImg, 2) in case the img gets changed to something else later
+            // DoLoadEventListener(this, true);
 
-            //see if not yet loaded
-            if (!this.complete) {
-                //hide, to avoid flash until load event is handled
-                DoHidden(this, true);
-                return;
-            }
+            // //see if not yet loaded
+            // if (!this.complete) {
+            //     //hide, to avoid flash until load event is handled
+            //     DoHidden(this, true);
+            //     return;
+            // }
 
-            var elWidth = this.width, elHeight = this.height;
-            if (this.src == blankImg) { //was successfully replaced
-                DoHidden(this, false);
-                DoWizmageBG(this, true);
-                this.wzmBeenBlocked = true;
-            } else if ((elWidth == 0 || elWidth > settings.maxSafe) && (elHeight == 0 || elHeight > settings.maxSafe)) { //needs to be hidden - we need to catch 0 too, as sometimes images start off as zero
-                DoMouseEventListeners(this, true);
-                if (!this.wzmHasTitleAndSizeSetup) {
-                    this.style.width = elWidth + 'px';
-                    this.style.height = elHeight + 'px';
-                    if (!this.title)
-                        if (this.alt)
-                            this.title = this.alt;
-                        else {
-                            this.src.match(/([-\w]+)(\.[\w]+)?$/i);
-                            this.title = RegExp.$1;
-                        }
-                    this.wzmHasTitleAndSizeSetup = true;
-                }
-                DoHidden(this, true);
-                DoImgSrc(this, true);
-                if (this.parentElement && this.parentElement.tagName == 'PICTURE') {
-                    for (var i = 0; i < this.parentElement.childNodes.length; i++) {
-                        var node = this.parentElement.childNodes[i];
-                        if (node.tagName == 'SOURCE')
-                            DoImgSrc(node, true);
-                    }
-                }
-                this.src = blankImg;
-            } else { //small image
-                DoHidden(this, false);
-            }
+            // var elWidth = this.width, elHeight = this.height;
+            // if (this.src == blankImg) { //was successfully replaced
+            //     DoHidden(this, false);
+            //     DoWizmageBG(this, true);
+            //     this.wzmBeenBlocked = true;
+            // } else if ((elWidth == 0 || elWidth > settings.maxSafe) && (elHeight == 0 || elHeight > settings.maxSafe)) { //needs to be hidden - we need to catch 0 too, as sometimes images start off as zero
+            //     DoMouseEventListeners(this, true);
+            //     if (!this.wzmHasTitleAndSizeSetup) {
+            //         this.style.width = elWidth + 'px';
+            //         this.style.height = elHeight + 'px';
+            //         if (!this.title)
+            //             if (this.alt)
+            //                 this.title = this.alt;
+            //             else {
+            //                 this.src.match(/([-\w]+)(\.[\w]+)?$/i);
+            //                 this.title = RegExp.$1;
+            //             }
+            //         this.wzmHasTitleAndSizeSetup = true;
+            //     }
+            //     DoHidden(this, true);
+            //     DoImgSrc(this, true);
+            //     if (this.parentElement && this.parentElement.tagName == 'PICTURE') {
+            //         for (var i = 0; i < this.parentElement.childNodes.length; i++) {
+            //             var node = this.parentElement.childNodes[i];
+            //             if (node.tagName == 'SOURCE')
+            //                 DoImgSrc(node, true);
+            //         }
+            //     }
+            //     this.src = blankImg;
+            // } else { //small image
+            //     DoHidden(this, false);
+            // }
         }
         else if (this.tagName == 'VIDEO') {
             AddAsSuspect(this);

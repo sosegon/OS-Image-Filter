@@ -121,15 +121,18 @@ var common = (function() {
    * @param {Object} attrs Dictionary of attributes to set on the module.
    */
   function createNaClModule(name, tool, path, width, height, attrs) {
+    console.log("createNaClModule");
     var moduleEl = document.createElement('embed');
     moduleEl.setAttribute('name', 'nacl_module');
     moduleEl.setAttribute('id', 'nacl_module');
     moduleEl.setAttribute('width', width);
     moduleEl.setAttribute('height', height);
-    moduleEl.setAttribute('path', path);
 
-    path_nmf = chrome.runtime.getURL('clang-newlib/Release/skin_hidder.nmf');
-    moduleEl.setAttribute('src', path_nmf);
+    path_ = chrome.runtime.getURL('clang-newlib/Release');
+    moduleEl.setAttribute('path', path_);
+
+    // path_nmf = chrome.runtime.getURL('clang-newlib/Release/skin_hidder.nmf');
+    moduleEl.setAttribute('src', path_ + "/skin_hidder.nmf");
 
     // Add any optional arguments
     if (attrs) {
@@ -236,9 +239,23 @@ var common = (function() {
   function moduleDidLoad() {
     common.naclModule = document.getElementById('nacl_module');
     updateStatus('RUNNING');
+    triggerNaclEvent()
 
     if (typeof window.moduleDidLoad !== 'undefined') {
       window.moduleDidLoad();
+    }
+  }
+
+  /**
+   * Called when the NaCl module is loaded.
+   *
+   * Now the images can be processed by NaCl module
+   */
+  function triggerNaclEvent() {
+    var event = new Event("onNaclModuleReady");
+    var all = document.getElementsByClassName("wiz-to-process");
+    for (var i = 0, max = all.length; i < max; i++){
+      all[i].dispatchEvent(event);
     }
   }
 
@@ -315,24 +332,29 @@ var common = (function() {
    *     the data sent from the NaCl module.
    */
   function handleMessage(message_event) {
-    if (typeof message_event.data === 'string') {
-      for (var type in defaultMessageTypes) {
-        if (defaultMessageTypes.hasOwnProperty(type)) {
-          if (startsWith(message_event.data, type + ':')) {
-            func = defaultMessageTypes[type];
-            func(message_event.data.slice(type.length + 1));
-            return;
-          }
-        }
+    var res = message_event.data;
+    if(res.type == "processed") {
+      if(res.data) {
+        drawImage(res.data, res.uuid);
       }
     }
+  }
 
-    if (typeof window.handleMessage !== 'undefined') {
-      window.handleMessage(message_event);
-      return;
-    }
+  function drawImage(pixels, uuid) {
+    var canvas = document.getElementById(uuid + "-canvas");
+    var ctx = canvas.getContext("2d");
+    var imData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    var buf8 = new Uint8ClampedArray(pixels);
+    imData.data.set(buf8);
+    ctx.putImageData(imData, 0, 0)
 
-    logMessage('Unhandled message: ' + message_event.data);
+    var dataURL = canvas.toDataURL("image/png");
+
+    var img = canvas.previousSibling;
+    img.src = dataURL;
+
+    canvas.parentNode.removeChild(canvas);
+    console.log("processed");
   }
 
   /**
@@ -411,7 +433,7 @@ var common = (function() {
 }());
 
 function setNaClDOM() {
-
+  document.body.setAttribute("data-name", "skin_hidder");
   document.body.setAttribute("data-tools", "clang-newlib");
   document.body.setAttribute("data-configs", "Debug Release");
   document.body.setAttribute("data-path", "{tc}/{config}");
@@ -419,10 +441,6 @@ function setNaClDOM() {
   listener_nacl = document.createElement('div');
   listener_nacl.setAttribute('id', 'listener_wizimage');
   document.body.appendChild(listener_nacl);
-
-  canvas_nacl = document.createElement('canvas');
-  canvas_nacl.setAttribute('id', 'canvas_wizimage');
-  document.body.appendChild(canvas_nacl);
 }
 
 // Listen for the DOM content to be loaded. This event is fired when parsing of
