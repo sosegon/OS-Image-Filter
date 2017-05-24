@@ -10,6 +10,9 @@ var isTest = false;
 // "Debug" NaCl module.
 var isRelease = true;
 
+// Used to process image once it has been loaded in img tags
+var isNaclModuleLoaded = false;
+
 // Javascript module pattern:
 //   see http://en.wikipedia.org/wiki/Unobtrusive_JavaScript#Namespaces
 // In essence, we define an anonymous function which is immediately called and
@@ -239,7 +242,8 @@ var common = (function() {
   function moduleDidLoad() {
     common.naclModule = document.getElementById('nacl_module');
     updateStatus('RUNNING');
-    triggerNaclEvent()
+    isNaclModuleLoaded = true;
+    triggeLoadEvent()
 
     if (typeof window.moduleDidLoad !== 'undefined') {
       window.moduleDidLoad();
@@ -251,11 +255,14 @@ var common = (function() {
    *
    * Now the images can be processed by NaCl module
    */
-  function triggerNaclEvent() {
-    var event = new Event("onNaclModuleReady");
+  function triggeLoadEvent() {
+    var event = new Event("load"); // trigger load event, it is handled accordingly by the listener
     var all = document.getElementsByClassName("wiz-to-process");
     for (var i = 0, max = all.length; i < max; i++){
-      all[i].dispatchEvent(event);
+      var current = all[i];
+      if(!current.wzmProcessed || current.wzmProcessed == true) {
+        current.dispatchEvent(event);
+      }
     }
   }
 
@@ -348,13 +355,14 @@ var common = (function() {
     imData.data.set(buf8);
     ctx.putImageData(imData, 0, 0)
 
-    var dataURL = canvas.toDataURL("image/png");
-
     var img = canvas.previousSibling;
+
+    var dataURL = canvas.toDataURL("image/png");
     img.src = dataURL;
 
-    canvas.parentNode.removeChild(canvas);
-    console.log("processed");
+    $(img).removeClass("wzmHide");
+    $(img).attr("wzmProcessed", "true");
+    $("#" + uuid + "-canvas").remove();
   }
 
   /**

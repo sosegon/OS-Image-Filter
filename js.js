@@ -171,6 +171,8 @@ function DoWin(win, winContentLoaded) {
                         var el = m.addedNodes[j];
                         if (!el.tagName) //eg text nodes
                             continue;
+                        if(el.tagName == 'CANVAS')
+                            continue;
                         if (el.tagName == 'IFRAME')
                             DoIframe(el);
                         else
@@ -215,24 +217,38 @@ function DoWin(win, winContentLoaded) {
         }, 10);
     }
     function ProcessImage() {
-        console.log("processImage");
-        var canvas = AddCanvasSibling(this);
-        if(canvas) {
-            canvas.setAttribute("width", this.width);
-            canvas.setAttribute("height", this.height);
-            var uuid = this.getAttribute("wiz-uuid")
-            var ctx = canvas.getContext("2d");
-            ctx.drawImage(this, 0, 0); // at this point the img is loaded
-            var width = this.width;
-            var height = this.height;
-            var imageData = ctx.getImageData(0, 0, width, height);
-            common.naclModule.postMessage({
-                "message": "image",
-                "uuid": uuid,
-                "width": width,
-                "height": height,
-                "data": imageData.data.buffer
-            });
+        if(isNaclModuleLoaded) {
+            var canvas = AddCanvasSibling(this);
+            if(canvas) {
+                this.wzmProcessed = true;
+                console.log("width, height (" + this.width + ", " + this.height + ")");
+                canvas.setAttribute("width", this.width);
+                canvas.setAttribute("height", this.height);
+                var uuid = this.getAttribute("wiz-uuid")
+                console.log("uuid: " + uuid);
+                var ctx = canvas.getContext("2d");
+                ctx.drawImage(this, 0, 0); // at this point the img is loaded
+                var width = this.width;
+                var height = this.height;
+                
+                try {
+                    var imageData = ctx.getImageData(0, 0, width, height);
+                    common.naclModule.postMessage({
+                        "message": "image",
+                        "uuid": uuid,
+                        "width": width,
+                        "height": height,
+                        "data": imageData.data.buffer
+                    });
+                } catch (err) {
+                    $(this).removeClass("wzmHide");
+                    $(this).attr("wzmProcessed", "false");
+                    $("#" + uuid + "-canvas").remove();
+                    console.log("exception")
+                }
+
+                DoLoadProcessImageListener(this, false);
+            }
         }
     }
     function AddCanvasSibling(el) {
@@ -245,56 +261,69 @@ function DoWin(win, winContentLoaded) {
         el.parentNode.insertBefore(canvas, el.nextSibling);
         return canvas;
     }
+    function DoLoadProcessImageListener(el, toggle) {
+        if (toggle && !el.wzmHasLoadProcessImageEventListener) {
+            el.addEventListener('load', ProcessImage);
+            el.wzmHasLoadProcessImageEventListener = true;
+        } else if (!toggle && el.wzmHasLoadProcessImageEventListener) {
+            el.removeEventListener('load', ProcessImage);
+            el.wzmHasLoadProcessImageEventListener = false;
+        }
+    }
     function DoElement() {
         if (showAll) return;
         if (this.tagName == 'IMG') {
+            if(this.wzmProcessed && this.wzmProcessed == true) { // already processed
+                return;
+            }
+            this.crossOrigin = "Anonymous"; // To process images from other domains
             AddRandomWizId(this);
-            AddClass(this, "wiz-to-process")
-            this.addEventListener('onNaclModuleReady', ProcessImage);
-            // AddAsSuspect(this);
+            AddClass(this, "wiz-to-process") // class used to trigger the load event once Nacl module is loaded
+            AddAsSuspect(this);
 
-            // //attach load event - needed 1) as we need to catch it after it is switched for the blankImg, 2) in case the img gets changed to something else later
-            // DoLoadEventListener(this, true);
+            //attach load event - needed 1) as we need to catch it after it is switched for the blankImg, 2) in case the img gets changed to something else later
+            DoLoadProcessImageListener(this, true);
+            DoLoadEventListener(this, true);
 
-            // //see if not yet loaded
-            // if (!this.complete) {
-            //     //hide, to avoid flash until load event is handled
-            //     DoHidden(this, true);
-            //     return;
-            // }
+            //see if not yet loaded
+            if (!this.complete) {
+                //hide, to avoid flash until load event is handled
+                DoHidden(this, true);
+                return;
+            }
 
-            // var elWidth = this.width, elHeight = this.height;
-            // if (this.src == blankImg) { //was successfully replaced
-            //     DoHidden(this, false);
-            //     DoWizmageBG(this, true);
-            //     this.wzmBeenBlocked = true;
-            // } else if ((elWidth == 0 || elWidth > settings.maxSafe) && (elHeight == 0 || elHeight > settings.maxSafe)) { //needs to be hidden - we need to catch 0 too, as sometimes images start off as zero
-            //     DoMouseEventListeners(this, true);
-            //     if (!this.wzmHasTitleAndSizeSetup) {
-            //         this.style.width = elWidth + 'px';
-            //         this.style.height = elHeight + 'px';
-            //         if (!this.title)
-            //             if (this.alt)
-            //                 this.title = this.alt;
-            //             else {
-            //                 this.src.match(/([-\w]+)(\.[\w]+)?$/i);
-            //                 this.title = RegExp.$1;
-            //             }
-            //         this.wzmHasTitleAndSizeSetup = true;
-            //     }
-            //     DoHidden(this, true);
-            //     DoImgSrc(this, true);
-            //     if (this.parentElement && this.parentElement.tagName == 'PICTURE') {
-            //         for (var i = 0; i < this.parentElement.childNodes.length; i++) {
-            //             var node = this.parentElement.childNodes[i];
-            //             if (node.tagName == 'SOURCE')
-            //                 DoImgSrc(node, true);
-            //         }
-            //     }
-            //     this.src = blankImg;
-            // } else { //small image
-            //     DoHidden(this, false);
-            // }
+            var elWidth = this.width, elHeight = this.height;
+            if (this.src == blankImg) { //was successfully replaced
+                DoHidden(this, false);
+                DoWizmageBG(this, true);
+                this.wzmBeenBlocked = true;
+            } else if ((elWidth == 0 || elWidth > settings.maxSafe) && (elHeight == 0 || elHeight > settings.maxSafe)) { //needs to be hidden - we need to catch 0 too, as sometimes images start off as zero
+                DoMouseEventListeners(this, true);
+                if (!this.wzmHasTitleAndSizeSetup) {
+                    this.style.width = elWidth + 'px';
+                    this.style.height = elHeight + 'px';
+                    if (!this.title)
+                        if (this.alt)
+                            this.title = this.alt;
+                        else {
+                            this.src.match(/([-\w]+)(\.[\w]+)?$/i);
+                            this.title = RegExp.$1;
+                        }
+                    this.wzmHasTitleAndSizeSetup = true;
+                }
+                DoHidden(this, true);
+                //DoImgSrc(this, true);
+                if (this.parentElement && this.parentElement.tagName == 'PICTURE') {
+                    for (var i = 0; i < this.parentElement.childNodes.length; i++) {
+                        var node = this.parentElement.childNodes[i];
+                        //if (node.tagName == 'SOURCE')
+                            //DoImgSrc(node, true);
+                    }
+                }
+                //this.src = blankImg;
+            } else { //small image
+                DoHidden(this, false);
+            }
         }
         else if (this.tagName == 'VIDEO') {
             AddAsSuspect(this);
@@ -566,8 +595,9 @@ function DoWin(win, winContentLoaded) {
         el.className += ' ' + c;
     }
     function AddRandomWizId(el) {
-        var uuid = guid();
-        el.setAttribute("wiz-uuid", uuid);
+        if($(el).attr("wiz-uuid") == null) {
+            $(el).attr("wiz-uuid", guid());
+        }
     }
     // from https://stackoverflow.com/a/105074/1065981
     function guid() {

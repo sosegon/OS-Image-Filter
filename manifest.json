@@ -14,9 +14,9 @@
     }, "options_page": "options.htm",
     "content_scripts": [{
         "matches": ["<all_urls>"],
-        "js":["common.js", "js.js"],
+        "js":["common.js", "js.js", "jquery.min.js"],
         "run_at":"document_start",
-        "all_frames": false
+        "all_frames": true
     }],
     "permissions": ["tabs", "storage"],
     "web_accessible_resources": [
