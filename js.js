@@ -325,31 +325,31 @@ function DoWin(win, winContentLoaded) {
                 DoHidden(this, false);
             }
         }
-        else if (this.tagName == 'VIDEO') {
-            AddAsSuspect(this);
-            DoHidden(this, true);
-            DoWizmageBG(this, true);
-        } else {
-            var compStyle = getComputedStyle(this), bgimg = compStyle['background-image'], width = parseInt(compStyle['width']) || this.clientWidth, height = parseInt(compStyle['height']) || this.clientHeight; //as per https://developer.mozilla.org/en/docs/Web/API/window.getComputedStyle, getComputedStyle will return the 'used values' for width and height, which is always in px. We also use clientXXX, since sometimes compStyle returns NaN.
-            if (bgimg != 'none' && (width == 0 || width > settings.maxSafe) && (height == 0 || height > settings.maxSafe) /*we need to catch 0 too, as sometimes elements start off as zero*/
-                    && bgimg.indexOf('url(') != -1
-                    && !bgimg.startsWith(urlExtensionUrl) && bgimg != urlBlankImg
-                    ) {
-                AddAsSuspect(this);
-                DoWizmageBG(this, true);
-                DoMouseEventListeners(this, true);
-                if (this.wzmLastCheckedSrc != bgimg) {
-                    this.wzmLastCheckedSrc = bgimg;
-                    var i = new Image();
-                    i.owner = this;
-                    i.onload = CheckBgImg;
-                    var urlMatch = /\burl\(["']?(.*?)["']?\)/.exec(bgimg);
-                    if (urlMatch)
-                        i.src = urlMatch[1];
-                }
-                this.wzmBeenBlocked = true;
-            }
-        }
+        // else if (this.tagName == 'VIDEO') {
+        //     AddAsSuspect(this);
+        //     DoHidden(this, true);
+        //     DoWizmageBG(this, true);
+        // } else {
+        //     var compStyle = getComputedStyle(this), bgimg = compStyle['background-image'], width = parseInt(compStyle['width']) || this.clientWidth, height = parseInt(compStyle['height']) || this.clientHeight; //as per https://developer.mozilla.org/en/docs/Web/API/window.getComputedStyle, getComputedStyle will return the 'used values' for width and height, which is always in px. We also use clientXXX, since sometimes compStyle returns NaN.
+        //     if (bgimg != 'none' && (width == 0 || width > settings.maxSafe) && (height == 0 || height > settings.maxSafe) we need to catch 0 too, as sometimes elements start off as zero
+        //             && bgimg.indexOf('url(') != -1
+        //             && !bgimg.startsWith(urlExtensionUrl) && bgimg != urlBlankImg
+        //             ) {
+        //         AddAsSuspect(this);
+        //         DoWizmageBG(this, true);
+        //         DoMouseEventListeners(this, true);
+        //         if (this.wzmLastCheckedSrc != bgimg) {
+        //             this.wzmLastCheckedSrc = bgimg;
+        //             var i = new Image();
+        //             i.owner = this;
+        //             i.onload = CheckBgImg;
+        //             var urlMatch = /\burl\(["']?(.*?)["']?\)/.exec(bgimg);
+        //             if (urlMatch)
+        //                 i.src = urlMatch[1];
+        //         }
+        //         this.wzmBeenBlocked = true;
+        //     }
+        // }
     }
     function CheckBgImg() {
         if (this.height <= settings.maxSafe || this.width <= settings.maxSafe) ShowEl.call(this.owner);
