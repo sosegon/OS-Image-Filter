@@ -221,30 +221,74 @@ function DoWin(win, winContentLoaded) {
             var canvas = AddCanvasSibling(this);
             if(canvas) {
                 this.wzmProcessed = true;
-                console.log("width, height (" + this.width + ", " + this.height + ")");
                 canvas.setAttribute("width", this.width);
                 canvas.setAttribute("height", this.height);
                 var uuid = this.getAttribute("wiz-uuid")
-                console.log("uuid: " + uuid);
-                var ctx = canvas.getContext("2d");
-                ctx.drawImage(this, 0, 0); // at this point the img is loaded
-                var width = this.width;
-                var height = this.height;
-                
+
                 try {
+                    var ctx = canvas.getContext("2d");
+                    ctx.drawImage(this, 0, 0); // at this point the img is loaded
+                    var width = this.width;
+                    var height = this.height;
                     var imageData = ctx.getImageData(0, 0, width, height);
+                    var src = this.src;
                     common.naclModule.postMessage({
                         "message": "image",
-                        "uuid": uuid,
-                        "width": width,
-                        "height": height,
-                        "data": imageData.data.buffer
+                        "uuid":    uuid,
+                        "width":   width,
+                        "height":  height,
+                        "type":    "arraybuffer",
+                        "format":  "none",
+                        "data":    imageData.data.buffer
                     });
                 } catch (err) {
-                    $(this).removeClass("wzmHide");
-                    $(this).attr("wzmProcessed", "false");
-                    $("#" + uuid + "-canvas").remove();
-                    console.log("exception")
+                    var xhr = new XMLHttpRequest();
+                    xhr.onload = function() {
+                        var reader = new FileReader();
+                        reader.uuid = this.uuid;
+                        reader.original_src = this.original_src;
+                        reader.onloadend = function() {
+                            var image = new Image();
+                            image.crossOrigin = "Anonymous";
+                            image.src = reader.result;
+                            image.uuid = this.uuid;
+                            image.original_src = this.original_src;
+                            image.onload = function(){
+                                var uuid = this.uuid;
+                                var width = this.width;
+                                var height = this.height;
+                                var format = this.src.split(";")[0].split("/")[1]
+                                format = format != "jpeg" ? format : "jpg";
+                                var data = this.src.split(",")[1];
+                                var src = this.original_src;
+                                // console.log("pre base64 src: " + src);
+                                // console.log("pre base64 data: \n" + this.src);
+                                common.naclModule.postMessage({
+                                    "message": "image",
+                                    "uuid":    uuid,
+                                    "width":   width,
+                                    "height":  height,
+                                    "type":    "base64",
+                                    "format":  format,
+                                    "source":  src,
+                                    "data":    data
+                                });
+                            }
+
+                        }
+                        reader.readAsDataURL(xhr.response);
+
+                    };
+                    xhr.open("GET", this.src);
+                    xhr.responseType = "blob";
+                    xhr.send();
+                    xhr.uuid = uuid;
+                    xhr.original_src = this.src
+
+
+                    // $(this).removeClass("wzmHide");
+                    // $(this).attr("wzmProcessed", "false");
+                    // $("#" + uuid + "-canvas").remove();
                 }
 
                 DoLoadProcessImageListener(this, false);

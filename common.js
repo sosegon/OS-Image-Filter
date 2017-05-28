@@ -340,28 +340,54 @@ var common = (function() {
    */
   function handleMessage(message_event) {
     var res = message_event.data;
-    if(res.type == "processed") {
+    if(res.kind == "image") {
       if(res.data) {
-        drawImage(res.data, res.uuid);
+        drawImage(res.data, res.uuid, res.type, res.source, res.width, res.height);
       }
+    } 
+    else if(res.kind == "log") {
+      console.log("From NaCl: " + res.data);
     }
   }
 
-  function drawImage(pixels, uuid) {
+  function drawImage(pixels, uuid, type, src, width, height) {
+    var dataURL;
     var canvas = document.getElementById(uuid + "-canvas");
-    var ctx = canvas.getContext("2d");
-    var imData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    var buf8 = new Uint8ClampedArray(pixels);
-    imData.data.set(buf8);
-    ctx.putImageData(imData, 0, 0)
 
+    if(type == "arraybuffer") {
+      var ctx = canvas.getContext("2d");
+      var imData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      var buf8 = new Uint8ClampedArray(pixels);
+      imData.data.set(buf8);
+      ctx.putImageData(imData, 0, 0)
+      dataURL = canvas.toDataURL("image/png");
+    } 
+    else { // base64 
+      if(pixels.byteLength > 0) {
+        var canvas_global = document.getElementById('wizimage_canvas');
+        canvas_global.setAttribute("width", width);
+        canvas_global.setAttribute("height", height);
+        var ctx = canvas_global.getContext("2d");
+        var im = new Image();
+        ctx.drawImage(im, 0, 0);
+        var imData = ctx.getImageData(0, 0, canvas_global.width, canvas_global.height);
+        
+        var buf8 = new Uint8ClampedArray(pixels);
+        imData.data.set(buf8);
+        ctx.putImageData(imData, 0, 0)
+        dataURL = canvas_global.toDataURL("image/jpeg");
+      }
+    }
+    
     var img = canvas.previousSibling;
-
-    var dataURL = canvas.toDataURL("image/png");
+    img.onload = load_processed;
     img.src = dataURL;
+  }
 
-    $(img).removeClass("wzmHide");
-    $(img).attr("wzmProcessed", "true");
+  function load_processed() {
+    $(this).removeClass("wzmHide");
+    $(this).attr("wzmProcessed", "true");
+    var uuid = $(this).attr("wiz-uuid");
     $("#" + uuid + "-canvas").remove();
   }
 
@@ -449,6 +475,11 @@ function setNaClDOM() {
   listener_nacl = document.createElement('div');
   listener_nacl.setAttribute('id', 'listener_wizimage');
   document.body.appendChild(listener_nacl);
+
+  // global canvas used for images from other domains
+  canvas_nacl = document.createElement('canvas');
+  canvas_nacl.setAttribute('id', 'wizimage_canvas');
+  document.body.appendChild(canvas_nacl);
 }
 
 // Listen for the DOM content to be loaded. This event is fired when parsing of
