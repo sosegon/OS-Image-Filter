@@ -13,11 +13,11 @@ using namespace std;
 namespace {
 }  // namespace
 
-class HelloTutorialInstance : public pp::Instance {
+class SkinHidderInstance : public pp::Instance {
  public:
-  explicit HelloTutorialInstance(PP_Instance instance)
+  explicit SkinHidderInstance(PP_Instance instance)
       : pp::Instance(instance) {}
-  virtual ~HelloTutorialInstance() {}
+  virtual ~SkinHidderInstance() {}
 
   virtual void HandleMessage(const pp::Var& var_message) {
     if (var_message.is_dictionary()) {
@@ -65,18 +65,18 @@ class HelloTutorialInstance : public pp::Instance {
 }
 };
 
-class HelloTutorialModule : public pp::Module {
+class SkinHidderModule : public pp::Module {
  public:
-  HelloTutorialModule() : pp::Module() {}
-  virtual ~HelloTutorialModule() {}
+  SkinHidderModule() : pp::Module() {}
+  virtual ~SkinHidderModule() {}
 
   virtual pp::Instance* CreateInstance(PP_Instance instance) {
-    return new HelloTutorialInstance(instance);
+    return new SkinHidderInstance(instance);
   }
 };
 
 namespace pp {
   Module* CreateModule() {
-    return new HelloTutorialModule();
+    return new SkinHidderModule();
   }
 }  // namespace pp
