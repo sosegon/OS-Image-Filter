@@ -340,48 +340,47 @@ var common = (function() {
    */
   function handleMessage(message_event) {
     var res = message_event.data;
-    if(res.kind == "image") {
-      if(res.data) {
-        drawImage(res.data, res.uuid, res.type, res.source, res.width, res.height);
-      }
-    } 
-    else if(res.kind == "log") {
-      console.log("From NaCl: " + res.data);
+    if(res.data) {
+      drawImage(res.data, res.uuid, res.origin, res.width, res.height);
     }
   }
 
-  function drawImage(pixels, uuid, type, src, width, height) {
-    var dataURL;
+  function drawImage(pixels, uuid, origin, width, height) {
+    var data_url;
     var canvas = document.getElementById(uuid + "-canvas");
 
-    if(type == "arraybuffer") {
-      var ctx = canvas.getContext("2d");
-      var imData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-      var buf8 = new Uint8ClampedArray(pixels);
-      imData.data.set(buf8);
-      ctx.putImageData(imData, 0, 0)
-      dataURL = canvas.toDataURL("image/png");
+    if(origin == "same") {
+      var context = canvas.getContext("2d");
+      var im_data = context.getImageData(0, 0, canvas.width, canvas.height);
+      var buffer  = new Uint8ClampedArray(pixels);
+
+      im_data.data.set(buffer);
+      context.putImageData(im_data, 0, 0)
+      data_url = canvas.toDataURL("image/png");
     } 
     else { // base64 
       if(pixels.byteLength > 0) {
         var canvas_global = document.getElementById('wizimage_canvas');
-        canvas_global.setAttribute("width", width);
+        canvas_global.setAttribute("width",  width );
         canvas_global.setAttribute("height", height);
-        var ctx = canvas_global.getContext("2d");
-        var im = new Image();
-        ctx.drawImage(im, 0, 0);
-        var imData = ctx.getImageData(0, 0, canvas_global.width, canvas_global.height);
         
-        var buf8 = new Uint8ClampedArray(pixels);
-        imData.data.set(buf8);
-        ctx.putImageData(imData, 0, 0)
-        dataURL = canvas_global.toDataURL("image/jpeg");
+        var context = canvas_global.getContext("2d");
+        var new_ima = new Image();
+        
+        context.drawImage(new_ima, 0, 0);
+
+        var im_data = context.getImageData(0, 0, canvas_global.width, canvas_global.height);
+        var buffer  = new Uint8ClampedArray(pixels);
+
+        im_data.data.set(buffer);
+        context.putImageData(im_data, 0, 0)
+        data_url = canvas_global.toDataURL("image/png");
       }
     }
     
     var img = canvas.previousSibling;
     img.onload = load_processed;
-    img.src = dataURL;
+    img.src = data_url;
   }
 
   function load_processed() {

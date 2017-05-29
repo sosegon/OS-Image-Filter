@@ -228,67 +228,58 @@ function DoWin(win, winContentLoaded) {
                 try {
                     var ctx = canvas.getContext("2d");
                     ctx.drawImage(this, 0, 0); // at this point the img is loaded
-                    var width = this.width;
-                    var height = this.height;
-                    var imageData = ctx.getImageData(0, 0, width, height);
-                    var src = this.src;
+                    var width     = this.width;
+                    var height    = this.height;
+                    var image_data = ctx.getImageData(0, 0, width, height);
+                    var src       = this.src;
                     common.naclModule.postMessage({
                         "message": "image",
-                        "uuid":    uuid,
-                        "width":   width,
-                        "height":  height,
-                        "type":    "arraybuffer",
-                        "format":  "none",
-                        "data":    imageData.data.buffer
+                        "uuid"   : uuid,
+                        "width"  : width,
+                        "height" : height,
+                        "origin" : "same",
+                        "data"   : image_data.data.buffer
                     });
                 } catch (err) {
                     var xhr = new XMLHttpRequest();
                     xhr.onload = function() {
-                        var reader = new FileReader();
+                        var reader  = new FileReader();
                         reader.uuid = this.uuid;
-                        reader.original_src = this.original_src;
                         reader.onloadend = function() {
-                            var image = new Image();
+                            var image         = new Image();
                             image.crossOrigin = "Anonymous";
-                            image.src = reader.result;
-                            image.uuid = this.uuid;
-                            image.original_src = this.original_src;
+                            image.src         = reader.result;
+                            image.uuid        = this.uuid;
                             image.onload = function(){
-                                var uuid = this.uuid;
-                                var width = this.width;
+                                var uuid   = this.uuid;
+                                var width  = this.width;
                                 var height = this.height;
-                                var format = this.src.split(";")[0].split("/")[1]
-                                format = format != "jpeg" ? format : "jpg";
-                                var data = this.src.split(",")[1];
-                                var src = this.original_src;
-                                // console.log("pre base64 src: " + src);
-                                // console.log("pre base64 data: \n" + this.src);
+
+                                var canvas_global = document.getElementById("wizimage_canvas");
+                                canvas_global.setAttribute("width",  width );
+                                canvas_global.setAttribute("height", height);
+
+                                var ctx_global = canvas_global.getContext("2d");
+                                ctx_global.drawImage(this, 0, 0);
+
+                                var new_image_data = ctx_global.getImageData(0, 0, width, height);
+
                                 common.naclModule.postMessage({
                                     "message": "image",
-                                    "uuid":    uuid,
-                                    "width":   width,
-                                    "height":  height,
-                                    "type":    "base64",
-                                    "format":  format,
-                                    "source":  src,
-                                    "data":    data
+                                    "uuid"   : uuid,
+                                    "width"  : width,
+                                    "height" : height,
+                                    "origin" : "other",
+                                    "data"   : new_image_data.data.buffer
                                 });
-                            }
-
+                            };
                         }
                         reader.readAsDataURL(xhr.response);
-
                     };
                     xhr.open("GET", this.src);
                     xhr.responseType = "blob";
                     xhr.send();
                     xhr.uuid = uuid;
-                    xhr.original_src = this.src
-
-
-                    // $(this).removeClass("wzmHide");
-                    // $(this).attr("wzmProcessed", "false");
-                    // $("#" + uuid + "-canvas").remove();
                 }
 
                 DoLoadProcessImageListener(this, false);
