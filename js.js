@@ -294,6 +294,7 @@ function DoWin(win, winContentLoaded) {
         var canvas = document.createElement("canvas");
         canvas.setAttribute("id", uuid);
         el.parentNode.insertBefore(canvas, el.nextSibling);
+        AddClass(canvas, "wzmHide");
         return canvas;
     }
     function DoLoadProcessImageListener(el, toggle) {
