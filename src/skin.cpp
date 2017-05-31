@@ -19,7 +19,7 @@ void hideSkin(Mat srcColor, Mat dstColor) {
 	const int EDGES_THRESHOLD = 80;
 	threshold(mask, mask, EDGES_THRESHOLD, 255, THRESH_BINARY_INV);
 
-	dstColor.setTo(255);
+	dstColor.setTo(127);
 	srcColor.copyTo(dstColor, mask);
 }
 
