@@ -336,8 +336,8 @@ function DoWin(win, winContentLoaded) {
             } else if ((elWidth == 0 || elWidth > settings.maxSafe) && (elHeight == 0 || elHeight > settings.maxSafe)) { //needs to be hidden - we need to catch 0 too, as sometimes images start off as zero
                 DoMouseEventListeners(this, true);
                 if (!this.wzmHasTitleAndSizeSetup) {
-                    this.style.width = elWidth + 'px';
-                    this.style.height = elHeight + 'px';
+                    // this.style.width = elWidth + 'px';
+                    // this.style.height = elHeight + 'px';
                     if (!this.title)
                         if (this.alt)
                             this.title = this.alt;
