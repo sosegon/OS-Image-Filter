@@ -309,7 +309,8 @@ function DoWin(win, winContentLoaded) {
     function DoElement() {
         if (showAll) return;
         if (this.tagName == 'IMG') {
-            if(this.wzmProcessed && this.wzmProcessed == true) { // already processed
+            if(this.wzmProcessed) { // already processed
+                DoWizmageBG(this, true); // Needed to enable eye icon in image
                 return;
             }
             this.crossOrigin = "Anonymous"; // To process images from other domains
@@ -400,13 +401,13 @@ function DoWin(win, winContentLoaded) {
     }
     function DoWizmageBG(el, toggle) {
         if (toggle && !el.wzmHasWizmageBG) {
-            var shade = Math.floor(Math.random() * 8);
-            el.wzmShade = shade;
-            AddClass(el, 'wzmPatternBgImg wzmShade' + shade);
+            // var shade = Math.floor(Math.random() * 8);
+            // el.wzmShade = shade;
+            // AddClass(el, 'wzmPatternBgImg wzmShade' + shade);
             el.wzmHasWizmageBG = true;
         } else if (!toggle && el.wzmHasWizmageBG) {
-            RemoveClass(el, 'wzmPatternBgImg');
-            RemoveClass(el, 'wzmShade' + el.wzmShade);
+            // RemoveClass(el, 'wzmPatternBgImg');
+            // RemoveClass(el, 'wzmShade' + el.wzmShade);
             el.wzmHasWizmageBG = false;
         }
     }
@@ -420,7 +421,9 @@ function DoWin(win, winContentLoaded) {
             //el.src = el.srcset = ''; 
         }
         else {
-            el.src = el.oldsrc;
+            var oldsrc = el.oldsrc;
+            el.oldsrc = el.src;
+            el.src = oldsrc;
             el.srcset = el.oldsrcset;
         }
     }
@@ -481,14 +484,17 @@ function DoWin(win, winContentLoaded) {
                     eye.onclick = function (e) {
                         e.stopPropagation();
                         ShowEl.call(el);
-                        eye.style.backgroundImage = undoCSSUrl;
-                        DoHoverVisualClearTimer(el, true);
-                        eye.onclick = function (e) {
-                            e.stopPropagation();
-                            DoElement.call(el);
-                            setupEye();
-                            DoHoverVisualClearTimer(el, true);
-                        }
+                        // hide the eye icon and not allow undo option for now
+                        // TODO: Implement undo option
+                        eye.style.display = 'none';
+                        // eye.style.backgroundImage = undoCSSUrl;
+                        // DoHoverVisualClearTimer(el, true);
+                        // eye.onclick = function (e) {
+                        //     e.stopPropagation();
+                        //     DoElement.call(el);
+                        //     setupEye();
+                        //     DoHoverVisualClearTimer(el, true);
+                        // }
                     }
                 }
                 setupEye();
