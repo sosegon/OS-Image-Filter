@@ -348,7 +348,7 @@ function DoWin(win, winContentLoaded) {
                     this.wzmHasTitleAndSizeSetup = true;
                 }
                 DoHidden(this, true);
-                //DoImgSrc(this, true);
+                DoImgSrc(this, true);
                 if (this.parentElement && this.parentElement.tagName == 'PICTURE') {
                     for (var i = 0; i < this.parentElement.childNodes.length; i++) {
                         var node = this.parentElement.childNodes[i];
@@ -410,11 +410,14 @@ function DoWin(win, winContentLoaded) {
             el.wzmHasWizmageBG = false;
         }
     }
+    // Used to store the original src of the image
     function DoImgSrc(el, toggle) {
         if (toggle) {
             el.oldsrc = el.src;
             el.oldsrcset = el.srcset;
-            el.src = el.srcset = '';
+            // Do not set to empty string, otherwise the processing
+            // will result in an empty image
+            //el.src = el.srcset = ''; 
         }
         else {
             el.src = el.oldsrc;
