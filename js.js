@@ -313,7 +313,7 @@ function DoWin(win, winContentLoaded) {
                 DoWizmageBG(this, true); // Needed to enable eye icon in image
                 return;
             }
-            this.crossOrigin = "Anonymous"; // To process images from other domains
+            //this.crossOrigin = "Anonymous"; // To process images from other domains
             AddRandomWizId(this);
             AddClass(this, "wiz-to-process") // class used to trigger the load event once Nacl module is loaded
             AddAsSuspect(this);
@@ -419,6 +419,7 @@ function DoWin(win, winContentLoaded) {
             // Do not set to empty string, otherwise the processing
             // will result in an empty image
             //el.src = el.srcset = ''; 
+            el.srcset = ''; // empty string to make sure filtered images are displayed in the img elements
         }
         else {
             var oldsrc = el.oldsrc;
