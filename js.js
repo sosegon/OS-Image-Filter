@@ -311,12 +311,19 @@ function DoWin(win, winContentLoaded) {
         if (this.tagName == 'IMG') {
             if(this.wzmProcessed) { // already processed
                 DoWizmageBG(this, true); // Needed to enable eye icon in image
+                DoImgSrc(this, true);
+                DoLoadProcessImageListener(this, false);
+                DoLoadEventListener(this, false);
                 return;
-            }
+            } 
+
+            //console.log(this.src);
             //this.crossOrigin = "Anonymous"; // To process images from other domains
-            AddRandomWizId(this);
-            AddClass(this, "wiz-to-process") // class used to trigger the load event once Nacl module is loaded
-            AddAsSuspect(this);
+            if(!$(this).hasClass("wiz-to-process")) {
+                AddRandomWizId(this);
+                AddClass(this, "wiz-to-process") // class used to trigger the load event once Nacl module is loaded
+                AddAsSuspect(this);
+            }
 
             //attach load event - needed 1) as we need to catch it after it is switched for the blankImg, 2) in case the img gets changed to something else later
             DoLoadProcessImageListener(this, true);
@@ -349,7 +356,7 @@ function DoWin(win, winContentLoaded) {
                     this.wzmHasTitleAndSizeSetup = true;
                 }
                 DoHidden(this, true);
-                DoImgSrc(this, true);
+                //DoImgSrc(this, true);
                 if (this.parentElement && this.parentElement.tagName == 'PICTURE') {
                     for (var i = 0; i < this.parentElement.childNodes.length; i++) {
                         var node = this.parentElement.childNodes[i];
@@ -413,15 +420,17 @@ function DoWin(win, winContentLoaded) {
     }
     // Used to store the original src of the image
     function DoImgSrc(el, toggle) {
-        if (toggle) {
+        if (toggle && $(el).attr("wiz-toggled-already") !== "true") {
+            console.log("DoImgSrc: " + el.src.slice(0, 80));
             el.oldsrc = el.src;
             el.oldsrcset = el.srcset;
             // Do not set to empty string, otherwise the processing
             // will result in an empty image
             //el.src = el.srcset = ''; 
             el.srcset = ''; // empty string to make sure filtered images are displayed in the img elements
+            $(el).attr("wiz-toggled-already", "true")
         }
-        else {
+        else if ($(el).attr("wiz-toggled-already") === "true"){
             var oldsrc = el.oldsrc;
             el.oldsrc = el.src;
             el.src = oldsrc;

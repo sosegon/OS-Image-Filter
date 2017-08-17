@@ -348,6 +348,11 @@ var common = (function() {
   function drawImage(pixels, uuid, origin, width, height) {
     var data_url;
     var canvas = document.getElementById(uuid + "-canvas");
+    var img = $("img[wiz-uuid="+ uuid + "]")[0];
+
+    if(canvas === null || img === null) {
+      return;
+    }
 
     if(origin == "same") {
       var context = canvas.getContext("2d");
@@ -386,6 +391,7 @@ var common = (function() {
   function load_processed() {
     $(this).removeClass("wzmHide");
     $(this).attr("wzmProcessed", "true");
+    this.wzmProcessed = true;
     var uuid = $(this).attr("wiz-uuid");
     $("#" + uuid + "-canvas").remove();
   }
