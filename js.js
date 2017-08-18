@@ -17,7 +17,12 @@ var showAll = false,
     quotesRegex = /['"]/g;
 
 //keep track of contentLoaded
-window.addEventListener('DOMContentLoaded', function () { contentLoaded = true; });
+window.addEventListener('DOMContentLoaded', function () {
+    canvas_nacl = document.createElement('canvas');
+    canvas_nacl.setAttribute('id', 'wizimage_canvas');
+    document.body.appendChild(canvas_nacl);
+    contentLoaded = true; 
+});
 
 //start by seeing if is active or is paused etc.
 chrome.runtime.sendMessage({ r: 'getSettings' }, function (s) {
@@ -216,42 +221,76 @@ function DoWin(win, winContentLoaded) {
                 clearInterval(pollID);
         }, 10);
     }
+    function load_processed() {
+        $(this).removeClass("wzmHide");
+        $(this).attr("wzmProcessed", "true");
+        this.wzmProcessed = true;
+        var uuid = $(this).attr("wiz-uuid");
+        $("#" + uuid + "-canvas").remove();
+    }
+    function filter_rgba_array(rgba_arr) {
+        for(var i = 0; i < rgba_arr.length; i++) {
+            ri = i * 4 
+            gi = ri + 1
+            bi = gi + 1
+            ai = bi + 1
+
+            r = rgba_arr[ri];
+            g = rgba_arr[gi];
+            b = rgba_arr[bi];
+           
+            if(
+                (r > 95 && g > 40 && b > 20) &&
+                (Math.max(r, g, b) - Math.min(r, g, b) > 15) &&
+                (Math.abs(r - g) > 15 && r > g && r > b)
+                ) {
+                rgba_arr[ri] = 127;
+                rgba_arr[gi] = 127;
+                rgba_arr[bi] = 127;
+                rgba_arr[ai] = 255;
+            }
+        }
+    }
+    function filterImageContent(canvas, img, uuid) {
+        canvas.setAttribute("width", img.width);
+        canvas.setAttribute("height", img.height);
+
+        var ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0); // at this point the img is loaded
+
+        var width       = img.width;
+        var height      = img.height;
+        var image_data  = ctx.getImageData(0, 0, width, height);
+        var rgba_arr    = image_data.data;
+
+        filter_rgba_array(rgba_arr);
+        image_data.data.set(rgba_arr);
+        ctx.putImageData(image_data, 0, 0)
+        data_url = canvas.toDataURL("image/png");
+
+        img_actual = $("img[wiz-uuid="+ uuid + "]")[0];
+        img_actual.src = data_url;
+        img_actual.onload = load_processed;
+    }
     function ProcessImage() {
-        if(isNaclModuleLoaded) {
+        //if(isNaclModuleLoaded) {
             var canvas = AddCanvasSibling(this);
             if(canvas) {
-                this.wzmProcessed = true;
-                canvas.setAttribute("width", this.width);
-                canvas.setAttribute("height", this.height);
+                //this.wzmProcessed = true;
                 var uuid = this.getAttribute("wiz-uuid")
-
                 try {
-                    var ctx = canvas.getContext("2d");
-                    ctx.drawImage(this, 0, 0); // at this point the img is loaded
-                    var width     = this.width;
-                    var height    = this.height;
-                    var image_data = ctx.getImageData(0, 0, width, height);
-                    var src       = this.src;
-                    common.naclModule.postMessage({
-                        "message": "image",
-                        "uuid"   : uuid,
-                        "width"  : width,
-                        "height" : height,
-                        "origin" : "same",
-                        "data"   : image_data.data.buffer
-                    });
+                    filterImageContent(canvas, this, uuid);
                 } catch (err) {
                     var xhr = new XMLHttpRequest();
                     xhr.onload = function() {
                         var reader  = new FileReader();
-                        reader.uuid = this.uuid;
+                        reader.uuid = uuid;
                         reader.onloadend = function() {
                             var image         = new Image();
-                            image.crossOrigin = "Anonymous";
+                            image.crossOrigin = "anonymous";
                             image.src         = reader.result;
                             image.uuid        = this.uuid;
                             image.onload = function(){
-                                var uuid   = this.uuid;
                                 var width  = this.width;
                                 var height = this.height;
 
@@ -259,19 +298,7 @@ function DoWin(win, winContentLoaded) {
                                 canvas_global.setAttribute("width",  width );
                                 canvas_global.setAttribute("height", height);
 
-                                var ctx_global = canvas_global.getContext("2d");
-                                ctx_global.drawImage(this, 0, 0);
-
-                                var new_image_data = ctx_global.getImageData(0, 0, width, height);
-
-                                common.naclModule.postMessage({
-                                    "message": "image",
-                                    "uuid"   : uuid,
-                                    "width"  : width,
-                                    "height" : height,
-                                    "origin" : "other",
-                                    "data"   : new_image_data.data.buffer
-                                });
+                                filterImageContent(canvas_global, this, this.uuid);
                             };
                         }
                         reader.readAsDataURL(xhr.response);
@@ -279,12 +306,12 @@ function DoWin(win, winContentLoaded) {
                     xhr.open("GET", this.src);
                     xhr.responseType = "blob";
                     xhr.send();
-                    xhr.uuid = uuid;
                 }
 
                 DoLoadProcessImageListener(this, false);
+                DoLoadEventListener(this, false);
             }
-        }
+        //}
     }
     function AddCanvasSibling(el) {
         var uuid = el.getAttribute("wiz-uuid") + "-canvas";
