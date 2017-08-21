@@ -21,6 +21,12 @@ window.addEventListener('DOMContentLoaded', function () {
     canvas_nacl = document.createElement('canvas');
     canvas_nacl.setAttribute('id', 'wizimage_canvas');
     document.body.appendChild(canvas_nacl);
+
+    canvases_room = document.createElement('div');
+    canvases_room.setAttribute('id', 'wizimage_canvases_room');
+    document.body.appendChild(canvases_room);
+
+    document.body.appendChild
     contentLoaded = true; 
 });
 
@@ -269,58 +275,64 @@ function DoWin(win, winContentLoaded) {
         data_url = canvas.toDataURL("image/png");
 
         img_actual = $("img[wiz-uuid="+ uuid + "]")[0];
-        img_actual.src = data_url;
-        img_actual.onload = load_processed;
+        if(img_actual !== undefined) {
+            img_actual.src = data_url;
+            img_actual.srcset = '';
+            img_actual.onload = load_processed;
+        }
     }
     function ProcessImage() {
-        //if(isNaclModuleLoaded) {
-            var canvas = AddCanvasSibling(this);
-            if(canvas) {
-                //this.wzmProcessed = true;
-                var uuid = this.getAttribute("wiz-uuid")
-                try {
-                    filterImageContent(canvas, this, uuid);
-                } catch (err) {
-                    var xhr = new XMLHttpRequest();
-                    xhr.onload = function() {
-                        var reader  = new FileReader();
-                        reader.uuid = uuid;
-                        reader.onloadend = function() {
-                            var image         = new Image();
-                            image.crossOrigin = "anonymous";
-                            image.src         = reader.result;
-                            image.uuid        = this.uuid;
-                            image.onload = function(){
-                                var width  = this.width;
-                                var height = this.height;
 
-                                var canvas_global = document.getElementById("wizimage_canvas");
-                                canvas_global.setAttribute("width",  width );
-                                canvas_global.setAttribute("height", height);
+        var canvas = AddCanvasSibling(this);
+        if(canvas) {
+            this.wzmProcessed = true;
+            var uuid = this.getAttribute("wiz-uuid")
+            try {
+                filterImageContent(canvas, this, uuid);
+            } catch (err) {
+                var xhr = new XMLHttpRequest();
+                xhr.onload = function() {
+                    var reader  = new FileReader();
+                    reader.uuid = uuid;
+                    reader.onloadend = function() {
+                        var image         = new Image();
+                        image.crossOrigin = "anonymous";
+                        image.src         = reader.result;
+                        image.uuid        = this.uuid;
+                        image.onload = function(){
+                            var width  = this.width;
+                            var height = this.height;
 
-                                filterImageContent(canvas_global, this, this.uuid);
-                            };
-                        }
-                        reader.readAsDataURL(xhr.response);
-                    };
-                    xhr.open("GET", this.src);
-                    xhr.responseType = "blob";
-                    xhr.send();
-                }
+                            var canvas_global = document.getElementById("wizimage_canvas");
+                            canvas_global.setAttribute("width",  width );
+                            canvas_global.setAttribute("height", height);
 
-                DoLoadProcessImageListener(this, false);
-                DoLoadEventListener(this, false);
+                            filterImageContent(canvas_global, this, this.uuid);
+                        };
+                    }
+                    reader.readAsDataURL(xhr.response);
+                };
+                xhr.open("GET", this.src);
+                xhr.responseType = "blob";
+                xhr.send();
             }
-        //}
+
+            DoLoadProcessImageListener(this, false);
+            DoLoadEventListener(this, false);
+        }
     }
     function AddCanvasSibling(el) {
         var uuid = el.getAttribute("wiz-uuid") + "-canvas";
-        if(document.getElementById(uuid)) {
-            return;
+        while(document.getElementById(uuid)) {
+            uuid = el.getAttribute("wiz-uuid") + "-canvas";
         }
         var canvas = document.createElement("canvas");
         canvas.setAttribute("id", uuid);
-        el.parentNode.insertBefore(canvas, el.nextSibling);
+
+        var room = document.getElementById("wizimage_canvases_room");
+        room.appendChild(canvas);
+
+        //el.parentNode.insertBefore(canvas, el.nextSibling);
         AddClass(canvas, "wzmHide");
         return canvas;
     }
@@ -383,7 +395,7 @@ function DoWin(win, winContentLoaded) {
                     this.wzmHasTitleAndSizeSetup = true;
                 }
                 DoHidden(this, true);
-                //DoImgSrc(this, true);
+                DoImgSrc(this, true);
                 if (this.parentElement && this.parentElement.tagName == 'PICTURE') {
                     for (var i = 0; i < this.parentElement.childNodes.length; i++) {
                         var node = this.parentElement.childNodes[i];
@@ -448,7 +460,7 @@ function DoWin(win, winContentLoaded) {
     // Used to store the original src of the image
     function DoImgSrc(el, toggle) {
         if (toggle && $(el).attr("wiz-toggled-already") !== "true") {
-            console.log("DoImgSrc: " + el.src.slice(0, 80));
+            //console.log("DoImgSrc: " + el.src.slice(0, 80));
             el.oldsrc = el.src;
             el.oldsrcset = el.srcset;
             // Do not set to empty string, otherwise the processing
