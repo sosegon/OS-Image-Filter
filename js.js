@@ -233,6 +233,12 @@ function DoWin(win, winContentLoaded) {
         this.wzmProcessed = true;
         var uuid = $(this).attr("wiz-uuid");
         $("#" + uuid + "-canvas").remove();
+
+        if(this.wzmProcessed) { // already processed
+            DoWizmageBG(this, true); // Needed to enable eye icon in image
+            //DoImgSrc(this, true);
+            return;
+        } 
     }
     function filter_rgba_array(rgba_arr) {
         for(var i = 0; i < rgba_arr.length; i++) {
@@ -348,13 +354,6 @@ function DoWin(win, winContentLoaded) {
     function DoElement() {
         if (showAll) return;
         if (this.tagName == 'IMG') {
-            if(this.wzmProcessed) { // already processed
-                DoWizmageBG(this, true); // Needed to enable eye icon in image
-                DoImgSrc(this, true);
-                DoLoadProcessImageListener(this, false);
-                DoLoadEventListener(this, false);
-                return;
-            } 
 
             //console.log(this.src);
             //this.crossOrigin = "Anonymous"; // To process images from other domains
@@ -459,7 +458,7 @@ function DoWin(win, winContentLoaded) {
     }
     // Used to store the original src of the image
     function DoImgSrc(el, toggle) {
-        if (toggle && $(el).attr("wiz-toggled-already") !== "true") {
+        if (toggle && !$(el).attr("wiz-toggled-already")) {
             //console.log("DoImgSrc: " + el.src.slice(0, 80));
             el.oldsrc = el.src;
             el.oldsrcset = el.srcset;
@@ -469,7 +468,7 @@ function DoWin(win, winContentLoaded) {
             el.srcset = ''; // empty string to make sure filtered images are displayed in the img elements
             $(el).attr("wiz-toggled-already", "true")
         }
-        else if ($(el).attr("wiz-toggled-already") === "true"){
+        else if (!toggle && $(el).attr("wiz-toggled-already") === "true"){
             var oldsrc = el.oldsrc;
             el.oldsrc = el.src;
             el.src = oldsrc;
