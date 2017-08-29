@@ -16,6 +16,14 @@ var showAll = false,
     settings = null,
     quotesRegex = /['"]/g;
 
+function inIframe () {
+    try {
+        return window.self !== window.top;
+    } catch (e) {
+        return true;
+    }
+}
+
 //keep track of contentLoaded
 window.addEventListener('DOMContentLoaded', function () {
     canvas_nacl = document.createElement('canvas');
@@ -26,9 +34,33 @@ window.addEventListener('DOMContentLoaded', function () {
     canvases_room.setAttribute('id', 'wizimage_canvases_room');
     document.body.appendChild(canvases_room);
 
-    document.body.appendChild
+    var paypal_div = document.getElementById("wizimage_paypal_donation");
+    if((paypal_div == null || paypal_div == undefined) && inIframe() === false) {
+
+        // Paypal donation
+        var htmlText = 
+                    '<div style="text-align: center">' + 
+                        'Please support further development of this extension. 100% of your donation will be used for development.' +
+                    '</div><br/>' + 
+                    '<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top" style="margin: 0 auto; width: 0">' +
+                        '<input type="hidden" name="cmd" value="_s-xclick">' +
+                        '<input type="hidden" name="hosted_button_id" value="KE9PLAN32JWS2">' +
+                        '<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">' +
+                        '<img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">' +
+                    '</form>'
+
+        paypal_div = document.createElement('div');
+        paypal_div.setAttribute('id', 'wizimage_paypal_donation');
+        paypal_div.innerHTML = htmlText;
+        paypal_div.className += ' ' + 'wzmPaypalDonation';
+        document.body.appendChild(paypal_div);
+        console.log("paypal donation");
+    }
+
     contentLoaded = true; 
 });
+
+
 
 //start by seeing if is active or is paused etc.
 chrome.runtime.sendMessage({ r: 'getSettings' }, function (s) {
@@ -87,6 +119,7 @@ function DoWin(win, winContentLoaded) {
             AddHeadStyle('body ', '{background-image: none !important;}');
             AddHeadStyle('.wzmHide', '{opacity: 0 !important;}');
             AddHeadStyle('.wzmPatternBgImg', '{ background-repeat: repeat !important;text-indent:0 !important;}'); //text-indent to show alt text
+            AddHeadStyle('.wzmPaypalDonation', '{position: fixed; left: 0px; bottom: 0px; width: 100%; z-index: 9000; background: #d09327}');
             for (var i = 0; i < 8; i++) {
                 AddHeadStyle('.wzmPatternBgImg.wzmShade' + i, '{background-image: ' + (settings.isNoPattern ? 'none' : 'url(' + extensionUrl + "pattern" + i + ".png" + ')') + ' !important; }');
                 AddHeadStyle('.wzmPatternBgImg.wzmPatternBgImgLight.wzmShade' + i, '{background-image: ' + (settings.isNoPattern ? 'none' : 'url(' + extensionUrl + "pattern-light" + i + ".png" + ')') + ' !important; }');
