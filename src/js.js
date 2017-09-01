@@ -26,16 +26,12 @@ function inIframe () {
 
 //keep track of contentLoaded
 window.addEventListener('DOMContentLoaded', function () {
-    canvas_nacl = document.createElement('canvas');
-    canvas_nacl.setAttribute('id', 'wizimage_canvas');
-    document.body.appendChild(canvas_nacl);
-    $('#wizimage_canvas').css({
-        'display': 'none',
-    });
-
     canvases_room = document.createElement('div');
     canvases_room.setAttribute('id', 'wizimage_canvases_room');
     document.body.appendChild(canvases_room);
+    $('#wizimage_canvases_room').css({
+        'display': 'none',
+    });
 
     var paypal_div = document.getElementById("wizimage_paypal_donation");
     if((paypal_div == null || paypal_div == undefined) && inIframe() === false) {
