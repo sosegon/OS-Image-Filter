@@ -29,6 +29,9 @@ window.addEventListener('DOMContentLoaded', function () {
     canvas_nacl = document.createElement('canvas');
     canvas_nacl.setAttribute('id', 'wizimage_canvas');
     document.body.appendChild(canvas_nacl);
+    $('#wizimage_canvas').css({
+        'display': 'none',
+    });
 
     canvases_room = document.createElement('div');
     canvases_room.setAttribute('id', 'wizimage_canvases_room');
@@ -119,7 +122,7 @@ function DoWin(win, winContentLoaded) {
             AddHeadStyle('body ', '{background-image: none !important;}');
             AddHeadStyle('.wzmHide', '{opacity: 0 !important;}');
             AddHeadStyle('.wzmPatternBgImg', '{ background-repeat: repeat !important;text-indent:0 !important;}'); //text-indent to show alt text
-            AddHeadStyle('.wzmPaypalDonation', '{position: fixed; left: 0px; bottom: 0px; width: 100%; z-index: 9000; background: #d09327}');
+            AddHeadStyle('.wzmPaypalDonation', '{left: 0px; bottom: 0px; width: 100%; z-index: 9000; background: #d09327}');
             for (var i = 0; i < 8; i++) {
                 AddHeadStyle('.wzmPatternBgImg.wzmShade' + i, '{background-image: ' + (settings.isNoPattern ? 'none' : 'url(' + extensionUrl + "pattern" + i + ".png" + ')') + ' !important; }');
                 AddHeadStyle('.wzmPatternBgImg.wzmPatternBgImgLight.wzmShade' + i, '{background-image: ' + (settings.isNoPattern ? 'none' : 'url(' + extensionUrl + "pattern-light" + i + ".png" + ')') + ' !important; }');
