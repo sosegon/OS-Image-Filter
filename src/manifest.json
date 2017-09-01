@@ -1,9 +1,9 @@
 {
-    "name":"Wizmage Image Blocker",
-    "short_name":"Wizmage",
-    "version":"2.6.13",
+    "name":"OS Image Filter",
+    "short_name":"OSIMAGEFILTER",
+    "version":"3.3",
     "manifest_version": 2,
-    "description": "An image blocker that will hide images in a way that minimizes the impact on the user's browsing experience.",
+    "description": "This extension filters images by analyzing their pixels, those within the human skin range are replaced by a grayscale tone",
     "icons":{"16":"icon16.png","48": "icon48.png","128": "icon128.png" },
     "browser_action": {
         "default_icon": "icon-d.png",
