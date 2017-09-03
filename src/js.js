@@ -26,6 +26,13 @@ function inIframe () {
 
 //keep track of contentLoaded
 window.addEventListener('DOMContentLoaded', function () {
+    canvas_global = document.createElement('canvas');
+    canvas_global.setAttribute('id', 'wizimage_canvas');
+    document.body.appendChild(canvas_global);
+    $('#wizimage_canvas').css({
+        'display': 'none',
+    });
+
     canvases_room = document.createElement('div');
     canvases_room.setAttribute('id', 'wizimage_canvases_room');
     document.body.appendChild(canvases_room);
