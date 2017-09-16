@@ -1,6 +1,7 @@
 # OS Image Filter
 
-Chrome extension to filter human skin in websites' images.
+Chrome extension to filter human skin in websites' images. It has been developed based on the chrome extension
+[Wizimage](https://chrome.google.com/webstore/detail/wizmage-image-hider/ifoggbfaoakkojipahnplnbfnhhhnmlp?hl=en).
 
 
 The extension filters images by analyzing their pixels, those within the human skin range are replaced by a grayscale tone.
@@ -20,6 +21,7 @@ set in the SRC attribute of a IMG node.
 
 The extension allows to see the original image by clicking in the eye icon shown when the mouse pointers hovers
 an IMG element.
+
 
 <img src="filtered_website.jpg" height="500"/>
 
