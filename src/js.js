@@ -368,17 +368,17 @@ function DoWin(win, winContentLoaded) {
     }
     function AddCanvasSibling(el) {
         var uuid = el.getAttribute("skfUUID") + "-canvas";
-        while(document.getElementById(uuid)) {
-            uuid = el.getAttribute("skfUUID") + "-canvas";
+        var canvas = document.getElementById(uuid);
+        
+        if(canvas === undefined || canvas === null) {
+            var canvas = document.createElement("canvas");
+            canvas.setAttribute("id", uuid);
+
+            var room = document.getElementById("skf_canvases_room");
+            room.appendChild(canvas);
+            //el.parentNode.insertBefore(canvas, el.nextSibling);
+            AddClass(canvas, "skfHide");
         }
-        var canvas = document.createElement("canvas");
-        canvas.setAttribute("id", uuid);
-
-        var room = document.getElementById("skf_canvases_room");
-        room.appendChild(canvas);
-
-        //el.parentNode.insertBefore(canvas, el.nextSibling);
-        AddClass(canvas, "skfHide");
         return canvas;
     }
     function DoLoadProcessImageListener(el, toggle) {
@@ -393,7 +393,6 @@ function DoWin(win, winContentLoaded) {
     function DoElement() {
         if (showAll) return;
         if (this.tagName == 'IMG') {
-
             //console.log(this.src);
             //this.crossOrigin = "Anonymous"; // To process images from other domains
             if(!$(this).hasClass("wiz-to-process")) {
