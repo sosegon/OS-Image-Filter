@@ -268,9 +268,9 @@ function DoWin(win, winContentLoaded) {
     }
     function load_processed() {
         $(this).removeClass("skfHide");
-        $(this).attr("skfProcessed", "true");
+        $(this).attr("skf-processed", "true");
         this.skfProcessed = true;
-        var uuid = $(this).attr("skfUUID");
+        var uuid = $(this).attr("skf-uuid");
         $("#" + uuid + "-canvas").remove();
 
         if(this.skfProcessed) { // already processed
@@ -319,7 +319,7 @@ function DoWin(win, winContentLoaded) {
         ctx.putImageData(image_data, 0, 0)
         data_url = canvas.toDataURL("image/png");
 
-        img_actual = $("img[skfUUID="+ uuid + "]")[0];
+        img_actual = $("img[skf-uuid="+ uuid + "]")[0];
         if(img_actual !== undefined) {
             img_actual.src = data_url;
             img_actual.srcset = '';
@@ -331,7 +331,7 @@ function DoWin(win, winContentLoaded) {
         var canvas = AddCanvasSibling(this);
         if(canvas) {
             this.skfProcessed = true;
-            var uuid = this.getAttribute("skfUUID")
+            var uuid = this.getAttribute("skf-uuid")
             try {
                 filterImageContent(canvas, this, uuid);
             } catch (err) {
@@ -367,7 +367,7 @@ function DoWin(win, winContentLoaded) {
         }
     }
     function AddCanvasSibling(el) {
-        var uuid = el.getAttribute("skfUUID") + "-canvas";
+        var uuid = el.getAttribute("skf-uuid") + "-canvas";
         var canvas = document.getElementById(uuid);
         
         if(canvas === undefined || canvas === null) {
@@ -726,8 +726,8 @@ function DoWin(win, winContentLoaded) {
         el.className += ' ' + c;
     }
     function AddRandomWizId(el) {
-        if($(el).attr("skfUUID") == null) {
-            $(el).attr("skfUUID", guid());
+        if($(el).attr("skf-uuid") == null) {
+            $(el).attr("skf-uuid", guid());
         }
     }
     // from https://stackoverflow.com/a/105074/1065981
