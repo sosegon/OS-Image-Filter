@@ -47,5 +47,12 @@ chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     document.getElementById('report').onclick = function () {
         chrome.tabs.create({ url: "https://chrome.google.com/webstore/support/ifoggbfaoakkojipahnplnbfnhhhnmlp?hl=en&gl=IL#bug" });
     };
+    document.getElementById('support').onclick = function () {
+        var advice = document.getElementById('collaborate');
+        advice.style.display = advice.style.display == 'block' ? 'none' : 'block';
+    };
+    document.getElementById('donate').onclick = function () {
+        chrome.tabs.create({ url: "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=KE9PLAN32JWS2" });
+    };
 });
 document.getElementById('close').onclick = function () { close(); };

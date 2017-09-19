@@ -12,9 +12,17 @@
         #close { float: right; border: 1px solid; border-radius: 2px; font-weight: bold; font-size: 10px; color: black; cursor: pointer; padding: 0 2px; }
             #close:hover { color: #555; }
         a { cursor: pointer; text-decoration: underline; }
-        #still-seeing-images { font-size: 10px; }
+        #still-seeing-images, #support { font-size: 10px; }
         #advice { display: none; padding-left: 20px; }
-            #advice > li { margin-bottom: 5px; }
+            #advice > li{ margin-bottom: 5px}
+        #collaborate { display: none; padding-left: 0px; }
+            #collaborate > li{ margin-bottom: 5px; list-style-type: none}
+            #donate { 
+                display: block; 
+                width: 147px;
+                height: 47px;
+                background-image: url('https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif')
+            }
         #exclude-tab-wrap { display: none; }
     </style>
 </head>
@@ -52,6 +60,12 @@
             <ul id="advice">
                 <li><a id="block-flash">Block Flash</a></li>
                 <li><a id="report">Report the problem</a></li>
+            </ul>
+        </div>
+        <div class="item">
+            <div><a id="support">Support this extension?</a></div>
+            <ul id="collaborate">
+                <li><a id="donate"></a></li>
             </ul>
         </div>
     </div>
