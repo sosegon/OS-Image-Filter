@@ -45,7 +45,7 @@ chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
         chrome.tabs.create({ url: "chrome://settings/content#handlers-section" });
     };
     document.getElementById('report').onclick = function () {
-        chrome.tabs.create({ url: "https://chrome.google.com/webstore/support/ifoggbfaoakkojipahnplnbfnhhhnmlp?hl=en&gl=IL#bug" });
+        chrome.tabs.create({ url: "https://chrome.google.com/webstore/detail/os-image-filter/digkbjcglmbbipijiogdeegbfbepgdon?hl=en&gl=IL#bug" });
     };
     document.getElementById('support').onclick = function () {
         var advice = document.getElementById('collaborate');
