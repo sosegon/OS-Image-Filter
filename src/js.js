@@ -411,8 +411,8 @@ function DoWin(win, winContentLoaded) {
                 if (this.parentElement && this.parentElement.tagName == 'PICTURE') {
                     for (var i = 0; i < this.parentElement.childNodes.length; i++) {
                         var node = this.parentElement.childNodes[i];
-                        //if (node.tagName == 'SOURCE')
-                            //DoImgSrc(node, true);
+                        if (node.tagName == 'SOURCE')
+                            DoImgSrc(node, true);
                     }
                 }
                 //this.src = blankImg;
