@@ -255,7 +255,7 @@ function DoWin(win, winContentLoaded) {
         } 
     }
     function filter_rgba_array(rgba_arr) {
-        for(var i = 0; i < rgba_arr.length * 4; i+=4) {
+        for(var i = 0; i < rgba_arr.length; i+=4) {
             rIndex = i
             gIndex = i + 1
             bIndex = i + 2
