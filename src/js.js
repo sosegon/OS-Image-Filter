@@ -255,25 +255,25 @@ function DoWin(win, winContentLoaded) {
         } 
     }
     function filter_rgba_array(rgba_arr) {
-        for(var i = 0; i < rgba_arr.length; i++) {
-            ri = i * 4 
-            gi = ri + 1
-            bi = gi + 1
-            ai = bi + 1
+        for(var i = 0; i < rgba_arr.length * 4; i+=4) {
+            rIndex = i
+            gIndex = i + 1
+            bIndex = i + 2
+            aIndex = i + 3
 
-            r = rgba_arr[ri];
-            g = rgba_arr[gi];
-            b = rgba_arr[bi];
+            r = rgba_arr[rIndex];
+            g = rgba_arr[gIndex];
+            b = rgba_arr[bIndex];
            
             if(
                 (r > 95 && g > 40 && b > 20) &&
                 (Math.max(r, g, b) - Math.min(r, g, b) > 15) &&
                 (Math.abs(r - g) > 15 && r > g && r > b)
                 ) {
-                rgba_arr[ri] = 127;
-                rgba_arr[gi] = 127;
-                rgba_arr[bi] = 127;
-                rgba_arr[ai] = 255;
+                rgba_arr[rIndex] = 127;
+                rgba_arr[gIndex] = 127;
+                rgba_arr[bIndex] = 127;
+                rgba_arr[aIndex] = 255;
             }
         }
     }
