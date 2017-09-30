@@ -17,6 +17,9 @@ $(function () {
     $noEye.click(function () {
         chrome.runtime.sendMessage({ r: 'setNoEye', toggle: this.checked });
     });
+    $noEye.click(function () {
+        chrome.runtime.sendMessage({ r: 'setNoFaceFeatures', toggle: this.checked });
+    });
     $whiteList.click(function () {
         chrome.runtime.sendMessage({ r: 'setBlackList', toggle: false });
     });

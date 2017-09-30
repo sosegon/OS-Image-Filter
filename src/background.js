@@ -112,6 +112,10 @@ chrome.runtime.onMessage.addListener(
                 isNoEye = request.toggle;
                 localStorage.isNoEye = isNoEye ? 1 : 0;
                 break;
+            case 'setNoFaceFeatures':
+                isNoFaceFeatures = request.toggle;
+                localStorage.isNoFaceFeatures = isNoFaceFeatures ? 1 : 0;
+                break;
             case 'setBlackList':
                 isBlackList = request.toggle;
                 localStorage.isBlackList = isBlackList ? 1 : 0;

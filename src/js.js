@@ -254,6 +254,7 @@ function DoWin(win, winContentLoaded) {
             return;
         } 
     }
+    // TODO: Implement option to remove face features. Convex hull or flooding may work.
     function filter_rgba_array(rgba_arr) {
         for(var i = 0; i < rgba_arr.length; i+=4) {
             rIndex = i
