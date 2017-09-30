@@ -301,8 +301,31 @@ function DoWin(win, winContentLoaded) {
             img_actual.onload = load_processed;
         }
     }
-    function ProcessImage() {
+     function FilterBackgroundImageContent(canvas, img, uuid) {
+        canvas.setAttribute("width", img.width);
+        canvas.setAttribute("height", img.height);
 
+        var ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0); // at this point the img is loaded
+
+        var width       = img.width;
+        var height      = img.height;
+        var imageData   = ctx.getImageData(0, 0, width, height);
+        var rgbaArr    = imageData.data;
+
+        filter_rgba_array(rgbaArr);
+        imageData.data.set(rgbaArr);
+        ctx.putImageData(imageData, 0, 0)
+        base64Img = canvas.toDataURL("image/png");
+        newBkgImgUrl = "url('"+ base64Img +"')";
+
+        actualEl = $("[skf-uuid="+ uuid + "]")[0];
+        if(actualEl !== undefined) {
+            $(actualEl).css("background-image", newBkgImgUrl);
+            actualEl.skfProcessed = true;
+        }
+    }
+    function ProcessImage() {
         var canvas = AddCanvasSibling(this);
         if(canvas) {
             this.skfProcessed = true;
@@ -341,6 +364,33 @@ function DoWin(win, winContentLoaded) {
             DoLoadEventListener(this, false);
         }
     }
+    function ProcessBkgImage(el, bkgImage, width, height, uuid) {
+        var xhr = new XMLHttpRequest();
+        xhr.onload = function() {
+            var reader  = new FileReader();
+            reader.uuid = uuid;
+            reader.onloadend = function() {
+                var image         = new Image();
+                image.crossOrigin = "anonymous";
+                image.src         = reader.result;
+                image.uuid        = this.uuid;
+                image.onload = function(){
+                    // var width  = this.width;
+                    // var height = this.height;
+
+                    var canvasGlobal = document.getElementById("skf_canvas");
+                    canvasGlobal.setAttribute("width",  width );
+                    canvasGlobal.setAttribute("height", height);
+
+                    FilterBackgroundImageContent(canvasGlobal, this, uuid);
+                };
+            }
+            reader.readAsDataURL(xhr.response);
+        };
+        xhr.open("GET", bkgImage);
+        xhr.responseType = "blob";
+        xhr.send();
+    }
     function AddCanvasSibling(el) {
         var uuid = el.getAttribute("skf-uuid") + "-canvas";
         var canvas = document.getElementById(uuid);
@@ -371,7 +421,7 @@ function DoWin(win, winContentLoaded) {
             //console.log(this.src);
             //this.crossOrigin = "Anonymous"; // To process images from other domains
             if(!$(this).hasClass("wiz-to-process")) {
-                AddRandomWizId(this);
+                AddRandomWizUuid(this);
                 AddClass(this, "wiz-to-process") // class used to trigger the load event once Nacl module is loaded
                 AddAsSuspect(this);
             }
@@ -419,32 +469,44 @@ function DoWin(win, winContentLoaded) {
             } else { //small image
                 DoHidden(this, false);
             }
-        }
+        // }
         // else if (this.tagName == 'VIDEO') {
         //     AddAsSuspect(this);
         //     DoHidden(this, true);
         //     DoSkifImageBG(this, true);
-        // } else {
-        //     var compStyle = getComputedStyle(this), bgimg = compStyle['background-image'], width = parseInt(compStyle['width']) || this.clientWidth, height = parseInt(compStyle['height']) || this.clientHeight; //as per https://developer.mozilla.org/en/docs/Web/API/window.getComputedStyle, getComputedStyle will return the 'used values' for width and height, which is always in px. We also use clientXXX, since sometimes compStyle returns NaN.
-        //     if (bgimg != 'none' && (width == 0 || width > settings.maxSafe) && (height == 0 || height > settings.maxSafe) we need to catch 0 too, as sometimes elements start off as zero
-        //             && bgimg.indexOf('url(') != -1
-        //             && !bgimg.startsWith(urlExtensionUrl) && bgimg != urlBlankImg
-        //             ) {
-        //         AddAsSuspect(this);
-        //         DoSkifImageBG(this, true);
-        //         DoMouseEventListeners(this, true);
-        //         if (this.skfLastCheckedSrc != bgimg) {
-        //             this.skfLastCheckedSrc = bgimg;
-        //             var i = new Image();
-        //             i.owner = this;
-        //             i.onload = CheckBgImg;
-        //             var urlMatch = /\burl\(["']?(.*?)["']?\)/.exec(bgimg);
-        //             if (urlMatch)
-        //                 i.src = urlMatch[1];
-        //         }
-        //         this.skfBeenBlocked = true;
-        //     }
-        // }
+        } else {
+            var compStyle = getComputedStyle(this), 
+                    bgImg = compStyle['background-image'], 
+                    width = parseInt(compStyle['width']) || this.clientWidth, 
+                    height = parseInt(compStyle['height']) || this.clientHeight; //as per https://developer.mozilla.org/en/docs/Web/API/window.getComputedStyle, getComputedStyle will return the 'used values' for width and height, which is always in px. We also use clientXXX, since sometimes compStyle returns NaN.
+
+            if (bgImg != 'none' && (width == 0 || width > settings.maxSafe) && (height == 0 || height > settings.maxSafe) //we need to catch 0 too, as sometimes elements start off as zero
+                    && bgImg.indexOf('url(') != -1
+                    && !bgImg.startsWith(urlExtensionUrl) && bgImg != urlBlankImg
+                    && !this.skfProcessed
+                    ) {
+                
+                var bgImgUrl = bgImg.slice(5, -2); // Used to fetch image with xhr
+                $(this).css("background-image", "url('')"); // Avoids quick display of original image
+                AddRandomWizUuid(this); // to reference the element once the image is processed
+                var uuid = $(this).attr("skf-uuid");
+                ProcessBkgImage(this, bgImgUrl, width, height, uuid);
+
+                AddAsSuspect(this);
+                DoSkifImageBG(this, true);
+                DoMouseEventListeners(this, true);
+                if (this.skfLastCheckedSrc != bgImg) {
+                    this.skfLastCheckedSrc = bgImg;
+                    var i = new Image();
+                    i.owner = this;
+                    i.onload = CheckBgImg;
+                    var urlMatch = /\burl\(["']?(.*?)["']?\)/.exec(bgImg);
+                    if (urlMatch)
+                        i.src = urlMatch[1];
+                }
+                this.skfBeenBlocked = true;
+            }
+        }
     }
     function CheckBgImg() {
         if (this.height <= settings.maxSafe || this.width <= settings.maxSafe) ShowEl.call(this.owner);
@@ -700,7 +762,7 @@ function DoWin(win, winContentLoaded) {
     function AddClass(el, c) {
         el.className += ' ' + c;
     }
-    function AddRandomWizId(el) {
+    function AddRandomWizUuid(el) {
         if($(el).attr("skf-uuid") == null) {
             $(el).attr("skf-uuid", guid());
         }
