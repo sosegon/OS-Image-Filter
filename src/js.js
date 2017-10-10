@@ -268,7 +268,7 @@ function DoWin(win, winContentLoaded) {
            
             if(
                 (r > 95 && g > 40 && b > 20) &&
-                (Math.max(r, g, b) - Math.min(r, g, b) > 15) &&
+                (r - Math.min(r, g, b) > 15) &&
                 (Math.abs(r - g) > 15 && r > g && r > b)
                 ) {
                 rgba_arr[rIndex] = 127;
