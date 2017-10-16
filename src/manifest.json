@@ -26,8 +26,6 @@
         "<all_urls>"
     ],
     "web_accessible_resources": [
-        "pattern0.png", "pattern1.png", "pattern2.png", "pattern3.png", "pattern4.png", "pattern5.png", "pattern6.png", "pattern7.png", 
-        "pattern-light0.png", "pattern-light1.png", "pattern-light2.png", "pattern-light3.png", "pattern-light4.png", "pattern-light5.png", "pattern-light6.png", "pattern-light7.png", 
-        "eye.png", "undo.png", "clang-newlib/*/*"
+        "eye.png", "undo.png"
     ]
 }
