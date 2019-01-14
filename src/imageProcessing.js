@@ -46,7 +46,7 @@ function filterImageElement(canvas, imgElement, uuid) {
     context.putImageData(imageData, 0, 0);
     const urlData = canvas.toDataURL('image/png');
 
-    const actualImg = $("img[skf-uuid=" + uuid + "]")[0];
+    const actualImg = $("img[" + ATTR_UUID + "=" + uuid + "]")[0];
     if (actualImg !== undefined) {
         actualImg.src = urlData;
         actualImg.srcset = '';
@@ -73,23 +73,23 @@ function filterBackgroundImageContent(canvas, imgElement, uuid) {
     const base64Img = canvas.toDataURL("image/png");
     const newBkgImgUrl = "url('" + base64Img + "')";
 
-    const actualEl = $("[skf-uuid=" + uuid + "]")[0];
+    const actualEl = $("[" + ATTR_UUID + "=" + uuid + "]")[0];
     if (actualEl !== undefined) {
         $(actualEl).css("background-image", newBkgImgUrl);
-        actualEl.skfProcessed = true;
+        actualEl[ATTR_PROCESSED] = true;
     }
 }
 
 // Sets attributes and styles for elements
 // which images have been already processed
 function LoadProcessed() {
-    $(this).removeClass("skfHide");
-    $(this).attr("skf-processed", "true");
-    this.skfProcessed = true;
-    const uuid = $(this).attr("skf-uuid");
+    $(this).removeClass(CSS_CLASS_HIDE);
+    $(this).attr(ATTR_PROCESSED, "true");
+    this[ATTR_PROCESSED] = true;
+    const uuid = $(this).attr(ATTR_UUID);
     $("#" + uuid + "-canvas").remove();
 
-    if (this.skfProcessed) { // already processed
+    if (this[ATTR_PROCESSED]) { // already processed
         DoSkifImageBG(this, true); // Needed to enable eye icon in image
         //DoImgSrc(this, true);
         return;
@@ -97,14 +97,14 @@ function LoadProcessed() {
 }
 
 function DoSkifImageBG(el, toggle) {
-    if (toggle && !el.skfHasWizmageBG) {
+    if (toggle && !el[ATTR_HAS_BACKGROUND_IMAGE]) {
         // var shade = Math.floor(Math.random() * 8);
         // el.skfShade = shade;
         // AddClass(el, 'skfPatternBgImg skfShade' + shade);
-        el.skfHasWizmageBG = true;
-    } else if (!toggle && el.skfHasWizmageBG) {
+        el[ATTR_HAS_BACKGROUND_IMAGE] = true;
+    } else if (!toggle && el[ATTR_HAS_BACKGROUND_IMAGE]) {
         // RemoveClass(el, 'skfPatternBgImg');
         // RemoveClass(el, 'skfShade' + el.skfShade);
-        el.skfHasWizmageBG = false;
+        el[ATTR_HAS_BACKGROUND_IMAGE] = false;
     }
 }

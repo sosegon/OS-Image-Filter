@@ -45,16 +45,16 @@ function inIframe() {
 // to process images fetched directly.
 window.addEventListener('DOMContentLoaded', function() {
     canvas_global = document.createElement('canvas');
-    canvas_global.setAttribute('id', 'skf_canvas');
+    canvas_global.setAttribute('id', CANVAS_GLOBAL_ID);
     document.body.appendChild(canvas_global);
-    $('#skf_canvas').css({
+    $('#' + CANVAS_GLOBAL_ID).css({
         'display': 'none',
     });
 
     canvases_room = document.createElement('div');
-    canvases_room.setAttribute('id', 'skf_canvases_room');
+    canvases_room.setAttribute('id', CANVAS_CONTAINER_ID);
     document.body.appendChild(canvases_room);
-    $('#skf_canvases_room').css({
+    $('#' + CANVAS_CONTAINER_ID).css({
         'display': 'none',
     });
 
@@ -152,12 +152,12 @@ function DoWin(win, winContentLoaded) {
             if (!hasStarted) AddHeadStyle('body', '{opacity: 0 !important; }');
 
             AddHeadStyle('body ', '{background-image: none !important;}');
-            AddHeadStyle('.skfHide', '{opacity: 0 !important;}');
-            AddHeadStyle('.skfPatternBgImg', '{ background-repeat: repeat !important;text-indent:0 !important;}'); //text-indent to show alt text
-            AddHeadStyle('.skfPaypalDonation', '{left: 0px; bottom: 0px; width: 100%; z-index: 9000; background: #d09327}');
+            AddHeadStyle('.' + CSS_CLASS_HIDE, '{opacity: 0 !important;}');
+            AddHeadStyle('.' + CSS_CLASS_BACKGROUND_PATTERN, '{ background-repeat: repeat !important;text-indent:0 !important;}'); //text-indent to show alt text
+            AddHeadStyle('.' + CSS_CLASS_PAYPAL_DONATION, '{left: 0px; bottom: 0px; width: 100%; z-index: 9000; background: #d09327}');
             for (var i = 0; i < 8; i++) {
-                AddHeadStyle('.skfPatternBgImg.skfShade' + i, '{background-image: ' + (settings.isNoPattern ? 'none' : 'url(' + extensionUrl + "pattern" + i + ".png" + ')') + ' !important; }');
-                AddHeadStyle('.skfPatternBgImg.skfPatternBgImgLight.skfShade' + i, '{background-image: ' + (settings.isNoPattern ? 'none' : 'url(' + extensionUrl + "pattern-light" + i + ".png" + ')') + ' !important; }');
+                AddHeadStyle('.' + CSS_CLASS_BACKGROUND_PATTERN + '.' + CSS_CLASS_SHADE + i, '{background-image: ' + (settings.isNoPattern ? 'none' : 'url(' + extensionUrl + "pattern" + i + ".png" + ')') + ' !important; }');
+                AddHeadStyle('.' + CSS_CLASS_BACKGROUND_PATTERN + '.' + CSS_CLASS_BACKGROUND_LIGHT_PATTERN + '.' + CSS_CLASS_SHADE + i, '{background-image: ' + (settings.isNoPattern ? 'none' : 'url(' + extensionUrl + "pattern-light" + i + ".png" + ')') + ' !important; }');
             }
             clearInterval(pollID);
         }
@@ -185,10 +185,10 @@ function DoWin(win, winContentLoaded) {
             chrome.runtime.sendMessage({ r: 'pause', toggle: true });
             ShowImages();
         } else if (mouseOverEl && e.altKey) {
-            if (e.keyCode == 65 && mouseOverEl.skfHasWizmageBG) { //ALT-a
+            if (e.keyCode == 65 && mouseOverEl[ATTR_HAS_BACKGROUND_IMAGE]) { //ALT-a
                 ShowEl.call(mouseOverEl);
                 eye.style.display = 'none';
-            } else if (e.keyCode == 90 && !mouseOverEl.skfHasWizmageBG) { //ALT-z
+            } else if (e.keyCode == 90 && !mouseOverEl[ATTR_HAS_BACKGROUND_IMAGE]) { //ALT-z
                 DoElement.call(mouseOverEl);
                 eye.style.display = 'none';
             }
@@ -247,7 +247,7 @@ function DoWin(win, winContentLoaded) {
             for (var i = 0; i < 8; i++) {
                 var div = doc.createElement('div');
                 div.style.opacity = div.style.width = div.style.height = 0;
-                div.className = 'skfPatternBgImg skfPatternBgImgLight skfShade' + i;
+                div.className = CSS_CLASS_BACKGROUND_PATTERN + ' ' + CSS_CLASS_BACKGROUND_LIGHT_PATTERN + ' ' + CSS_CLASS_SHADE + i;
                 doc.body.appendChild(div);
             }
         }
@@ -365,8 +365,8 @@ function DoWin(win, winContentLoaded) {
     function ProcessImage() {
         var canvas = AddCanvasSibling(this);
         if (canvas) {
-            this.skfProcessed = true;
-            var uuid = this.getAttribute("skf-uuid")
+            this[ATTR_PROCESSED] = true;
+            var uuid = this.getAttribute(ATTR_UUID)
             try {
                 filterImageElement(canvas, this, uuid);
             } catch (err) {
@@ -383,7 +383,7 @@ function DoWin(win, winContentLoaded) {
                             var width = this.width;
                             var height = this.height;
 
-                            var canvas_global = document.getElementById("skf_canvas");
+                            var canvas_global = document.getElementById(CANVAS_GLOBAL_ID);
                             canvas_global.setAttribute("width", width);
                             canvas_global.setAttribute("height", height);
 
@@ -420,7 +420,7 @@ function DoWin(win, winContentLoaded) {
                 image.uuid = this.uuid;
                 image.onload = function() {
 
-                    var canvasGlobal = document.getElementById("skf_canvas");
+                    var canvasGlobal = document.getElementById(CANVAS_GLOBAL_ID);
                     canvasGlobal.setAttribute("width", width);
                     canvasGlobal.setAttribute("height", height);
 
@@ -441,17 +441,17 @@ function DoWin(win, winContentLoaded) {
     // TODO: Use only the global canvas to
     // improve perfomance. Workers may be helpful
     function AddCanvasSibling(el) {
-        var uuid = el.getAttribute("skf-uuid") + "-canvas";
+        var uuid = el.getAttribute(ATTR_UUID) + "-canvas";
         var canvas = document.getElementById(uuid);
 
         if (canvas === undefined || canvas === null) {
             var canvas = document.createElement("canvas");
             canvas.setAttribute("id", uuid);
 
-            var room = document.getElementById("skf_canvases_room");
+            var room = document.getElementById(CANVAS_CONTAINER_ID);
             room.appendChild(canvas);
             //el.parentNode.insertBefore(canvas, el.nextSibling);
-            AddClass(canvas, "skfHide");
+            AddClass(canvas, CSS_CLASS_HIDE);
         }
         return canvas;
     }
@@ -459,12 +459,12 @@ function DoWin(win, winContentLoaded) {
     // Adds or removes the listener for a
     // load event in an IMG element
     function DoLoadProcessImageListener(el, toggle) {
-        if (toggle && !el.skfHasLoadProcessImageEventListener) {
+        if (toggle && !el[ATTR_HAS_PROCESS_IMAGE_LISTENER]) {
             el.addEventListener('load', ProcessImage);
-            el.skfHasLoadProcessImageEventListener = true;
-        } else if (!toggle && el.skfHasLoadProcessImageEventListener) {
+            el[ATTR_HAS_PROCESS_IMAGE_LISTENER] = true;
+        } else if (!toggle && el[ATTR_HAS_PROCESS_IMAGE_LISTENER]) {
             el.removeEventListener('load', ProcessImage);
-            el.skfHasLoadProcessImageEventListener = false;
+            el[ATTR_HAS_PROCESS_IMAGE_LISTENER] = false;
         }
     }
 
@@ -520,7 +520,7 @@ function DoWin(win, winContentLoaded) {
             if (this.src == blankImg) {
                 DoHidden(this, false);
                 DoSkifImageBG(this, true);
-                this.skfBeenBlocked = true;
+                this[ATTR_IS_BLOCKED] = true;
             }
 
             // Image greater than the dimensions
@@ -529,7 +529,7 @@ function DoWin(win, winContentLoaded) {
             // images start off as zero
             else if ((elWidth == 0 || elWidth > settings.maxSafe) && (elHeight == 0 || elHeight > settings.maxSafe)) {
                 DoMouseEventListeners(this, true);
-                if (!this.skfHasTitleAndSizeSetup) {
+                if (!this[ATTR_HAS_TITLE_AND_SIZE]) {
                     // this.style.width = elWidth + 'px';
                     // this.style.height = elHeight + 'px';
                     if (!this.title)
@@ -539,7 +539,7 @@ function DoWin(win, winContentLoaded) {
                             this.src.match(/([-\w]+)(\.[\w]+)?$/i);
                             this.title = RegExp.$1;
                         }
-                    this.skfHasTitleAndSizeSetup = true;
+                    this[ATTR_HAS_TITLE_AND_SIZE] = true;
                 }
                 DoHidden(this, true);
                 DoImgSrc(this, true);
@@ -582,7 +582,7 @@ function DoWin(win, winContentLoaded) {
             if (bgImg != 'none' && (width == 0 || width > settings.maxSafe) && (height == 0 || height > settings.maxSafe) &&
                 bgImg.indexOf('url(') != -1 &&
                 !bgImg.startsWith(urlExtensionUrl) && bgImg != urlBlankImg &&
-                !this.skfProcessed
+                !this[ATTR_PROCESSED]
             ) {
 
                 // Used to fetch image with xhr
@@ -591,14 +591,14 @@ function DoWin(win, winContentLoaded) {
                 $(this).css("background-image", "url('')");
                 // Reference for the element once the image is processed
                 AddRandomWizUuid(this);
-                var uuid = $(this).attr("skf-uuid");
+                var uuid = $(this).attr(ATTR_UUID);
                 ProcessBkgImage(this, bgImgUrl, width, height, uuid);
 
                 AddAsSuspect(this);
                 DoSkifImageBG(this, true);
                 DoMouseEventListeners(this, true);
-                if (this.skfLastCheckedSrc != bgImg) {
-                    this.skfLastCheckedSrc = bgImg;
+                if (this[ATTR_LAST_CHECKED_SRC] != bgImg) {
+                    this[ATTR_LAST_CHECKED_SRC] = bgImg;
                     var i = new Image();
                     i.owner = this;
                     i.onload = CheckBgImg;
@@ -606,7 +606,7 @@ function DoWin(win, winContentLoaded) {
                     if (urlMatch)
                         i.src = urlMatch[1];
                 }
-                this.skfBeenBlocked = true;
+                this[ATTR_IS_BLOCKED] = true;
             }
         }
     }
@@ -619,14 +619,14 @@ function DoWin(win, winContentLoaded) {
     function AddAsSuspect(el) {
         if (elList.indexOf(el) == -1) {
             elList.push(el);
-            el.skfRect = el.getBoundingClientRect();
+            el[ATTR_RECTANGLE] = el.getBoundingClientRect();
         }
     }
 
 
     // Stores the original src of the image
     function DoImgSrc(el, toggle) {
-        if (toggle && !$(el).attr("wiz-toggled-already")) {
+        if (toggle && !$(el).attr(ATTR_ALREADY_TOGGLED)) {
             //console.log("DoImgSrc: " + el.src.slice(0, 80));
             el.oldsrc = el.src;
             el.oldsrcset = el.srcset;
@@ -634,8 +634,8 @@ function DoWin(win, winContentLoaded) {
             // will result in an empty image
             //el.src = el.srcset = '';
             el.srcset = ''; // empty string to make sure filtered images are displayed in the img elements
-            $(el).attr("wiz-toggled-already", "true")
-        } else if (!toggle && $(el).attr("wiz-toggled-already") === "true") {
+            $(el).attr(ATTR_ALREADY_TOGGLED, "true")
+        } else if (!toggle && $(el).attr(ATTR_ALREADY_TOGGLED) === "true") {
             var oldsrc = el.oldsrc;
             el.oldsrc = el.src;
             el.src = oldsrc;
@@ -644,49 +644,50 @@ function DoWin(win, winContentLoaded) {
     }
     // Hides elements using styles
     function DoHidden(el, toggle) {
-        if (toggle && !el.skfHidden) {
-            AddClass(el, 'skfHide');
-            el.skfHidden = true;
-        } else if (!toggle && el.skfHidden) {
-            RemoveClass(el, 'skfHide');
-            el.skfHidden = false;
+        if (toggle && !el[ATTR_IS_HID]) {
+            AddClass(el, CSS_CLASS_HIDE);
+            el[ATTR_IS_HID] = true;
+        } else if (!toggle && el[ATTR_IS_HID]) {
+            RemoveClass(el, CSS_CLASS_HIDE);
+            el[ATTR_IS_HID] = false;
         }
     }
     // Adds / removes mouse event listeners
     function DoMouseEventListeners(el, toggle) {
-        if (toggle && !el.skfHasMouseEventListeners) {
+        if (toggle && !el[ATTR_HAS_MOUSE_LISTENERS]) {
             el.addEventListener('mouseover', mouseEntered);
             el.addEventListener('mouseout', mouseLeft);
-            el.skfHasMouseEventListeners = true;
-        } else if (!toggle && el.skfHasMouseEventListeners) {
+            el[ATTR_HAS_MOUSE_LISTENERS] = true;
+        } else if (!toggle && el[ATTR_HAS_MOUSE_LISTENERS]) {
             el.removeEventListener('mouseover', mouseEntered);
             el.removeEventListener('mouseout', mouseLeft);
-            el.skfHasMouseEventListeners = false;
+            el[ATTR_HAS_MOUSE_LISTENERS] = false;
         }
     }
     // Adds / removes the load event
     function DoLoadEventListener(el, toggle) {
-        if (toggle && !el.skfHasLoadEventListener) {
+        if (toggle && !el[ATTR_HAS_LOAD_LISTENER]) {
             el.addEventListener('load', DoElement);
-            el.skfHasLoadEventListener = true;
-        } else if (!toggle && el.skfHasLoadEventListener) {
+            el[ATTR_HAS_LOAD_LISTENER] = true;
+        } else if (!toggle && el[ATTR_HAS_LOAD_LISTENER]) {
             el.removeEventListener('load', DoElement);
-            el.skfHasLoadEventListener = false;
+            el[ATTR_HAS_LOAD_LISTENER] = false;
         }
     }
     // Contorls when the mouse pointer is over
     // an element
     function DoHover(el, toggle, evt) {
-        var coords = el.skfRect;
-        if (toggle && !el.skfHasHover) {
-            if (mouseOverEl && mouseOverEl != el)
+        var coords = el[ATTR_RECTANGLE];
+        if (toggle && !el[ATTR_HAS_HOVER]) {
+            if (mouseOverEl && mouseOverEl != el){
                 DoHover(mouseOverEl, false);
+            }
             mouseOverEl = el;
             DoHoverVisual(el, true, coords);
-            el.skfHasHover = true;
-        } else if (!toggle && el.skfHasHover && (!evt || !IsMouseIn(evt, coords))) {
+            el[ATTR_HAS_HOVER] = true;
+        } else if (!toggle && el[ATTR_HAS_HOVER] && (!evt || !IsMouseIn(evt, coords))) {
             DoHoverVisual(el, false, coords);
-            el.skfHasHover = false;
+            el[ATTR_HAS_HOVER] = false;
             if (el == mouseOverEl)
                 mouseOverEl = null;
         }
@@ -696,7 +697,7 @@ function DoWin(win, winContentLoaded) {
     // over the image hovered by the mouse
     // pointer
     function DoHoverVisual(el, toggle, coords) {
-        if (toggle && !el.skfHasHoverVisual && el.skfHasWizmageBG) {
+        if (toggle && !el[ATTR_HAS_HOVER_VISUAL] && el[ATTR_HAS_BACKGROUND_IMAGE]) {
             if (!settings.isNoEye) {
                 //eye
                 PositionEye(el, coords);
@@ -722,26 +723,26 @@ function DoWin(win, winContentLoaded) {
                 }
                 setupEye();
             } else
-                AddClass(el, 'skfPatternBgImgLight');
+                AddClass(el, CSS_CLASS_BACKGROUND_LIGHT_PATTERN);
             DoHoverVisualClearTimer(el, true);
-            el.skfHasHoverVisual = true;
-        } else if (!toggle && el.skfHasHoverVisual) {
+            el[ATTR_HAS_HOVER_VISUAL] = true;
+        } else if (!toggle && el[ATTR_HAS_HOVER_VISUAL]) {
             if (!settings.isNoEye)
                 eye.style.display = 'none';
             else
-                RemoveClass(el, 'skfPatternBgImgLight');
+                RemoveClass(el, CSS_CLASS_BACKGROUND_LIGHT_PATTERN);
             DoHoverVisualClearTimer(el, false);
-            el.skfHasHoverVisual = false;
+            el[ATTR_HAS_HOVER_VISUAL] = false;
         }
     }
 
     function DoHoverVisualClearTimer(el, toggle) {
         if (toggle) {
             DoHoverVisualClearTimer(el, false);
-            el.skfClearHoverVisualTimer = setTimeout(function() { DoHoverVisual(el, false); }, 2500);
-        } else if (!toggle && el.skfClearHoverVisualTimer) {
-            clearTimeout(el.skfClearHoverVisualTimer);
-            el.skfClearHoverVisualTimer = null;
+            el[ATTR_CLEAR_HOVER_VISUAL_TIMER] = setTimeout(function() { DoHoverVisual(el, false); }, 2500);
+        } else if (!toggle && el[ATTR_CLEAR_HOVER_VISUAL_TIMER]) {
+            clearTimeout(el[ATTR_CLEAR_HOVER_VISUAL_TIMER]);
+            el[ATTR_CLEAR_HOVER_VISUAL_TIMER] = null;
         }
     }
     // Positions the eye in the top right
@@ -757,7 +758,7 @@ function DoWin(win, winContentLoaded) {
     function UpdateElRects() {
         for (var i = 0, max = elList.length; i < max; i++) {
             var el = elList[i];
-            el.skfRect = el.getBoundingClientRect();
+            el[ATTR_RECTANGLE] = el.getBoundingClientRect();
         }
     }
 
@@ -766,11 +767,11 @@ function DoWin(win, winContentLoaded) {
         mouseMoved = false;
         //see if needs to defocus current
         if (mouseOverEl) {
-            var coords = mouseOverEl.skfRect;
+            var coords = mouseOverEl[ATTR_RECTANGLE];
             if (!IsMouseIn(mouseEvent, coords))
                 DoHover(mouseOverEl, false);
-            else if (mouseOverEl.skfHasWizmageBG) {
-                if (!mouseOverEl.skfHasHoverVisual)
+            else if (mouseOverEl[ATTR_HAS_BACKGROUND_IMAGE]) {
+                if (!mouseOverEl[ATTR_HAS_HOVER_VISUAL])
                     DoHoverVisual(mouseOverEl, true, coords);
                 else {
                     DoHoverVisualClearTimer(mouseOverEl, true);
@@ -781,21 +782,21 @@ function DoWin(win, winContentLoaded) {
         //find element under mouse
         var foundEl = mouseOverEl,
             found = false,
-            foundSize = foundEl ? foundEl.skfRect.width * foundEl.skfRect.height : null;
+            foundSize = foundEl ? foundEl[ATTR_RECTANGLE].width * foundEl[ATTR_RECTANGLE].height : null;
         for (var i = 0, max = elList.length; i < max; i++) {
             var el = elList[i];
             if (el == foundEl)
                 continue;
-            var rect = el.skfRect;
+            var rect = el[ATTR_RECTANGLE];
             if (IsMouseIn(mouseEvent, rect)) {
                 //If not foundEl yet, use this. Else if foundEl has not got skfBG, then if ours does, use it. Else if foundEl is bigger, use this.
                 var useThis = false;
                 if (!foundEl)
                     useThis = true;
-                else if (!foundEl.skfHasWizmageBG) {
-                    if (el.skfHasWizmageBG)
+                else if (!foundEl[ATTR_HAS_BACKGROUND_IMAGE]) {
+                    if (el[ATTR_HAS_BACKGROUND_IMAGE])
                         useThis = true;
-                } else if ((foundSize > rect.width * rect.height) && foundEl.skfHasWizmageBG == el.skfHasWizmageBG)
+                } else if ((foundSize > rect.width * rect.height) && foundEl[ATTR_HAS_BACKGROUND_IMAGE] == el[ATTR_HAS_BACKGROUND_IMAGE])
                     useThis = true;
                 if (useThis) {
                     foundEl = el;
@@ -804,7 +805,7 @@ function DoWin(win, winContentLoaded) {
                 }
             }
         }
-        if (found && (foundEl.skfHasWizmageBG || !mouseOverEl)) {
+        if (found && (foundEl[ATTR_HAS_BACKGROUND_IMAGE] || !mouseOverEl)) {
             DoHover(foundEl, true);
         }
     }
@@ -827,9 +828,9 @@ function DoWin(win, winContentLoaded) {
             }
         }
         DoSkifImageBG(this, false);
-        if (this.skfCheckTimeout) {
-            clearTimeout(this.skfCheckTimeout);
-            this.skfCheckTimeout = null;
+        if (this[ATTR_CHECK_TIMEOUT]) {
+            clearTimeout(this[ATTR_CHECK_TIMEOUT]);
+            this[ATTR_CHECK_TIMEOUT] = null;
         }
         if (showAll) {
             DoMouseEventListeners(this, false);
@@ -874,8 +875,8 @@ function DoWin(win, winContentLoaded) {
     }
 
     function AddRandomWizUuid(el) {
-        if ($(el).attr("skf-uuid") == null) {
-            $(el).attr("skf-uuid", guid());
+        if ($(el).attr(ATTR_UUID) == null) {
+            $(el).attr(ATTR_UUID, guid());
         }
     }
     // from https://stackoverflow.com/a/105074/1065981
