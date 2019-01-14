@@ -1,4 +1,5 @@
-var ul = localStorage.urlList, urlList = ul ? JSON.parse(ul) : [],
+var ul = localStorage.urlList,
+    urlList = ul ? JSON.parse(ul) : [],
     paused = localStorage.isPaused == 1,
     isNoPattern = localStorage.isNoPattern == 1,
     isNoEye = localStorage.isNoEye == 1,
@@ -7,15 +8,17 @@ var ul = localStorage.urlList, urlList = ul ? JSON.parse(ul) : [],
     pauseForTabList = [],
     domainRegex = /^\w+:\/\/([\w\.:-]+)/,
     maxSafe = +localStorage.maxSafe || 32;
+
 function getDomain(url) {
     var regex = domainRegex.exec(url);
     return regex ? regex[1].toLowerCase() : null;
 }
+
 function saveUrlList() {
     localStorage.urlList = JSON.stringify(urlList);
 }
 chrome.runtime.onMessage.addListener(
-    function (request, sender, sendResponse) {
+    function(request, sender, sendResponse) {
         switch (request.r) {
             case 'getSettings':
                 var settings = {
@@ -33,14 +36,12 @@ chrome.runtime.onMessage.addListener(
                         var domain = getDomain(tab.url);
                         if (domain) {
                             for (var i = 0; i < excludeForTabList.length; i++) {
-                                if (excludeForTabList[i].tabId == tab.id && excludeForTabList[i].domain == domain)
-                                { settings.isExcludedForTab = true; break; }
+                                if (excludeForTabList[i].tabId == tab.id && excludeForTabList[i].domain == domain) { settings.isExcludedForTab = true; break; }
                             }
                         }
                         var lowerUrl = tab.url.toLowerCase();
                         for (var i = 0; i < urlList.length; i++) {
-                            if (lowerUrl.indexOf(urlList[i]) != -1)
-                            { settings.isExcluded = true; break; }
+                            if (lowerUrl.indexOf(urlList[i]) != -1) { settings.isExcluded = true; break; }
                         }
                         if (isBlackList)
                             settings.isExcluded = !settings.isExcluded;
@@ -64,8 +65,10 @@ chrome.runtime.onMessage.addListener(
                 if (request.url) {
                     var lowerUrl = request.url.toLowerCase();
                     for (var i = 0; i < urlList.length; i++) {
-                        if (lowerUrl.indexOf(urlList[i]) != -1)
-                        { urlList.splice(i, 1); i--; }
+                        if (lowerUrl.indexOf(urlList[i]) != -1) {
+                            urlList.splice(i, 1);
+                            i--;
+                        }
                     }
                 } else
                     urlList.splice(request.index, 1);
@@ -85,11 +88,9 @@ chrome.runtime.onMessage.addListener(
                 if (!domain) return;
                 if (request.toggle) {
                     excludeForTabList.push({ tabId: request.tab.id, domain: domain });
-                }
-                else {
+                } else {
                     for (var i = 0; i < excludeForTabList.length; i++)
-                        if (excludeForTabList[i].tabId == request.tab.id && excludeForTabList[i].domain == domain)
-                        { excludeForTabList.splice(i, 1); break; }
+                        if (excludeForTabList[i].tabId == request.tab.id && excludeForTabList[i].domain == domain) { excludeForTabList.splice(i, 1); break; }
                 }
                 break;
             case 'pause':
@@ -101,8 +102,7 @@ chrome.runtime.onMessage.addListener(
                     pauseForTabList.push(request.tabId);
                 else
                     for (var i = 0; i < pauseForTabList.length; i++)
-                        if (pauseForTabList[i] == request.tabId)
-                        { pauseForTabList.splice(i, 1); break; }
+                        if (pauseForTabList[i] == request.tabId) { pauseForTabList.splice(i, 1); break; }
                 break;
             case 'setNoPattern':
                 isNoPattern = request.toggle;
@@ -136,7 +136,7 @@ chrome.runtime.onMessage.addListener(
 var accessControlRequestHeaders;
 var exposedHeaders;
 
-var requestListener = function(details){
+var requestListener = function(details) {
     var flag = false,
         rule = {
             name: "Origin",
@@ -151,20 +151,20 @@ var requestListener = function(details){
             break;
         }
     }
-    if(!flag) details.requestHeaders.push(rule);
-    
+    if (!flag) details.requestHeaders.push(rule);
+
     for (i = 0; i < details.requestHeaders.length; ++i) {
         if (details.requestHeaders[i].name.toLowerCase() === "access-control-request-headers") {
-            accessControlRequestHeaders = details.requestHeaders[i].value   
+            accessControlRequestHeaders = details.requestHeaders[i].value
         }
-    }   
-    
-    return {requestHeaders: details.requestHeaders};
+    }
+
+    return { requestHeaders: details.requestHeaders };
 };
 
-var responseListener = function(details){
+var responseListener = function(details) {
     var flag = false,
-    rule = {
+        rule = {
             "name": "Access-Control-Allow-Origin",
             "value": "*"
         };
@@ -176,36 +176,36 @@ var responseListener = function(details){
             break;
         }
     }
-    if(!flag) details.responseHeaders.push(rule);
+    if (!flag) details.responseHeaders.push(rule);
 
     console.log("Before if loop")
     if (accessControlRequestHeaders) {
 
-        details.responseHeaders.push({"name": "Access-Control-Allow-Headers", "value": accessControlRequestHeaders});
+        details.responseHeaders.push({ "name": "Access-Control-Allow-Headers", "value": accessControlRequestHeaders });
 
     }
 
-    if(exposedHeaders) {
-        details.responseHeaders.push({"name": "Access-Control-Expose-Headers", "value": exposedHeaders});
+    if (exposedHeaders) {
+        details.responseHeaders.push({ "name": "Access-Control-Expose-Headers", "value": exposedHeaders });
     }
 
-    details.responseHeaders.push({"name": "Access-Control-Allow-Methods", "value": "GET, PUT, POST, DELETE, HEAD, OPTIONS"});
+    details.responseHeaders.push({ "name": "Access-Control-Allow-Methods", "value": "GET, PUT, POST, DELETE, HEAD, OPTIONS" });
 
-    return {responseHeaders: details.responseHeaders};
-    
+    return { responseHeaders: details.responseHeaders };
+
 };
 
 /*On install*/
-chrome.runtime.onInstalled.addListener(function(){
-    chrome.storage.local.set({'active': true});
-    chrome.storage.local.set({'urls': ["<all_urls>"]});
-    chrome.storage.local.set({'exposedHeaders': ''});
+chrome.runtime.onInstalled.addListener(function() {
+    chrome.storage.local.set({ 'active': true });
+    chrome.storage.local.set({ 'urls': ["<all_urls>"] });
+    chrome.storage.local.set({ 'exposedHeaders': '' });
     reload();
 });
 
 /*Reload settings*/
 function reload() {
-    chrome.storage.local.get({'active': false, 'urls': ["<all_urls>"], 'exposedHeaders': ''}, function(result) {
+    chrome.storage.local.get({ 'active': false, 'urls': ["<all_urls>"], 'exposedHeaders': '' }, function(result) {
 
         exposedHeaders = result.exposedHeaders;
 
@@ -214,21 +214,21 @@ function reload() {
         chrome.webRequest.onBeforeSendHeaders.removeListener(requestListener);
 
         //if(result.active) {
-            //chrome.browserAction.setIcon({path: "on.png"});
+        //chrome.browserAction.setIcon({path: "on.png"});
 
-            if(result.urls.length) {
+        if (result.urls.length) {
 
-                /*Add Listeners*/
-                chrome.webRequest.onHeadersReceived.addListener(responseListener, {
-                    urls: result.urls
-                },["blocking", "responseHeaders"]);
+            /*Add Listeners*/
+            chrome.webRequest.onHeadersReceived.addListener(responseListener, {
+                urls: result.urls
+            }, ["blocking", "responseHeaders"]);
 
-                chrome.webRequest.onBeforeSendHeaders.addListener(requestListener, {
-                    urls: result.urls
-                },["blocking", "requestHeaders"]);
-            }
+            chrome.webRequest.onBeforeSendHeaders.addListener(requestListener, {
+                urls: result.urls
+            }, ["blocking", "requestHeaders"]);
+        }
         //} else {
-            //chrome.browserAction.setIcon({path: "off.png"});
+        //chrome.browserAction.setIcon({path: "off.png"});
         //}
     });
 }

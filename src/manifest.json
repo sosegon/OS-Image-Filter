@@ -1,25 +1,35 @@
 {
-    "name":"OS Image Filter",
-    "short_name":"OSIMAGEFILTER",
-    "version":"3.3",
+    "name": "OS Image Filter",
+    "short_name": "OSIMAGEFILTER",
+    "version": "3.3",
     "manifest_version": 2,
     "description": "This extension filters images by analyzing their pixels, those within the human skin range are replaced by a grayscale tone",
-    "icons":{"16":"icon16.png","48": "icon48.png","128": "icon128.png" },
-    "browser_action": {
+    "icons":
+    {
+        "16": "icon16.png",
+        "48": "icon48.png",
+        "128": "icon128.png"
+    },
+    "browser_action":
+    {
         "default_icon": "icon-d.png",
         "default_title": "Overlay Images",
         "default_popup": "popup.htm"
-    }, "background": {
+    },
+    "background":
+    {
         "scripts": ["background.js"]
-    }, "options_page": "options.htm",
-    "content_scripts": [{
+    },
+    "options_page": "options.htm",
+    "content_scripts": [
+    {
         "matches": ["<all_urls>"],
-        "js":["js.js", "jquery.min.js"],
-        "run_at":"document_start",
+        "js": ["js.js", "jquery.min.js", "imageProcessing.js"],
+        "run_at": "document_start",
         "all_frames": true
     }],
     "permissions": [
-        "tabs", 
+        "tabs",
         "storage",
         "webRequest",
         "webRequestBlocking",
