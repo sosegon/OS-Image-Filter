@@ -15,8 +15,8 @@ ATTR_HAS_LOAD_LISTENER = 'skf-has-load-listener';
 ATTR_HAS_TITLE_AND_SIZE = 'skf-has-title-and-size';
 ATTR_HAS_MOUSE_LISTENERS = 'skf-has-mouse-listeners';
 ATTR_HAS_BACKGROUND_IMAGE = 'skf-has-background-image';
-ATTR_HAS_PROCESS_IMAGE_LISTENER = 'skf-has-process-image-listener';
 ATTR_CLEAR_HOVER_VISUAL_TIMER = 'skf-clear-hover-visual-timer';
+ATTR_HAS_PROCESS_IMAGE_LISTENER = 'skf-has-process-image-listener';
 
 CSS_CLASS_HIDE = 'skf-hide';
 CSS_CLASS_SHADE = 'skf-shade';
