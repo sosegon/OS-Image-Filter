@@ -146,15 +146,15 @@ function DoWin(win, winContentLoaded) {
             // If process has not started.
             // Make the webpage transparent
             // That way no images are displayed.
-            if (!hasStarted) AddHeadStyle('body', '{opacity: 0 !important; }');
+            if (!hasStarted) addHeadStyle(doc, headStyles, 'body', '{opacity: 0 !important; }');
 
-            AddHeadStyle('body ', '{background-image: none !important;}');
-            AddHeadStyle('.' + CSS_CLASS_HIDE, '{opacity: 0 !important;}');
-            AddHeadStyle('.' + CSS_CLASS_BACKGROUND_PATTERN, '{ background-repeat: repeat !important;text-indent:0 !important;}'); //text-indent to show alt text
-            AddHeadStyle('.' + CSS_CLASS_PAYPAL_DONATION, '{left: 0px; bottom: 0px; width: 100%; z-index: 9000; background: #d09327}');
+            addHeadStyle(doc, headStyles, 'body ', '{background-image: none !important;}');
+            addHeadStyle(doc, headStyles, '.' + CSS_CLASS_HIDE, '{opacity: 0 !important;}');
+            addHeadStyle(doc, headStyles, '.' + CSS_CLASS_BACKGROUND_PATTERN, '{ background-repeat: repeat !important;text-indent:0 !important;}'); //text-indent to show alt text
+            addHeadStyle(doc, headStyles, '.' + CSS_CLASS_PAYPAL_DONATION, '{left: 0px; bottom: 0px; width: 100%; z-index: 9000; background: #d09327}');
             for (var i = 0; i < 8; i++) {
-                AddHeadStyle('.' + CSS_CLASS_BACKGROUND_PATTERN + '.' + CSS_CLASS_SHADE + i, '{background-image: ' + (settings.isNoPattern ? 'none' : 'url(' + extensionUrl + "pattern" + i + ".png" + ')') + ' !important; }');
-                AddHeadStyle('.' + CSS_CLASS_BACKGROUND_PATTERN + '.' + CSS_CLASS_BACKGROUND_LIGHT_PATTERN + '.' + CSS_CLASS_SHADE + i, '{background-image: ' + (settings.isNoPattern ? 'none' : 'url(' + extensionUrl + "pattern-light" + i + ".png" + ')') + ' !important; }');
+                addHeadStyle(doc, headStyles, '.' + CSS_CLASS_BACKGROUND_PATTERN + '.' + CSS_CLASS_SHADE + i, '{background-image: ' + (settings.isNoPattern ? 'none' : 'url(' + extensionUrl + "pattern" + i + ".png" + ')') + ' !important; }');
+                addHeadStyle(doc, headStyles, '.' + CSS_CLASS_BACKGROUND_PATTERN + '.' + CSS_CLASS_BACKGROUND_LIGHT_PATTERN + '.' + CSS_CLASS_SHADE + i, '{background-image: ' + (settings.isNoPattern ? 'none' : 'url(' + extensionUrl + "pattern-light" + i + ".png" + ')') + ' !important; }');
             }
             clearInterval(pollID);
         }
@@ -219,7 +219,7 @@ function DoWin(win, winContentLoaded) {
         DoElements(doc.body, false);
 
         // Once body has been done, show it
-        if (headStyles['body']) RemoveHeadStyle('body');
+        if (headStyles['body']) removeHeadStyle(doc, headStyles, 'body');
 
         // Create eye icon
         // There is one single icon that is
@@ -448,7 +448,7 @@ function DoWin(win, winContentLoaded) {
             var room = document.getElementById(CANVAS_CONTAINER_ID);
             room.appendChild(canvas);
             //el.parentNode.insertBefore(canvas, el.nextSibling);
-            AddClass(canvas, CSS_CLASS_HIDE);
+            addCssClass(canvas, CSS_CLASS_HIDE);
         }
         return canvas;
     }
@@ -456,13 +456,9 @@ function DoWin(win, winContentLoaded) {
     // Adds or removes the listener for a
     // load event in an IMG element
     function DoLoadProcessImageListener(el, toggle) {
-        if (toggle && !el[ATTR_HAS_PROCESS_IMAGE_LISTENER]) {
-            el.addEventListener('load', ProcessImage);
-            el[ATTR_HAS_PROCESS_IMAGE_LISTENER] = true;
-        } else if (!toggle && el[ATTR_HAS_PROCESS_IMAGE_LISTENER]) {
-            el.removeEventListener('load', ProcessImage);
-            el[ATTR_HAS_PROCESS_IMAGE_LISTENER] = false;
-        }
+        handleListeners(el, {
+            'load': ProcessImage
+        }, toggle, ATTR_HAS_PROCESS_IMAGE_LISTENER);
     }
 
     // Analyses an element to proceed to
@@ -486,7 +482,7 @@ function DoWin(win, winContentLoaded) {
             // once over the same element.
             if (!$(this).hasClass("wiz-to-process")) {
                 AddRandomWizUuid(this);
-                AddClass(this, "wiz-to-process") // class used to trigger the load event once Nacl module is loaded
+                addCssClass(this, "wiz-to-process") // class used to trigger the load event once Nacl module is loaded
                 AddAsSuspect(this);
             }
 
@@ -641,35 +637,20 @@ function DoWin(win, winContentLoaded) {
     }
     // Hides elements using styles
     function DoHidden(el, toggle) {
-        if (toggle && !el[ATTR_IS_HID]) {
-            AddClass(el, CSS_CLASS_HIDE);
-            el[ATTR_IS_HID] = true;
-        } else if (!toggle && el[ATTR_IS_HID]) {
-            RemoveClass(el, CSS_CLASS_HIDE);
-            el[ATTR_IS_HID] = false;
-        }
+        handleStyleClasses(el, [CSS_CLASS_HIDE], toggle, ATTR_IS_HID);
     }
     // Adds / removes mouse event listeners
     function DoMouseEventListeners(el, toggle) {
-        if (toggle && !el[ATTR_HAS_MOUSE_LISTENERS]) {
-            el.addEventListener('mouseover', mouseEntered);
-            el.addEventListener('mouseout', mouseLeft);
-            el[ATTR_HAS_MOUSE_LISTENERS] = true;
-        } else if (!toggle && el[ATTR_HAS_MOUSE_LISTENERS]) {
-            el.removeEventListener('mouseover', mouseEntered);
-            el.removeEventListener('mouseout', mouseLeft);
-            el[ATTR_HAS_MOUSE_LISTENERS] = false;
-        }
+        handleListeners(el, {
+            'mouseover': mouseEntered,
+            'mouseout': mouseLeft
+        }, toggle, ATTR_HAS_MOUSE_LISTENERS);
     }
     // Adds / removes the load event
     function DoLoadEventListener(el, toggle) {
-        if (toggle && !el[ATTR_HAS_LOAD_LISTENER]) {
-            el.addEventListener('load', DoElement);
-            el[ATTR_HAS_LOAD_LISTENER] = true;
-        } else if (!toggle && el[ATTR_HAS_LOAD_LISTENER]) {
-            el.removeEventListener('load', DoElement);
-            el[ATTR_HAS_LOAD_LISTENER] = false;
-        }
+        handleListeners(el, {
+            'load': DoElement
+        }, toggle, ATTR_HAS_LOAD_LISTENER);
     }
     // Contorls when the mouse pointer is over
     // an element
@@ -720,14 +701,14 @@ function DoWin(win, winContentLoaded) {
                 }
                 setupEye();
             } else
-                AddClass(el, CSS_CLASS_BACKGROUND_LIGHT_PATTERN);
+                addCssClass(el, CSS_CLASS_BACKGROUND_LIGHT_PATTERN);
             DoHoverVisualClearTimer(el, true);
             el[ATTR_HAS_HOVER_VISUAL] = true;
         } else if (!toggle && el[ATTR_HAS_HOVER_VISUAL]) {
             if (!settings.isNoEye)
                 eye.style.display = 'none';
             else
-                RemoveClass(el, CSS_CLASS_BACKGROUND_LIGHT_PATTERN);
+                removeCssClass(el, CSS_CLASS_BACKGROUND_LIGHT_PATTERN);
             DoHoverVisualClearTimer(el, false);
             el[ATTR_HAS_HOVER_VISUAL] = false;
         }
@@ -834,43 +815,6 @@ function DoWin(win, winContentLoaded) {
         }
     }
 
-    function AddHeadStyle(n, s) {
-        var styleel = doc.createElement('style');
-        styleel.type = 'text/css';
-        styleel.appendChild(doc.createTextNode(n + s));
-        doc.head.appendChild(styleel);
-        headStyles[n] = styleel;
-    }
-
-    function AddHeadScript(doc, src, code, onload) {
-        var scriptel = doc.createElement('script');
-        scriptel.type = 'text/javascript';
-        if (src)
-            scriptel.src = src;
-        if (code)
-            scriptel.appendChild(doc.createTextNode(code));
-        if (onload)
-            scriptel.onload = onload;
-        doc.head.appendChild(scriptel);
-    }
-
-    function RemoveHeadStyle(n) {
-        doc.head.removeChild(headStyles[n]);
-        delete headStyles[n];
-    }
-
-    function RemoveClass(el, n) { //these assume long unique class names, so no need to check for word boundaries
-        var oldClass = el.className,
-            newClass = el.className.replace(new RegExp('\\b' + n + '\\b'), '');
-        if (oldClass != newClass) {
-            el.className = newClass;
-        }
-    }
-
-    function AddClass(el, c) {
-        el.className += ' ' + c;
-    }
-
     function AddRandomWizUuid(el) {
         if ($(el).attr(ATTR_UUID) == null) {
             $(el).attr(ATTR_UUID, guid());
@@ -895,7 +839,7 @@ function DoWin(win, winContentLoaded) {
             ShowEl.call(elList[i]);
         win.removeEventListener('DOMContentLoaded', Start);
         for (var s in headStyles)
-            RemoveHeadStyle(s);
+            removeHeadStyle(doc, headStyles, s);
         if (mouseOverEl) {
             DoHover(mouseOverEl, false);
             mouseOverEl = null;
