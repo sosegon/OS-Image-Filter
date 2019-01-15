@@ -55,7 +55,7 @@ function filterImageElement(canvas, imgElement, uuid) {
     if (actualImg !== undefined) {
         actualImg.src = urlData;
         actualImg.srcset = '';
-        actualImg.onload = LoadProcessed;
+        actualImg.onload = loadProcessed;
     }
 }
 
@@ -92,7 +92,7 @@ function filterBackgroundImageContent(canvas, imgElement, uuid) {
 
 // Sets attributes and styles for elements
 // which images have been already processed
-function LoadProcessed() {
+function loadProcessed() {
     removeCssClass(this, CSS_CLASS_HIDE);
     this.setAttribute(ATTR_PROCESSED, "true");
     this[ATTR_PROCESSED] = true;
@@ -109,7 +109,7 @@ function LoadProcessed() {
     }
 }
 
-function DoSkifImageBG(el, toggle) {
+function doSkifImageBG(el, toggle) {
     if (toggle && !el[ATTR_HAS_BACKGROUND_IMAGE]) {
         // var shade = Math.floor(Math.random() * 8);
         // el.skfShade = shade;

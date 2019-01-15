@@ -54,7 +54,7 @@ chrome.runtime.sendMessage({ r: 'getSettings' }, function(s) {
         //change icon
         chrome.runtime.sendMessage({ r: 'setColorIcon', toggle: true });
         //do main window
-        DoWin(window, contentLoaded);
+        doWin(window, contentLoaded);
     }
 });
 
@@ -91,7 +91,7 @@ function ShowImages() {
 // Contains all the logic related
 // to handle the dom structure
 // and process the images.
-function DoWin(win, winContentLoaded) {
+function doWin(win, winContentLoaded) {
     let doc = win.document,
         headStyles = {},
         observer = null,
@@ -111,7 +111,7 @@ function DoWin(win, winContentLoaded) {
     // callback to get the settings from background
     // are executed. This condition is the way to handle
     // tha situation.
-    // DoWin is called after receiving the settings
+    // doWin is called after receiving the settings
     // from the background. However, at that moment,
     // the listener for 'DOMContentLoaded' that sets
     // the flag contentLoaded passed here as
@@ -159,45 +159,45 @@ function DoWin(win, winContentLoaded) {
         }
     }, 1);
     //ALT-a, ALT-z
-    doc.addEventListener('keydown', DocKeyDown);
+    doc.addEventListener('keydown', docKeyDown);
     //notice when mouse has moved
-    doc.addEventListener('mousemove', DocMouseMove);
-    win.addEventListener('scroll', WindowScroll);
+    doc.addEventListener('mousemove', docMouseMove);
+    win.addEventListener('scroll', windowScroll);
 
-    function DocMouseMove(event) {
+    function docMouseMove(event) {
         mouseEvent = event;
         mouseMoved = true;
     };
 
-    function WindowScroll() {
+    function windowScroll() {
         mouseMoved = true;
-        UpdateElRects();
-        CheckMousePosition();
+        updateElementRectangles();
+        checkMousePosition();
     }
 
-    function DocKeyDown(event) {
+    function docKeyDown(event) {
         if (event.altKey && event.keyCode == 80 && !settings.isPaused) { //ALT-p
             settings.isPaused = true;
             chrome.runtime.sendMessage({ r: 'pause', toggle: true });
             ShowImages();
         } else if (mouseOverEl && event.altKey) {
             if (event.keyCode == 65 && mouseOverEl[ATTR_HAS_BACKGROUND_IMAGE]) { //ALT-a
-                ShowEl.call(mouseOverEl);
+                showElement.call(mouseOverEl);
                 eye.style.display = 'none';
             } else if (event.keyCode == 90 && !mouseOverEl[ATTR_HAS_BACKGROUND_IMAGE]) { //ALT-z
-                DoElement.call(mouseOverEl);
+                doElement.call(mouseOverEl);
                 eye.style.display = 'none';
             }
         }
     }
     //keep track of which image-element mouse if over
     function mouseEntered(event) {
-        DoHover(this, true, event);
+        doHover(this, true, event);
         event.stopPropagation();
     }
 
     function mouseLeft(event) {
-        DoHover(this, false, event);
+        doHover(this, false, event);
     }
 
     // Starts the process to filter images
@@ -217,27 +217,14 @@ function DoWin(win, winContentLoaded) {
         // Filter any image in the body.
         // Here the image can be a background
         // set in a css style
-        DoElements(doc.body, false);
+        doElements(doc.body, false);
 
         // Once body has been done, show it
         if (headStyles['body']) {
             removeHeadStyle(doc, headStyles, 'body');
         }
 
-        // Create eye icon
-        // There is one single icon that is
-        // positioned accordingly in the
-        // corresponding element that can be
-        // displayed at that moment
-        eye = doc.createElement('div');
-        eye.style.display = 'none';
-        eye.style.width = eye.style.height = '16px';
-        eye.style.position = 'fixed';
-        eye.style.zIndex = 1e8;
-        eye.style.cursor = 'pointer';
-        eye.style.padding = '0';
-        eye.style.margin = '0';
-        eye.style.opacity = '.5';
+        eye = createEye(doc);
         doc.body.appendChild(eye);
 
         // Create temporary div,
@@ -264,7 +251,7 @@ function DoWin(win, winContentLoaded) {
                         const oldHasLazy = m.oldValue != null && m.oldValue.indexOf('lazy') > -1,
                             newHasLazy = m.target.className != null && m.target.className.indexOf('lazy') > -1;
                         if (oldHasLazy != newHasLazy) {
-                            DoElements(m.target, true);
+                            doElements(m.target, true);
                         }
                     } else if (m.attributeName == 'style' && m.target.style.backgroundImage.indexOf('url(') > -1) {
                         let oldBgImg, oldBgImgMatch;
@@ -274,7 +261,7 @@ function DoWin(win, winContentLoaded) {
                             oldBgImg = oldBgImgMatch[1];
                         }
                         if (oldBgImg != /url\(['"]?(.+?)['"]?\)/.exec(m.target.style.backgroundImage)[1]) {
-                            DoElement.call(m.target);
+                            doElement.call(m.target);
                         }
                     }
                 }
@@ -289,9 +276,9 @@ function DoWin(win, winContentLoaded) {
                             continue;
                         }
                         if (domElement.tagName == 'IFRAME') {
-                            DoIframe(domElement);
+                            doIframe(domElement);
                         } else {
-                            DoElements(domElement, true);
+                            doElements(domElement, true);
                         }
                     }
                 }
@@ -299,22 +286,22 @@ function DoWin(win, winContentLoaded) {
         });
         observer.observe(doc, { subtree: true, childList: true, attributes: true, attributeOldValue: true });
 
-        // CheckMousePosition every so often
+        // checkMousePosition every so often
         // This is to update the positon of
         // the eye when the mouse pointer is
         // over an image
-        setInterval(CheckMousePosition, 250);
+        setInterval(checkMousePosition, 250);
 
         // Update the bounding boxes for every
         // element with an image
-        setInterval(UpdateElRects, 3000);
+        setInterval(updateElementRectangles, 3000);
 
         // This is likely to be set based on
         // an average time for a web page to be loaded
         // TODO: Improve this
         for (let i = 1; i < 7; i++) {
             if ((i % 2) > 0) {
-                setTimeout(UpdateElRects, i * 1500);
+                setTimeout(updateElementRectangles, i * 1500);
             }
         }
 
@@ -323,7 +310,7 @@ function DoWin(win, winContentLoaded) {
         // content may not have been loaded.
         const iframes = doc.getElementsByTagName('iframe');
         for (let i = 0, max = iframes.length; i < max; i++) {
-            DoIframe(iframes[i]);
+            doIframe(iframes[i]);
         }
 
         // Now the process has officially started
@@ -332,13 +319,13 @@ function DoWin(win, winContentLoaded) {
 
     // Gets an elements to star the process over
     // its descendants and itself if specified
-    function DoElements(domElement, includeChildren) {
+    function doElements(domElement, includeChildren) {
         if (includeChildren && tagList.indexOf(domElement.tagName) > -1) {
-            DoElement.call(domElement);
+            doElement.call(domElement);
         }
         const all = domElement.querySelectorAll(tagListCSS);
         for (let i = 0, max = all.length; i < max; i++) {
-            DoElement.call(all[i]);
+            doElement.call(all[i]);
         }
     }
 
@@ -346,7 +333,7 @@ function DoWin(win, winContentLoaded) {
     // Remember that an iframe contains
     // another webpage embedded in the main
     // one.
-    function DoIframe(iframe) {
+    function doIframe(iframe) {
         if (iframe.src && iframe.src != "about:blank" && iframe.src.substr(0, 11) != 'javascript:') {
             return;
         }
@@ -363,7 +350,7 @@ function DoWin(win, winContentLoaded) {
             pollID = setInterval(function() {
                 if (doc.body) {
                     clearInterval(pollID);
-                    DoWin(win, true);
+                    doWin(win, true);
                 }
                 if (++pollNum == 500) {
                     clearInterval(pollID);
@@ -377,7 +364,7 @@ function DoWin(win, winContentLoaded) {
     // getting the data from the canvas; if that fails,
     // it retrieves the data of the image with
     // an XHR and passes processes the result.
-    function ProcessImage() {
+    function processImage() {
         const canvas = addCanvasSibling(this);
         if (canvas) {
             this[ATTR_PROCESSED] = true;
@@ -411,8 +398,8 @@ function DoWin(win, winContentLoaded) {
                 xhr.send();
             }
 
-            DoLoadProcessImageListener(this, false);
-            DoLoadEventListener(this, false);
+            doLoadProcessImageListener(this, false);
+            doLoadEventListener(this, false);
         }
     }
 
@@ -422,7 +409,7 @@ function DoWin(win, winContentLoaded) {
     // to retrieve it with an XHR object.
     // It uses the global canvas to filter the
     // image.
-    function ProcessBkgImage(domElement, backgroundImage, width, height, uuid) {
+    function processBackgroundImage(domElement, backgroundImage, width, height, uuid) {
         const xhr = new XMLHttpRequest();
         xhr.onload = function() {
             const reader = new FileReader();
@@ -450,15 +437,15 @@ function DoWin(win, winContentLoaded) {
 
     // Adds or removes the listener for a
     // load event in an IMG element
-    function DoLoadProcessImageListener(domElement, toggle) {
+    function doLoadProcessImageListener(domElement, toggle) {
         handleListeners(domElement, {
-            'load': ProcessImage
+            'load': processImage
         }, toggle, ATTR_HAS_PROCESS_IMAGE_LISTENER);
     }
 
     // Analyses an element to proceed to
     // process its image if it has one
-    function DoElement() {
+    function doElement() {
         // No need to do anything when
         // all the images are going to
         // be dispolayed
@@ -478,9 +465,9 @@ function DoWin(win, winContentLoaded) {
             // that this function is executed more than
             // once over the same element.
             if (!this.classList.contains('wiz-to-process')) {
-                AddRandomWizUuid(this);
+                addRandomWizUuid(this);
                 addCssClass(this, "wiz-to-process") // class used to trigger the load event once Nacl module is loaded
-                AddAsSuspect(this);
+                addAsSuspect(this);
             }
 
             // Attach load event need for:
@@ -489,15 +476,15 @@ function DoWin(win, winContentLoaded) {
             //
             // 2) In case the img gets changed to
             // something else later
-            DoLoadProcessImageListener(this, true);
-            DoLoadEventListener(this, true);
+            doLoadProcessImageListener(this, true);
+            doLoadEventListener(this, true);
 
             // See if not yet loaded
             if (!this.complete) {
 
                 // Hide, to avoid flash until load
                 // event is handled
-                DoHidden(this, true);
+                doHidden(this, true);
                 return;
             }
 
@@ -507,8 +494,8 @@ function DoWin(win, winContentLoaded) {
             // TODO: Check this because it comes
             // from the original extension
             if (this.src == blankImg) {
-                DoHidden(this, false);
-                DoSkifImageBG(this, true);
+                doHidden(this, false);
+                doSkifImageBG(this, true);
                 this[ATTR_IS_BLOCKED] = true;
             }
 
@@ -517,7 +504,7 @@ function DoWin(win, winContentLoaded) {
             // we need to catch 0 too, as sometimes
             // images start off as zero
             else if ((width == 0 || width > settings.maxSafe) && (height == 0 || height > settings.maxSafe)) {
-                DoMouseEventListeners(this, true);
+                doMouseEventListeners(this, true);
                 if (!this[ATTR_HAS_TITLE_AND_SIZE]) {
                     // this.style.width = elWidth + 'px';
                     // this.style.height = elHeight + 'px';
@@ -532,13 +519,13 @@ function DoWin(win, winContentLoaded) {
                     }
                     this[ATTR_HAS_TITLE_AND_SIZE] = true;
                 }
-                DoHidden(this, true);
-                DoImgSrc(this, true);
+                doHidden(this, true);
+                doImgSrc(this, true);
                 if (this.parentElement && this.parentElement.tagName == 'PICTURE') {
                     for (let i = 0; i < this.parentElement.childNodes.length; i++) {
                         const node = this.parentElement.childNodes[i];
                         if (node.tagName == 'SOURCE'){
-                            DoImgSrc(node, true);
+                            doImgSrc(node, true);
                         }
                     }
                 }
@@ -548,15 +535,15 @@ function DoWin(win, winContentLoaded) {
             // TODO: Add a rule in the settings
             // to let the user know that this happens
             else {
-                DoHidden(this, false);
+                doHidden(this, false);
             }
             // TODO: Uncomment this when the
             // logic for video is implemented
             // }
             // else if (this.tagName == 'VIDEO') {
-            //     AddAsSuspect(this);
-            //     DoHidden(this, true);
-            //     DoSkifImageBG(this, true);
+            //     addAsSuspect(this);
+            //     doHidden(this, true);
+            //     doSkifImageBG(this, true);
 
             // Any element other than IMG and VIDEO
         } else {
@@ -582,18 +569,18 @@ function DoWin(win, winContentLoaded) {
                 // Avoids quick display of original image
                 this.style.backgroundImage = "url('')";
                 // Reference for the element once the image is processed
-                AddRandomWizUuid(this);
+                addRandomWizUuid(this);
                 const uuid = this.getAttribute(ATTR_UUID);
-                ProcessBkgImage(this, bgImgUrl, width, height, uuid);
+                processBackgroundImage(this, bgImgUrl, width, height, uuid);
 
-                AddAsSuspect(this);
-                DoSkifImageBG(this, true);
-                DoMouseEventListeners(this, true);
+                addAsSuspect(this);
+                doSkifImageBG(this, true);
+                doMouseEventListeners(this, true);
                 if (this[ATTR_LAST_CHECKED_SRC] != bgImg) {
                     this[ATTR_LAST_CHECKED_SRC] = bgImg;
                     const image = new Image();
                     image.owner = this;
-                    image.onload = CheckBgImg;
+                    image.onload = checkBackgroundImage;
                     const urlMatch = /\burl\(["']?(.*?)["']?\)/.exec(bgImg);
                     if (urlMatch) {
                         image.src = urlMatch[1];
@@ -604,15 +591,15 @@ function DoWin(win, winContentLoaded) {
         }
     }
     //
-    function CheckBgImg() {
+    function checkBackgroundImage() {
         const { height, width } = this;
         if (height <= settings.maxSafe || width <= settings.maxSafe) {
-            ShowEl.call(this.owner);
+            showElement.call(this.owner);
         }
         this.onload = null;
     };
     // Add to the lists of suspects
-    function AddAsSuspect(domElement) {
+    function addAsSuspect(domElement) {
         if (elList.indexOf(domElement) == -1) {
             elList.push(domElement);
             domElement[ATTR_RECTANGLE] = domElement.getBoundingClientRect();
@@ -620,7 +607,7 @@ function DoWin(win, winContentLoaded) {
     }
 
     // Stores the original src of the image
-    function DoImgSrc(domElement, toggle) {
+    function doImgSrc(domElement, toggle) {
         if (toggle && !domElement.getAttribute(ATTR_ALREADY_TOGGLED)) {
             domElement.oldsrc = domElement.src;
             domElement.oldsrcset = domElement.srcset;
@@ -637,35 +624,35 @@ function DoWin(win, winContentLoaded) {
         }
     }
     // Hides elements using styles
-    function DoHidden(domElement, toggle) {
+    function doHidden(domElement, toggle) {
         handleStyleClasses(domElement, [CSS_CLASS_HIDE], toggle, ATTR_IS_HID);
     }
     // Adds / removes mouse event listeners
-    function DoMouseEventListeners(domElement, toggle) {
+    function doMouseEventListeners(domElement, toggle) {
         handleListeners(domElement, {
             'mouseover': mouseEntered,
             'mouseout': mouseLeft
         }, toggle, ATTR_HAS_MOUSE_LISTENERS);
     }
     // Adds / removes the load event
-    function DoLoadEventListener(domElement, toggle) {
+    function doLoadEventListener(domElement, toggle) {
         handleListeners(domElement, {
-            'load': DoElement
+            'load': doElement
         }, toggle, ATTR_HAS_LOAD_LISTENER);
     }
     // Contorls when the mouse pointer is over
     // an element
-    function DoHover(domElement, toggle, event) {
+    function doHover(domElement, toggle, event) {
         const coords = domElement[ATTR_RECTANGLE];
         if (toggle && !domElement[ATTR_HAS_HOVER]) {
             if (mouseOverEl && mouseOverEl != domElement) {
-                DoHover(mouseOverEl, false);
+                doHover(mouseOverEl, false);
             }
             mouseOverEl = domElement;
-            DoHoverVisual(domElement, true, coords);
+            doHoverVisual(domElement, true, coords);
             domElement[ATTR_HAS_HOVER] = true;
-        } else if (!toggle && domElement[ATTR_HAS_HOVER] && (!event || !IsMouseIn(event, coords))) {
-            DoHoverVisual(domElement, false, coords);
+        } else if (!toggle && domElement[ATTR_HAS_HOVER] && (!event || !isMouseIn(event, coords))) {
+            doHoverVisual(domElement, false, coords);
             domElement[ATTR_HAS_HOVER] = false;
             if (domElement == mouseOverEl) {
                 mouseOverEl = null;
@@ -676,28 +663,28 @@ function DoWin(win, winContentLoaded) {
     // Positions and displays the eye icon
     // over the image hovered by the mouse
     // pointer
-    function DoHoverVisual(domElement, toggle, coords) {
+    function doHoverVisual(domElement, toggle, coords) {
         if (toggle && !domElement[ATTR_HAS_HOVER_VISUAL] && domElement[ATTR_HAS_BACKGROUND_IMAGE]) {
             if (!settings.isNoEye) {
                 //eye
-                PositionEye(domElement, coords);
+                positionEye(domElement, coords);
                 eye.style.display = 'block';
 
                 function setupEye() {
                     eye.style.backgroundImage = eyeCSSUrl;
                     eye.onclick = function(e) {
                         e.stopPropagation();
-                        ShowEl.call(domElement);
+                        showElement.call(domElement);
                         // hide the eye icon and not allow undo option for now
                         // TODO: Implement undo option
                         eye.style.display = 'none';
                         // eye.style.backgroundImage = undoCSSUrl;
-                        // DoHoverVisualClearTimer(el, true);
+                        // doHoverVisualClearTimer(el, true);
                         // eye.onclick = function (e) {
                         //     e.stopPropagation();
-                        //     DoElement.call(el);
+                        //     doElement.call(el);
                         //     setupEye();
-                        //     DoHoverVisualClearTimer(el, true);
+                        //     doHoverVisualClearTimer(el, true);
                         // }
                     }
                 }
@@ -705,7 +692,7 @@ function DoWin(win, winContentLoaded) {
             } else {
                 addCssClass(domElement, CSS_CLASS_BACKGROUND_LIGHT_PATTERN);
             }
-            DoHoverVisualClearTimer(domElement, true);
+            doHoverVisualClearTimer(domElement, true);
             domElement[ATTR_HAS_HOVER_VISUAL] = true;
         } else if (!toggle && domElement[ATTR_HAS_HOVER_VISUAL]) {
             if (!settings.isNoEye) {
@@ -713,15 +700,15 @@ function DoWin(win, winContentLoaded) {
             } else {
                 removeCssClass(domElement, CSS_CLASS_BACKGROUND_LIGHT_PATTERN);
             }
-            DoHoverVisualClearTimer(domElement, false);
+            doHoverVisualClearTimer(domElement, false);
             domElement[ATTR_HAS_HOVER_VISUAL] = false;
         }
     }
 
-    function DoHoverVisualClearTimer(domElement, toggle) {
+    function doHoverVisualClearTimer(domElement, toggle) {
         if (toggle) {
-            DoHoverVisualClearTimer(domElement, false);
-            domElement[ATTR_CLEAR_HOVER_VISUAL_TIMER] = setTimeout(function() { DoHoverVisual(domElement, false); }, 2500);
+            doHoverVisualClearTimer(domElement, false);
+            domElement[ATTR_CLEAR_HOVER_VISUAL_TIMER] = setTimeout(function() { doHoverVisual(domElement, false); }, 2500);
         } else if (!toggle && domElement[ATTR_CLEAR_HOVER_VISUAL_TIMER]) {
             clearTimeout(domElement[ATTR_CLEAR_HOVER_VISUAL_TIMER]);
             domElement[ATTR_CLEAR_HOVER_VISUAL_TIMER] = null;
@@ -729,7 +716,7 @@ function DoWin(win, winContentLoaded) {
     }
     // Positions the eye in the top right
     // corner of an image
-    function PositionEye(domElement, coords) {
+    function positionEye(domElement, coords) {
         eye.style.top = (coords.top < 0 ? 0 : coords.top) + 'px';
         let left = coords.right;
         if (left > doc.documentElement.clientWidth) {
@@ -738,14 +725,14 @@ function DoWin(win, winContentLoaded) {
         eye.style.left = (left - 16) + 'px';
     }
 
-    function UpdateElRects() {
+    function updateElementRectangles() {
         for (let i = 0, max = elList.length; i < max; i++) {
             const domElement = elList[i];
             domElement[ATTR_RECTANGLE] = domElement.getBoundingClientRect();
         }
     }
 
-    function CheckMousePosition() {
+    function checkMousePosition() {
         if (!mouseMoved || !mouseEvent || !contentLoaded || showAll) {
             return;
         }
@@ -753,20 +740,20 @@ function DoWin(win, winContentLoaded) {
         //see if needs to defocus current
         if (mouseOverEl) {
             const coords = mouseOverEl[ATTR_RECTANGLE];
-            if (!IsMouseIn(mouseEvent, coords)) {
-                DoHover(mouseOverEl, false);
+            if (!isMouseIn(mouseEvent, coords)) {
+                doHover(mouseOverEl, false);
             } else if (mouseOverEl[ATTR_HAS_BACKGROUND_IMAGE]) {
                 if (!mouseOverEl[ATTR_HAS_HOVER_VISUAL]) {
-                    DoHoverVisual(mouseOverEl, true, coords);
+                    doHoverVisual(mouseOverEl, true, coords);
                 } else {
-                    DoHoverVisualClearTimer(mouseOverEl, true);
-                    PositionEye(mouseOverEl, coords);
+                    doHoverVisualClearTimer(mouseOverEl, true);
+                    positionEye(mouseOverEl, coords);
                 }
             }
         }
         //find element under mouse
-        const foundElement = mouseOverEl;
-        let found = false,
+        let foundElement = mouseOverEl,
+            found = false,
             foundSize = foundElement ? foundElement[ATTR_RECTANGLE].width * foundElement[ATTR_RECTANGLE].height : null;
         for (let i = 0, max = elList.length; i < max; i++) {
             let domElement = elList[i];
@@ -774,7 +761,7 @@ function DoWin(win, winContentLoaded) {
                 continue;
             }
             const rect = domElement[ATTR_RECTANGLE];
-            if (IsMouseIn(mouseEvent, rect)) {
+            if (isMouseIn(mouseEvent, rect)) {
                 //If not foundElement yet, use this. Else if foundElement has not got skfBG, then if ours does, use it. Else if foundElement is bigger, use this.
                 let useThis = false;
                 if (!foundElement) {
@@ -794,39 +781,39 @@ function DoWin(win, winContentLoaded) {
             }
         }
         if (found && (foundElement[ATTR_HAS_BACKGROUND_IMAGE] || !mouseOverEl)) {
-            DoHover(foundElement, true);
+            doHover(foundElement, true);
         }
     }
 
-    function IsMouseIn(event, coords) {
+    function isMouseIn(event, coords) {
         return event.x >= coords.left && event.x < coords.right && event.y >= coords.top && event.y < coords.bottom;
     }
 
-    function ShowEl() {
-        DoHidden(this, false);
+    function showElement() {
+        doHidden(this, false);
         if (this.tagName == 'IMG') {
-            DoLoadEventListener(this, false);
-            DoImgSrc(this, false);
+            doLoadEventListener(this, false);
+            doImgSrc(this, false);
             if (this.parentElement && this.parentElement.tagName == 'PICTURE') {
                 for (let i = 0; i < this.parentElement.childNodes.length; i++) {
                     let node = this.parentElement.childNodes[i];
                     if (node.tagName == 'SOURCE') {
-                        DoImgSrc(node, false);
+                        doImgSrc(node, false);
                     }
                 }
             }
         }
-        DoSkifImageBG(this, false);
+        doSkifImageBG(this, false);
         if (this[ATTR_CHECK_TIMEOUT]) {
             clearTimeout(this[ATTR_CHECK_TIMEOUT]);
             this[ATTR_CHECK_TIMEOUT] = null;
         }
         if (showAll) {
-            DoMouseEventListeners(this, false);
+            doMouseEventListeners(this, false);
         }
     }
 
-    function AddRandomWizUuid(domElement) {
+    function addRandomWizUuid(domElement) {
         if (domElement.getAttribute(ATTR_UUID) === null) {
             domElement.setAttribute(ATTR_UUID, guid());
         }
@@ -843,18 +830,18 @@ function DoWin(win, winContentLoaded) {
     }
 
     win.skfShowImages = function() {
-        doc.removeEventListener('keydown', DocKeyDown);
-        doc.removeEventListener('mousemove', DocMouseMove);
-        win.removeEventListener('scroll', WindowScroll);
+        doc.removeEventListener('keydown', docKeyDown);
+        doc.removeEventListener('mousemove', docMouseMove);
+        win.removeEventListener('scroll', windowScroll);
         for (let i = 0, max = elList.length; i < max; i++) {
-            ShowEl.call(elList[i]);
+            showElement.call(elList[i]);
         }
         win.removeEventListener('DOMContentLoaded', Start);
         for (let s in headStyles) {
             removeHeadStyle(doc, headStyles, s);
         }
         if (mouseOverEl) {
-            DoHover(mouseOverEl, false);
+            doHover(mouseOverEl, false);
             mouseOverEl = null;
         }
         if (eye) {
