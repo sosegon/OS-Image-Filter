@@ -94,6 +94,8 @@ const displayer = new ImagesDisplayer();
  */
 function doWin(win, winContentLoaded) {
     const suspects = new Suspects();
+    const imageProcessor = new DomImageProcessor();
+
     let doc = win.document,
         headStyles = {},
         observer = null,
@@ -404,103 +406,11 @@ function doWin(win, winContentLoaded) {
                 }
             }, 10);
     }
-
-    /**
-     * Add a sibling canvas for the corresponding IMG element. Then,
-     * it tries to filter the content of the image by directly
-     * getting the data from the canvas. If that fails, it retrieves
-     * the data of the image with an XHR and passes processes the
-     * result.
-     */
     function processImage() {
-        const canvas = addCanvasSibling(this);
-        if (canvas) {
-            this[ATTR_PROCESSED] = true;
-            const uuid = this.getAttribute(ATTR_UUID)
-            try {
-                filterImageElement(canvas, this, uuid);
-            } catch (err) {
-                const xhr = new XMLHttpRequest();
-                xhr.onload = function() {
-                    const reader = new FileReader();
-                    reader.uuid = uuid;
-                    reader.onloadend = function() {
-                        const image = new Image();
-                        image.crossOrigin = "anonymous";
-                        image.src = reader.result;
-                        image.uuid = this.uuid;
-                        image.onload = function() {
-                            const { width, height } = this;
-
-                            const canvas_global = document.getElementById(CANVAS_GLOBAL_ID);
-                            canvas_global.setAttribute("width", width);
-                            canvas_global.setAttribute("height", height);
-
-                            filterImageElement(canvas_global, this, this.uuid);
-                        };
-                    }
-                    reader.readAsDataURL(xhr.response);
-                };
-                xhr.open("GET", this.src);
-                xhr.responseType = "blob";
-                xhr.send();
-            }
-
-            doLoadProcessImageListener(this, false);
-            doLoadEventListener(this, false);
-        }
+        imageProcessor.processDomImage(this);
+        imageProcessor.handleLoadProcessImageListener(this, processImage, false);
+        imageProcessor.handleLoadEventListener(this, doElement, false);
     }
-    /**
-     * Process the image of an element passed in its style. Since the
-     * image is in the style, it is referenced with an url. The url is
-     * used to retrieve the image with an XHR object. It uses the
-     * global canvas to filter the image.
-     *
-     * @param {Element} domElement
-     * @param {ImageBitmap} backgrounfImage
-     * @param {number} width
-     * @param {number} height
-     * @param {string} uuid
-     */
-    function processBackgroundImage(domElement, backgroundImage, width, height, uuid) {
-        const xhr = new XMLHttpRequest();
-        xhr.onload = function() {
-            const reader = new FileReader();
-            reader.uuid = uuid;
-            reader.onloadend = function() {
-                const image = new Image();
-                image.crossOrigin = "anonymous";
-                image.src = reader.result;
-                image.uuid = this.uuid;
-                image.onload = function() {
-
-                    const canvasGlobal = document.getElementById(CANVAS_GLOBAL_ID);
-                    canvasGlobal.setAttribute("width", width);
-                    canvasGlobal.setAttribute("height", height);
-
-                    filterBackgroundImageContent(canvasGlobal, this, uuid);
-                };
-            }
-            reader.readAsDataURL(xhr.response);
-        };
-        xhr.open("GET", backgroundImage);
-        xhr.responseType = "blob";
-        xhr.send();
-    }
-
-    /**
-     * Add or remove the listener for a **load** event in an IMG
-     * element.
-     *
-     * @param {HTMLImageElement} domElement
-     * @param {boolean} toggle
-     */
-    function doLoadProcessImageListener(domElement, toggle) {
-        handleListeners(domElement, {
-            'load': processImage
-        }, toggle, ATTR_HAS_PROCESS_IMAGE_LISTENER);
-    }
-
     /**
      * Analyse an element to proceed to process its image if it has
      * one.
@@ -536,8 +446,8 @@ function doWin(win, winContentLoaded) {
              *
              * 2) In case the img gets changed to something else later
              */
-            doLoadProcessImageListener(this, true);
-            doLoadEventListener(this, true);
+            imageProcessor.handleLoadProcessImageListener(this, processImage, true);
+            imageProcessor.handleLoadEventListener(this, doElement, true);
 
             // See if not yet loaded
             if (!this.complete) {
@@ -626,7 +536,7 @@ function doWin(win, winContentLoaded) {
                 // processed.
                 addRandomWizUuid(this);
                 const uuid = this.getAttribute(ATTR_UUID);
-                processBackgroundImage(this, bgImgUrl, width, height, uuid);
+                imageProcessor.processBackgroundImage(this, bgImgUrl, width, height, uuid);
 
                 suspects.addSuspect(this);
                 doSkifImageBG(this, true);
@@ -699,17 +609,6 @@ function doWin(win, winContentLoaded) {
             'mouseover': mouseEntered,
             'mouseout': mouseLeft
         }, toggle, ATTR_HAS_MOUSE_LISTENERS);
-    }
-    /**
-     * Add / remove a load event listener.
-     *
-     * @param {Element} domElement
-     * @param {boolean} toggle
-     */
-    function doLoadEventListener(domElement, toggle) {
-        handleListeners(domElement, {
-            'load': doElement
-        }, toggle, ATTR_HAS_LOAD_LISTENER);
     }
     /**
      * Control when the mouse pointer is over an element.
@@ -816,7 +715,7 @@ function doWin(win, winContentLoaded) {
     function showElement(domElement) {
         doHidden(domElement, false);
         if (domElement.tagName == 'IMG') {
-            doLoadEventListener(domElement, false);
+            imageProcessor.handleLoadEventListener(domElement, doElement, false);
             doImgSrc(domElement, false);
             if (domElement.parentElement && domElement.parentElement.tagName == 'PICTURE') {
                 for (let i = 0; i < domElement.parentElement.childNodes.length; i++) {
