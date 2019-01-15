@@ -179,10 +179,10 @@ function doWin(win, winContentLoaded) {
             doHover(mouseOverEl, false);
             mouseOverEl = null;
         }
-        if (eye) {
+        if (eye.getDomElement()) {
             for (let i = 0, bodyChildren = doc.body.children; i < bodyChildren.length; i++) { //for some reason, sometimes the eye is removed before
-                if (bodyChildren[i] == eye) {
-                    doc.body.removeChild(eye);
+                if (bodyChildren[i] === eye.getDomElement()) {
+                    doc.body.removeChild(eye.getDomElement());
                 }
             }
         }
@@ -215,10 +215,10 @@ function doWin(win, winContentLoaded) {
         } else if (mouseOverEl && event.altKey) {
             if (event.keyCode == 65 && mouseOverEl[ATTR_HAS_BACKGROUND_IMAGE]) { //ALT-a
                 showElement(mouseOverEl);
-                eye.style.display = 'none';
+                eye.getDomElement().style.display = 'none';
             } else if (event.keyCode == 90 && !mouseOverEl[ATTR_HAS_BACKGROUND_IMAGE]) { //ALT-z
                 doElement.call(mouseOverEl);
-                eye.style.display = 'none';
+                eye.getDomElement().style.display = 'none';
             }
         }
     }
@@ -266,8 +266,8 @@ function doWin(win, winContentLoaded) {
             removeHeadStyle(doc, headStyles, 'body');
         }
 
-        eye = createEye(doc);
-        doc.body.appendChild(eye);
+        eye = new Eye(doc);
+        doc.body.appendChild(eye.getDomElement());
 
         // Create temporary div, to eager load background img light
         // for noEye to avoid flicker.
@@ -754,18 +754,18 @@ function doWin(win, winContentLoaded) {
     function doHoverVisual(domElement, toggle, coords) {
         if (toggle && !domElement[ATTR_HAS_HOVER_VISUAL] && domElement[ATTR_HAS_BACKGROUND_IMAGE]) {
             if (!settings.isNoEye) {
-                positionEye(domElement, coords);
-                eye.style.display = 'block';
+                eye.position(domElement, coords, doc);
+                eye.getDomElement().style.display = 'block';
 
                 function setupEye() {
-                    eye.style.backgroundImage = eyeCSSUrl;
-                    eye.onclick = function(e) {
+                    eye.getDomElement().style.backgroundImage = eyeCSSUrl;
+                    eye.getDomElement().onclick = function(e) {
                         e.stopPropagation();
                         showElement(domElement);
                         // Hide the eye icon and not allow undo option
                         // for now.
                         // TODO: Implement undo option
-                        eye.style.display = 'none';
+                        eye.getDomElement().style.display = 'none';
                         // eye.style.backgroundImage = undoCSSUrl;
                         // doHoverVisualClearTimer(el, true);
                         // eye.onclick = function (e) {
@@ -784,7 +784,7 @@ function doWin(win, winContentLoaded) {
             domElement[ATTR_HAS_HOVER_VISUAL] = true;
         } else if (!toggle && domElement[ATTR_HAS_HOVER_VISUAL]) {
             if (!settings.isNoEye) {
-                eye.style.display = 'none';
+                eye.getDomElement().style.display = 'none';
             } else {
                 removeCssClass(domElement, CSS_CLASS_BACKGROUND_LIGHT_PATTERN);
             }
@@ -801,20 +801,6 @@ function doWin(win, winContentLoaded) {
             clearTimeout(domElement[ATTR_CLEAR_HOVER_VISUAL_TIMER]);
             domElement[ATTR_CLEAR_HOVER_VISUAL_TIMER] = null;
         }
-    }
-    /**
-     * Position the eye in the top right corner of an image.
-     *
-     * @param {Element} domElement
-     * @param {object} coords
-     */
-    function positionEye(domElement, coords) {
-        eye.style.top = (coords.top < 0 ? 0 : coords.top) + 'px';
-        let left = coords.right;
-        if (left > doc.documentElement.clientWidth) {
-            left = doc.documentElement.clientWidth;
-        }
-        eye.style.left = (left - 16) + 'px';
     }
 
     function updateElementRectangles() {
@@ -839,7 +825,7 @@ function doWin(win, winContentLoaded) {
                     doHoverVisual(mouseOverEl, true, coords);
                 } else {
                     doHoverVisualClearTimer(mouseOverEl, true);
-                    positionEye(mouseOverEl, coords);
+                    eye.position(mouseOverEl, coords, doc);
                 }
             }
         }

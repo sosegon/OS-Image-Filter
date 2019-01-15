@@ -98,24 +98,3 @@ function createCanvas(id) {
     return canvas;
 }
 
-/**
- * Create eye icon. There is one single icon that is positioned
- * accordingly in the corresponding element that can be displayed at
- * that moment.
- *
- * @param {Document} doc
- */
-function createEye(doc) {
-    const eye = doc.createElement('div');
-
-    eye.style.display = 'none';
-    eye.style.width = eye.style.height = '16px';
-    eye.style.position = 'fixed';
-    eye.style.zIndex = 1e8;
-    eye.style.cursor = 'pointer';
-    eye.style.padding = '0';
-    eye.style.margin = '0';
-    eye.style.opacity = '.5';
-
-    return eye;
-}
