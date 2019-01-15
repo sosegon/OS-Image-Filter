@@ -103,7 +103,7 @@ function loadProcessed() {
     }
 
     if (this[ATTR_PROCESSED]) { // already processed
-        DoSkifImageBG(this, true); // Needed to enable eye icon in image
+        doSkifImageBG(this, true); // Needed to enable eye icon in image
         //DoImgSrc(this, true);
         return;
     }
