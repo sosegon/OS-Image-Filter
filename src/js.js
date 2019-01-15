@@ -1,7 +1,6 @@
 /**
  * Global variables.
  */
-let showAll = false,
 let extensionUrl = chrome.extension.getURL(''),
     urlExtensionUrl = 'url("' + extensionUrl,
     blankImg = 'data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==',
@@ -23,11 +22,6 @@ let extensionUrl = chrome.extension.getURL(''),
         'VIDEO', 'P', 'ARTICLE'
     ],
     tagListCSS = tagList.join(),
-
-    /**
-     * List of iframes within the webpage.
-     */
-    iframes = [],
 
     /**
      * Flag that triggers the process of iterating over the entire
@@ -85,43 +79,11 @@ chrome.runtime.sendMessage({
  */
 chrome.runtime.onMessage.addListener(request => {
     if (request.r === 'showImages') {
-        ShowImages();
+        displayer.showImages();
     }
 });
 
-/**
- * Display images in webpage and iframes
- */
-function ShowImages() {
-
-    if (showAll) {
-        // Already shown, do nothing.
-        return;
-    }
-
-    showAll = true;
-
-    if (window == top) {
-        chrome.runtime.sendMessage({
-            r: 'setColorIcon',
-            toggle: false
-        });
-    }
-
-    if (window.skfShowImages !== null) {
-        window.skfShowImages();
-    }
-
-    for (let i = 0, max = iframes.length; i < max; i++) {
-        try {
-            if (iframes[i].contentWindow && iframes[i].contentWindow.skfShowImages) {
-                iframes[i].contentWindow.skfShowImages();
-            }
-        } catch (err) {
-            // Iframe may have been rewritten.
-        }
-    }
-}
+const displayer = new ImagesDisplayer();
 
 /**
  * Contain all the logic related to handle the DOM structure and
@@ -176,7 +138,7 @@ function doWin(win, winContentLoaded) {
     const pollID = setInterval(function() {
         // Nothing to add. All images will be shown. Stop the
         // iteration.
-        if (showAll) {
+        if (displayer.isShowAll()) {
             clearInterval(pollID);
         } else if (doc.head) {
             // If process has not started. Make the webpage
@@ -249,7 +211,7 @@ function doWin(win, winContentLoaded) {
         if (event.altKey && event.keyCode == 80 && !settings.isPaused) { //ALT-p
             settings.isPaused = true;
             chrome.runtime.sendMessage({ r: 'pause', toggle: true });
-            ShowImages();
+            displayer.showImages();
         } else if (mouseOverEl && event.altKey) {
             if (event.keyCode == 65 && mouseOverEl[ATTR_HAS_BACKGROUND_IMAGE]) { //ALT-a
                 showElement(mouseOverEl);
@@ -290,7 +252,7 @@ function doWin(win, winContentLoaded) {
             doc.body.children.length == 1 &&
             doc.body.children[0].tagName == 'IMG') {
 
-            ShowImages();
+            displayer.showImages();
             return;
         }
 
@@ -419,7 +381,7 @@ function doWin(win, winContentLoaded) {
             return;
         }
 
-        iframes.push(iframe);
+        displayer.addIFrame(iframe);
 
         const win = iframe.contentWindow;
         if (!win) {
@@ -543,7 +505,7 @@ function doWin(win, winContentLoaded) {
     function doElement() {
         // No need to do anything when all the images are going to be
         // displayed.
-        if (showAll) {
+        if (displayer.isShowAll()) {
             return;
         }
 
@@ -863,7 +825,7 @@ function doWin(win, winContentLoaded) {
     }
 
     function checkMousePosition() {
-        if (!mouseMoved || !mouseEvent || !contentLoaded || showAll) {
+        if (!mouseMoved || !mouseEvent || !contentLoaded || displayer.isShowAll()) {
             return;
         }
         mouseMoved = false;
@@ -940,7 +902,7 @@ function doWin(win, winContentLoaded) {
             clearTimeout(domElement[ATTR_CHECK_TIMEOUT]);
             domElement[ATTR_CHECK_TIMEOUT] = null;
         }
-        if (showAll) {
+        if (displayer.isShowAll()) {
             doMouseEventListeners(domElement, false);
         }
     }
