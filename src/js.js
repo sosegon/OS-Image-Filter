@@ -1,4 +1,6 @@
-//global variables
+/**
+ * Global variables.
+ */
 let showAll = false,
     extensionUrl = chrome.extension.getURL(''),
     urlExtensionUrl = 'url("' + extensionUrl,
@@ -6,26 +8,41 @@ let showAll = false,
     urlBlankImg = 'url("' + blankImg + '")',
     eyeCSSUrl = 'url(' + extensionUrl + "eye.png" + ')',
     undoCSSUrl = 'url(' + extensionUrl + "undo.png" + ')',
-    // This is the list of elements that can
-    // actually hold images. These are the ones
-    // that have to be checked.
-    tagList = ['IMG', 'DIV', 'SPAN', 'A', 'UL', 'LI', 'TD', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'I', 'STRONG', 'B', 'BIG', 'BUTTON', 'CENTER', 'SECTION', 'TABLE', 'FIGURE', 'ASIDE', 'HEADER', 'VIDEO', 'P', 'ARTICLE'],
+    /**
+     * This is the list of elements that can actually hold images.
+     * These are the ones that have to be checked.
+     */
+    tagList = ['IMG', 'DIV', 'SPAN',
+        'A', 'UL', 'LI',
+        'TD', 'H1', 'H2',
+        'H3', 'H4', 'H5',
+        'H6', 'I', 'STRONG',
+        'B', 'BIG', 'BUTTON',
+        'CENTER', 'SECTION', 'TABLE',
+        'FIGURE', 'ASIDE', 'HEADER',
+        'VIDEO', 'P', 'ARTICLE'
+    ],
     tagListCSS = tagList.join(),
 
-    // List of iframes within the webpage
+    /**
+     * List of iframes within the webpage.
+     */
     iframes = [],
 
-    // Flag the trigger the process of iterating
-    // over  the entire structure to process the
-    // images and add elements like the eye icon
+    /**
+     * Flag that triggers the process of iterating over the entire
+     * structure to process the images and add elements like the eye
+     * icon.
+     */
     contentLoaded = false,
     settings = null,
     quotesRegex = /['"]/g;
 
-// Detects if the script is being executed
-// within an iframe, it is usseful when trying
-// to accomplish something just in the main
-// page e.g. displaying a bar for donations
+/**
+ * Detect if the script is being executed within an iframe. It is
+ * useful when trying to accomplish something just in the main page
+ * e.g. displaying a bar for donations.
+ */
 function inIframe() {
     try {
         return window.self !== window.top;
@@ -34,63 +51,85 @@ function inIframe() {
     }
 }
 
-// Keeps track of contentLoaded
-// Once the DOM tree is ready we can start to
-// modify it. In this case, we add the canvas
-// element to process images fetched with XHR
-// and the container for the canvas elements
-// to process images fetched directly.
-window.addEventListener('DOMContentLoaded', function() {
+/**
+ * Keep track of flag **contentLoaded**. Once the DOM tree is ready we
+ * can start to modify it. In this case, we add the canvas element to
+ * process images fetched with XHR and the container for the canvas
+ * elements to process images fetched directly.
+ */
+window.addEventListener('DOMContentLoaded', () => {
     document.body.appendChild(createCanvas(CANVAS_GLOBAL_ID));
     document.body.appendChild(createCanvas(CANVAS_CONTAINER_ID));
     contentLoaded = true;
 });
 
-// Gets settings to check if it is active or is paused etc.
-chrome.runtime.sendMessage({ r: 'getSettings' }, function(s) {
+/**
+ * Get settings to check status of extension.
+ */
+chrome.runtime.sendMessage({
+    r: 'getSettings'
+}, (s) => {
     settings = s;
-    //if is active - go
+    // If it is active, do the stuff
     if (settings && !settings.isExcluded && !settings.isExcludedForTab && !settings.isPaused && !settings.isPausedForTab) {
-        //change icon
-        chrome.runtime.sendMessage({ r: 'setColorIcon', toggle: true });
-        //do main window
+        chrome.runtime.sendMessage({
+            r: 'setColorIcon',
+            toggle: true
+        });
         doWin(window, contentLoaded);
     }
 });
 
-// Catches 'Show Images' option from browser actions
-chrome.runtime.onMessage.addListener(
-    function(request, sender, sendResponse) {
-        if (request.r == 'showImages') {
-            ShowImages();
-        }
+/**
+ * Catches 'Show Images' option from browser actions
+ */
+chrome.runtime.onMessage.addListener(request => {
+    if (request.r === 'showImages') {
+        ShowImages();
     }
-);
+});
 
-// Displays images within the webpage and the
-// iframes
+/**
+ * Display images in webpage and iframes
+ */
 function ShowImages() {
+
     if (showAll) {
+        // Already shown, do nothing.
         return;
     }
+
     showAll = true;
+
     if (window == top) {
-        chrome.runtime.sendMessage({ r: 'setColorIcon', toggle: false });
+        chrome.runtime.sendMessage({
+            r: 'setColorIcon',
+            toggle: false
+        });
     }
-    window.skfShowImages();
+
+    if (window.skfShowImages !== null) {
+        window.skfShowImages();
+    }
+
     for (let i = 0, max = iframes.length; i < max; i++) {
         try {
             if (iframes[i].contentWindow && iframes[i].contentWindow.skfShowImages) {
                 iframes[i].contentWindow.skfShowImages();
             }
-        } catch (err) { /*iframe may have been rewritten*/ }
+        } catch (err) {
+            // Iframe may have been rewritten.
+        }
     }
 }
 
-
-// Contains all the logic related
-// to handle the dom structure
-// and process the images.
+/**
+ * Contain all the logic related to handle the DOM structure and
+ * process the images.
+ *
+ * @param {object} win
+ * @param {boolean} winContentLoaded
+ */
 function doWin(win, winContentLoaded) {
     let doc = win.document,
         headStyles = {},
@@ -100,23 +139,24 @@ function doWin(win, winContentLoaded) {
         mouseEvent = null,
         mouseOverEl = null,
         elList = [],
-        // This flag is used to check if the process
-        // of iteration over the structure to find
-        // the elements and process the images
-        // has started
+        /**
+         * This flag is used to check if the iteration over the
+         * structure to find the elements and process the images has
+         * started.
+         */
         hasStarted = false;
-    // Start, or register start
-    // There is no way to control the order in which
-    // the listener for 'DOMContentLoaded' and the
-    // callback to get the settings from background
-    // are executed. This condition is the way to handle
-    // tha situation.
-    // doWin is called after receiving the settings
-    // from the background. However, at that moment,
-    // the listener for 'DOMContentLoaded' that sets
-    // the flag contentLoaded passed here as
-    // winContentLoaded has been already triggered
-    // In short, the listener was executed first
+
+    /**
+     * Start, or register start. There is no way to control the order
+     * in which the listener for **DOMContentLoaded** and the callback
+     * to get the settings from background are executed. This
+     * condition is the way to handle that situation. **doWin** is
+     * called after receiving the settings from the background.
+     * However, at that moment, the listener for **DOMContentLoaded**
+     * that sets the flag **contentLoaded** passed here as
+     * **winContentLoaded** has been already triggered. In short, the
+     * listener was executed first.
+     */
     if (winContentLoaded) {
         Start();
     }
@@ -125,24 +165,22 @@ function doWin(win, winContentLoaded) {
         win.addEventListener('DOMContentLoaded', Start);
     }
 
-    // Set some css as soon as possible.
-    // These styles are going to be used in the elements
-    // containing images, and other additional
-    // items added by the chrome extension
-    // The logic is set to repeat every 1ms:
-    // at this point we do not know if the
-    // dom is ready for manipulation. The
-    // variable doc.head is check to see
-    // if the styles can be added.
+    /**
+     * Set some css as soon as possible. These styles are going to be
+     * used in the elements containing images, and other additional
+     * items added by the chrome extension. The logic is set to repeat
+     * every 1ms. At this point we do not know if the DOM tree is
+     * ready for manipulation. The variable doc.head is check to see
+     * if the styles can be added.
+     */
     const pollID = setInterval(function() {
-        // Nothing to add. All images will be
-        // shown. Stop the iteration.
+        // Nothing to add. All images will be shown. Stop the
+        // iteration.
         if (showAll) {
             clearInterval(pollID);
         } else if (doc.head) {
-            // If process has not started.
-            // Make the webpage transparent
-            // That way no images are displayed.
+            // If process has not started. Make the webpage
+            // transparent. That way no images are displayed.
             if (!hasStarted) {
                 addHeadStyle(doc, headStyles, 'body', '{opacity: 0 !important; }');
             }
@@ -158,12 +196,17 @@ function doWin(win, winContentLoaded) {
             clearInterval(pollID);
         }
     }, 1);
+
     //ALT-a, ALT-z
     doc.addEventListener('keydown', docKeyDown);
-    //notice when mouse has moved
     doc.addEventListener('mousemove', docMouseMove);
     win.addEventListener('scroll', windowScroll);
 
+    /**
+     * Set **mouseEvent** object and **mouseMoved** flag.
+     *
+     * @param {Event} event
+     */
     function docMouseMove(event) {
         mouseEvent = event;
         mouseMoved = true;
@@ -190,7 +233,12 @@ function doWin(win, winContentLoaded) {
             }
         }
     }
-    //keep track of which image-element mouse if over
+
+    /**
+     * Keep track in which **IMG** element the mouse is over.
+     *
+     * @param {Event} event
+     */
     function mouseEntered(event) {
         doHover(this, true, event);
         event.stopPropagation();
@@ -200,26 +248,31 @@ function doWin(win, winContentLoaded) {
         doHover(this, false, event);
     }
 
-    // Starts the process to filter images
+    /**
+     * Start the process to filter images.
+     */
     function Start() {
-        // With iFrames it happens
+        // With iFrames it happens.
         if (!doc.body) {
             return;
         }
 
-        // Do not hide an image opened in the browser
-        // The user actually WANTS to see it.
-        if (win == top && doc.body.children.length == 1 && doc.body.children[0].tagName == 'IMG') {
+        // Do not hide an image opened in the browser. The user
+        // actually WANTS to see it.
+        if (win == top &&
+            doc.body.children.length == 1 &&
+            doc.body.children[0].tagName == 'IMG') {
+
             ShowImages();
             return;
         }
 
-        // Filter any image in the body.
-        // Here the image can be a background
-        // set in a css style
+
+        // Filter any image in the body. Here the image can be a
+        // background set in a css style.
         doElements(doc.body, false);
 
-        // Once body has been done, show it
+        // Once body has been done, show it.
         if (headStyles['body']) {
             removeHeadStyle(doc, headStyles, 'body');
         }
@@ -227,9 +280,8 @@ function doWin(win, winContentLoaded) {
         eye = createEye(doc);
         doc.body.appendChild(eye);
 
-        // Create temporary div,
-        // to eager load background img
-        // light for noEye to avoid flicker
+        // Create temporary div, to eager load background img light
+        // for noEye to avoid flicker.
         if (settings.isNoEye) {
             for (let i = 0; i < 8; i++) {
                 const div = doc.createElement('div');
@@ -239,13 +291,13 @@ function doWin(win, winContentLoaded) {
             }
         }
 
-        // Mutation observer checks when a change
-        // in the dom has occured
+        // Mutation observer checks when a change in the DOM tree has
+        // occured.
         observer = new WebKitMutationObserver(function(mutations, observer) {
             for (let i = 0; i < mutations.length; i++) {
                 const m = mutations[i];
-                // This is for changes in the nodes
-                // already in the tree
+                // This is for changes in the nodes already in the DOM
+                // tree.
                 if (m.type == 'attributes') {
                     if (m.attributeName == 'class') {
                         const oldHasLazy = m.oldValue != null && m.oldValue.indexOf('lazy') > -1,
@@ -265,7 +317,7 @@ function doWin(win, winContentLoaded) {
                         }
                     }
                 }
-                // When new nodes have been added
+                // When new nodes have been added.
                 else if (m.addedNodes != null && m.addedNodes.length > 0) {
                     for (let j = 0; j < m.addedNodes.length; j++) {
                         const domElement = m.addedNodes[j];
@@ -286,18 +338,15 @@ function doWin(win, winContentLoaded) {
         });
         observer.observe(doc, { subtree: true, childList: true, attributes: true, attributeOldValue: true });
 
-        // checkMousePosition every so often
-        // This is to update the positon of
-        // the eye when the mouse pointer is
-        // over an image
+        // checkMousePosition every so often. This is to update the
+        // positon of the eye when the mouse pointer is over an image.
         setInterval(checkMousePosition, 250);
 
-        // Update the bounding boxes for every
-        // element with an image
+        // Update the bounding boxes for every element with an image.
         setInterval(updateElementRectangles, 3000);
 
-        // This is likely to be set based on
-        // an average time for a web page to be loaded
+        // This is likely to be set based on an average time for a web
+        // page to be loaded.
         // TODO: Improve this
         for (let i = 1; i < 7; i++) {
             if ((i % 2) > 0) {
@@ -305,20 +354,23 @@ function doWin(win, winContentLoaded) {
             }
         }
 
-        // At this point the frame elements
-        // are already in the dom, but their
-        // content may not have been loaded.
+        // At this point, the frame elements are already in the DOM
+        // tree, but their content may not have been loaded.
         const iframes = doc.getElementsByTagName('iframe');
         for (let i = 0, max = iframes.length; i < max; i++) {
             doIframe(iframes[i]);
         }
 
-        // Now the process has officially started
+        // Now the process has officially started.
         hasStarted = true;
     }
 
-    // Gets an elements to star the process over
-    // its descendants and itself if specified
+    /**
+     * Get an element to star the process.
+     *
+     * @param {Element} domElement
+     * @param {boolean} includeChildren
+     */
     function doElements(domElement, includeChildren) {
         if (includeChildren && tagList.indexOf(domElement.tagName) > -1) {
             doElement.call(domElement);
@@ -329,25 +381,28 @@ function doWin(win, winContentLoaded) {
         }
     }
 
-    // Do the process over an iframe
-    // Remember that an iframe contains
-    // another webpage embedded in the main
-    // one.
+    /**
+     * Do the process over an iframe. An iframe contains another
+     * webpage embedded in the main one.
+     *
+     * @param {HTMLIFrameElement} iframe
+     */
     function doIframe(iframe) {
         if (iframe.src && iframe.src != "about:blank" && iframe.src.substr(0, 11) != 'javascript:') {
             return;
         }
+
         iframes.push(iframe);
+
         const win = iframe.contentWindow;
         if (!win) {
-            return; //with iFrames it happens
+            return; //with iFrames it happens.
         }
 
-        // Similar to the main page. The
-        // logic is set to be executed until
-        // the iframe is ready to be processed
+        // Similar to the main page. The logic is set to be executed
+        // until the iframe is ready to be processed.
         const pollNum = 0,
-            pollID = setInterval(function() {
+            pollID = setInterval(() => {
                 if (doc.body) {
                     clearInterval(pollID);
                     doWin(win, true);
@@ -358,12 +413,13 @@ function doWin(win, winContentLoaded) {
             }, 10);
     }
 
-    // Adds a sibling canvas for the corresponding
-    // element with an image. The it tries to
-    // filter the content of the image by directly
-    // getting the data from the canvas; if that fails,
-    // it retrieves the data of the image with
-    // an XHR and passes processes the result.
+    /**
+     * Add a sibling canvas for the corresponding IMG element. Then,
+     * it tries to filter the content of the image by directly
+     * getting the data from the canvas. If that fails, it retrieves
+     * the data of the image with an XHR and passes processes the
+     * result.
+     */
     function processImage() {
         const canvas = addCanvasSibling(this);
         if (canvas) {
@@ -402,13 +458,18 @@ function doWin(win, winContentLoaded) {
             doLoadEventListener(this, false);
         }
     }
-
-    // Process the image of an image passed in
-    // its style. Since the image in the style
-    // is referenced with an url, it uses it
-    // to retrieve it with an XHR object.
-    // It uses the global canvas to filter the
-    // image.
+    /**
+     * Process the image of an element passed in its style. Since the
+     * image is in the style, it is referenced with an url. The url is
+     * used to retrieve the image with an XHR object. It uses the
+     * global canvas to filter the image.
+     *
+     * @param {Element} domElement
+     * @param {ImageBitmap} backgrounfImage
+     * @param {number} width
+     * @param {number} height
+     * @param {string} uuid
+     */
     function processBackgroundImage(domElement, backgroundImage, width, height, uuid) {
         const xhr = new XMLHttpRequest();
         xhr.onload = function() {
@@ -435,84 +496,88 @@ function doWin(win, winContentLoaded) {
         xhr.send();
     }
 
-    // Adds or removes the listener for a
-    // load event in an IMG element
+    /**
+     * Add or remove the listener for a **load** event in an IMG
+     * element.
+     *
+     * @param {HTMLImageElement} domElement
+     * @param {boolean} toggle
+     */
     function doLoadProcessImageListener(domElement, toggle) {
         handleListeners(domElement, {
             'load': processImage
         }, toggle, ATTR_HAS_PROCESS_IMAGE_LISTENER);
     }
 
-    // Analyses an element to proceed to
-    // process its image if it has one
+    /**
+     * Analyse an element to proceed to process its image if it has
+     * one.
+     */
     function doElement() {
-        // No need to do anything when
-        // all the images are going to
-        // be dispolayed
+        // No need to do anything when all the images are going to be
+        // displayed.
         if (showAll) {
             return;
         }
 
-        // IMG elements
         if (this.tagName == 'IMG') {
-            //this.crossOrigin = "Anonymous"; // To process images from other domains
+            // this.crossOrigin = "Anonymous"; // To process images from other domains
 
-            // wiz-to-process class does not exist
-            // it is just a workaround to avoid setting
-            // an wiz-uuid in an element that already
-            // has one and it is also in the lists
-            // of suspects. This is due to the fact
-            // that this function is executed more than
-            // once over the same element.
+            /**
+             * wiz-to-process class does not exist. It is just a
+             * workaround to avoid setting an wiz-uuid in an element
+             * that already has one and it is also in the lists of
+             * suspects. This is due to the fact that this function is
+             * executed more than once over the same element.
+             */
             if (!this.classList.contains('wiz-to-process')) {
                 addRandomWizUuid(this);
-                addCssClass(this, "wiz-to-process") // class used to trigger the load event once Nacl module is loaded
+                addCssClass(this, "wiz-to-process");
                 addAsSuspect(this);
             }
 
-            // Attach load event need for:
-            // 1) As we need to catch it after
-            // it is switched for the base64 image
-            //
-            // 2) In case the img gets changed to
-            // something else later
+            /**
+             * Attach load event need for the following:
+             *
+             * 1) As we need to catch it after, it is switched for the
+             * base64 image.
+             *
+             * 2) In case the img gets changed to something else later
+             */
             doLoadProcessImageListener(this, true);
             doLoadEventListener(this, true);
 
             // See if not yet loaded
             if (!this.complete) {
 
-                // Hide, to avoid flash until load
-                // event is handled
+                // Hide, to avoid flash until load event is handled.
                 doHidden(this, true);
                 return;
             }
 
             const { width, height } = this;
 
-            // It was successfully replace
-            // TODO: Check this because it comes
-            // from the original extension
+            // It was successfully replace.
+            // TODO: Check this because it comes from the original
+            // extension.
             if (this.src == blankImg) {
                 doHidden(this, false);
                 doSkifImageBG(this, true);
                 this[ATTR_IS_BLOCKED] = true;
             }
 
-            // Image greater than the dimensions
-            // in the settings needs to be filtered
-            // we need to catch 0 too, as sometimes
-            // images start off as zero
+            // An image greater than the dimensions in settings needs
+            // to be filtered. We need to catch 0 too, as sometimes
+            // images start off as zero.
             else if ((width == 0 || width > settings.maxSafe) && (height == 0 || height > settings.maxSafe)) {
                 doMouseEventListeners(this, true);
                 if (!this[ATTR_HAS_TITLE_AND_SIZE]) {
                     // this.style.width = elWidth + 'px';
                     // this.style.height = elHeight + 'px';
                     if (!this.title) {
-                        if (this.alt){
+                        if (this.alt) {
                             this.title = this.alt;
-                        }
-                        else {
+                        } else {
                             this.src.match(/([-\w]+)(\.[\w]+)?$/i);
                             this.title = RegExp.$1;
                         }
@@ -524,51 +589,49 @@ function doWin(win, winContentLoaded) {
                 if (this.parentElement && this.parentElement.tagName == 'PICTURE') {
                     for (let i = 0; i < this.parentElement.childNodes.length; i++) {
                         const node = this.parentElement.childNodes[i];
-                        if (node.tagName == 'SOURCE'){
+                        if (node.tagName == 'SOURCE') {
                             doImgSrc(node, true);
                         }
                     }
                 }
                 //this.src = blankImg;
             }
-            // Small images are simply hidden
-            // TODO: Add a rule in the settings
-            // to let the user know that this happens
+            // Small images are simply hidden.
+            // TODO: Add a rule in the settings to let the user know
+            // that this happens.
             else {
                 doHidden(this, false);
             }
-            // TODO: Uncomment this when the
-            // logic for video is implemented
-            // }
+            // TODO: Uncomment this when the logic for video is
+            // implemented.
             // else if (this.tagName == 'VIDEO') {
             //     addAsSuspect(this);
             //     doHidden(this, true);
             //     doSkifImageBG(this, true);
+            // }
 
-            // Any element other than IMG and VIDEO
         } else {
-            // Here the images are added in the
-            // styles as backgrounds
+            // Here the images are added in the styles as backgrounds.
             const compStyle = getComputedStyle(this),
                 bgImg = compStyle['background-image'],
                 width = parseInt(compStyle['width']) || this.clientWidth,
                 height = parseInt(compStyle['height']) || this.clientHeight; //as per https://developer.mozilla.org/en/docs/Web/API/window.getComputedStyle, getComputedStyle will return the 'used values' for width and height, which is always in px. We also use clientXXX, since sometimes compStyle returns NaN.
 
-            // Image greater than the dimensions
-            // in the settings needs to be filtered
-            // we need to catch 0 too, as sometimes
-            // images start off as zero
+            // Image greater than the dimensions in the settings needs
+            // to be filtered. We need to catch 0 too, as sometimes
+            // images start off as zero.
             if (bgImg != 'none' && (width == 0 || width > settings.maxSafe) && (height == 0 || height > settings.maxSafe) &&
                 bgImg.indexOf('url(') != -1 &&
                 !bgImg.startsWith(urlExtensionUrl) && bgImg != urlBlankImg &&
                 !this[ATTR_PROCESSED]
             ) {
 
-                // Used to fetch image with xhr
+                // Used to fetch image with xhr.
                 const bgImgUrl = bgImg.slice(5, -2);
                 // Avoids quick display of original image
                 this.style.backgroundImage = "url('')";
-                // Reference for the element once the image is processed
+                // Reference for the element once the image is
+                // processed.
                 addRandomWizUuid(this);
                 const uuid = this.getAttribute(ATTR_UUID);
                 processBackgroundImage(this, bgImgUrl, width, height, uuid);
@@ -590,7 +653,7 @@ function doWin(win, winContentLoaded) {
             }
         }
     }
-    //
+
     function checkBackgroundImage() {
         const { height, width } = this;
         if (height <= settings.maxSafe || width <= settings.maxSafe) {
@@ -598,7 +661,11 @@ function doWin(win, winContentLoaded) {
         }
         this.onload = null;
     };
-    // Add to the lists of suspects
+    /**
+     * Add element to the lists of suspects.
+     *
+     * @param {Element} domElement
+     */
     function addAsSuspect(domElement) {
         if (elList.indexOf(domElement) == -1) {
             elList.push(domElement);
@@ -606,15 +673,23 @@ function doWin(win, winContentLoaded) {
         }
     }
 
-    // Stores the original src of the image
+    /**
+     * Store the original src of the image.
+     *
+     * @param {HTMLImageElement} domElement
+     * @param {boolean} toggle
+     */
     function doImgSrc(domElement, toggle) {
         if (toggle && !domElement.getAttribute(ATTR_ALREADY_TOGGLED)) {
             domElement.oldsrc = domElement.src;
             domElement.oldsrcset = domElement.srcset;
             // Do not set to empty string, otherwise the processing
             // will result in an empty image
-            //el.src = el.srcset = '';
-            domElement.srcset = ''; // empty string to make sure filtered images are displayed in the img elements
+            // el.src = el.srcset = '';
+
+            // Empty string to make sure filtered images are displayed
+            // in the img elements
+            domElement.srcset = '';
             domElement.setAttribute(ATTR_ALREADY_TOGGLED, 'true');
         } else if (!toggle && domElement.getAttribute(ATTR_ALREADY_TOGGLED) === 'true') {
             const oldsrc = domElement.oldsrc;
@@ -623,25 +698,45 @@ function doWin(win, winContentLoaded) {
             domElement.srcset = domElement.oldsrcset;
         }
     }
-    // Hides elements using styles
+    /**
+     * Hide element.
+     *
+     * @param {Element} domElement
+     * @param {boolean} toggle
+     */
     function doHidden(domElement, toggle) {
         handleStyleClasses(domElement, [CSS_CLASS_HIDE], toggle, ATTR_IS_HID);
     }
-    // Adds / removes mouse event listeners
+    /**
+     * Add/remove mouse event listeners.
+     *
+     * @param {Element} domElement
+     * @param {boolean} toggle
+     */
     function doMouseEventListeners(domElement, toggle) {
         handleListeners(domElement, {
             'mouseover': mouseEntered,
             'mouseout': mouseLeft
         }, toggle, ATTR_HAS_MOUSE_LISTENERS);
     }
-    // Adds / removes the load event
+    /**
+     * Add / remove a load event listener.
+     *
+     * @param {Element} domElement
+     * @param {boolean} toggle
+     */
     function doLoadEventListener(domElement, toggle) {
         handleListeners(domElement, {
             'load': doElement
         }, toggle, ATTR_HAS_LOAD_LISTENER);
     }
-    // Contorls when the mouse pointer is over
-    // an element
+    /**
+     * Control when the mouse pointer is over an element.
+     *
+     * @param {Element} domElement
+     * @param {boolean} toggle
+     * @param {Event} event
+     */
     function doHover(domElement, toggle, event) {
         const coords = domElement[ATTR_RECTANGLE];
         if (toggle && !domElement[ATTR_HAS_HOVER]) {
@@ -659,14 +754,17 @@ function doWin(win, winContentLoaded) {
             }
         }
     }
-
-    // Positions and displays the eye icon
-    // over the image hovered by the mouse
-    // pointer
+    /**
+     * Position and display the eye icon ver the image hovered by the
+     * mouse pointer.
+     *
+     * @param {Element} domElement
+     * @param {boolean} toggle
+     * @param {object} coords
+     */
     function doHoverVisual(domElement, toggle, coords) {
         if (toggle && !domElement[ATTR_HAS_HOVER_VISUAL] && domElement[ATTR_HAS_BACKGROUND_IMAGE]) {
             if (!settings.isNoEye) {
-                //eye
                 positionEye(domElement, coords);
                 eye.style.display = 'block';
 
@@ -675,7 +773,8 @@ function doWin(win, winContentLoaded) {
                     eye.onclick = function(e) {
                         e.stopPropagation();
                         showElement.call(domElement);
-                        // hide the eye icon and not allow undo option for now
+                        // Hide the eye icon and not allow undo option
+                        // for now.
                         // TODO: Implement undo option
                         eye.style.display = 'none';
                         // eye.style.backgroundImage = undoCSSUrl;
@@ -714,8 +813,12 @@ function doWin(win, winContentLoaded) {
             domElement[ATTR_CLEAR_HOVER_VISUAL_TIMER] = null;
         }
     }
-    // Positions the eye in the top right
-    // corner of an image
+    /**
+     * Position the eye in the top right corner of an image.
+     *
+     * @param {Element} domElement
+     * @param {object} coords
+     */
     function positionEye(domElement, coords) {
         eye.style.top = (coords.top < 0 ? 0 : coords.top) + 'px';
         let left = coords.right;
@@ -737,7 +840,7 @@ function doWin(win, winContentLoaded) {
             return;
         }
         mouseMoved = false;
-        //see if needs to defocus current
+        // See if needs to defocus current.
         if (mouseOverEl) {
             const coords = mouseOverEl[ATTR_RECTANGLE];
             if (!isMouseIn(mouseEvent, coords)) {
@@ -751,7 +854,7 @@ function doWin(win, winContentLoaded) {
                 }
             }
         }
-        //find element under mouse
+        // Find element under mouse.
         let foundElement = mouseOverEl,
             found = false,
             foundSize = foundElement ? foundElement[ATTR_RECTANGLE].width * foundElement[ATTR_RECTANGLE].height : null;
@@ -762,7 +865,9 @@ function doWin(win, winContentLoaded) {
             }
             const rect = domElement[ATTR_RECTANGLE];
             if (isMouseIn(mouseEvent, rect)) {
-                //If not foundElement yet, use this. Else if foundElement has not got skfBG, then if ours does, use it. Else if foundElement is bigger, use this.
+                // If not foundElement yet, use this. Else if
+                // foundElement has not got skfBG, then if ours does,
+                // use it. Else if foundElement is bigger, use this.
                 let useThis = false;
                 if (!foundElement) {
                     useThis = true;
@@ -818,8 +923,13 @@ function doWin(win, winContentLoaded) {
             domElement.setAttribute(ATTR_UUID, guid());
         }
     }
-    // from https://stackoverflow.com/a/105074/1065981
+    /**
+     * Generate a uuid number.
+     *
+     * @returns {number}
+     */
     function guid() {
+        // See https://stackoverflow.com/a/105074/1065981
         function s4() {
             return Math.floor((1 + Math.random()) * 0x10000)
                 .toString(16)

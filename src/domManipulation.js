@@ -66,13 +66,15 @@ function handleStyleClasses(domElement, classNames, add, flag) {
         domElement[flag] = false;
     }
 }
-
-// Adds a canvas sibling for an element
-// containing an image. The canvas is
-// meant to be used to get the data in
-// a readable format to be filtered
 // TODO: Use only the global canvas to
 // improve perfomance. Workers may be helpful
+/**
+ * Add a canvas sibling for an element containing an image. The
+ * canvas is meant to be used to get the data in a readable format to
+ * be filtered.
+ *
+ * @param {Element} domElement
+ */
 function addCanvasSibling(domElement) {
     const uuid = domElement.getAttribute(ATTR_UUID) + "-canvas";
     const canvas = document.getElementById(uuid);
@@ -96,11 +98,13 @@ function createCanvas(id) {
     return canvas;
 }
 
-// Create eye icon
-// There is one single icon that is
-// positioned accordingly in the
-// corresponding element that can be
-// displayed at that moment
+/**
+ * Create eye icon. There is one single icon that is positioned
+ * accordingly in the corresponding element that can be displayed at
+ * that moment.
+ *
+ * @param {Document} doc
+ */
 function createEye(doc) {
     const eye = doc.createElement('div');
 

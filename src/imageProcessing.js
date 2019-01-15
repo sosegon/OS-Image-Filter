@@ -1,10 +1,10 @@
 // TODO: Implement option to remove face features. Convex hull or flooding may work.
-// Grays out the filter corresponding to
-// skin color. Does not make any other
-// discrimination. Pixels that are not
-// human skin may be grayed out; some
-// pixels that are human skin may be
-// skipped.
+/**
+ * Gray skin color out. Pixels that are not human skin may be grayed
+ * out; some pixels that are human skin may be skipped.
+ *
+ * @param {array} rgbaArray
+ */
 function filterRgbaArray(rgbaArray) {
     for (let i = 0; i < rgbaArray.length; i += 4) {
         rIndex = i
@@ -28,8 +28,13 @@ function filterRgbaArray(rgbaArray) {
         }
     }
 }
-// Gets an IMG and a canvas to process the
-// image of the former one
+/**
+ * Filter the image in an IMG element.
+ *
+ * @param {HTMLCanvasElement} canvas
+ * @param {HTMLImageElement} imgElement
+ * @param {number} uuid
+ */
 function filterImageElement(canvas, imgElement, uuid) {
     const { width, height } = imgElement;
     canvas.setAttribute('width', width);
@@ -58,9 +63,13 @@ function filterImageElement(canvas, imgElement, uuid) {
         actualImg.onload = loadProcessed;
     }
 }
-
-// Gets an IMG and a canvas to process the
-// image in the style of the former one
+/**
+ * Filter the background image in an element.
+ *
+ * @param {HTMLCanvasElement} canvas
+ * @param {HTMLImageElement} imgElement
+ * @param {number} uuid
+ */
 function filterBackgroundImageContent(canvas, imgElement, uuid) {
     const { width, height } = imgElement;
     canvas.setAttribute('width', width);
@@ -89,9 +98,10 @@ function filterBackgroundImageContent(canvas, imgElement, uuid) {
         actualEl[ATTR_PROCESSED] = true;
     }
 }
-
-// Sets attributes and styles for elements
-// which images have been already processed
+/**
+ * Set attributes and styles for elements which images have been
+ * already processed.
+ */
 function loadProcessed() {
     removeCssClass(this, CSS_CLASS_HIDE);
     this.setAttribute(ATTR_PROCESSED, "true");
@@ -103,7 +113,8 @@ function loadProcessed() {
     }
 
     if (this[ATTR_PROCESSED]) { // already processed
-        doSkifImageBG(this, true); // Needed to enable eye icon in image
+        // Needed to enable eye icon in image
+        doSkifImageBG(this, true);
         //DoImgSrc(this, true);
         return;
     }
