@@ -46,7 +46,12 @@ function filterImageElement(canvas, imgElement, uuid) {
     context.putImageData(imageData, 0, 0);
     const urlData = canvas.toDataURL('image/png');
 
-    const actualImg = $("img[" + ATTR_UUID + "=" + uuid + "]")[0];
+    let images = document.querySelectorAll('[' + ATTR_UUID + ']');
+    images = [...images];
+    const actualImg = images.filter((img) => {
+        return img.getAttribute(ATTR_UUID) === uuid;
+    })[0];
+
     if (actualImg !== undefined) {
         actualImg.src = urlData;
         actualImg.srcset = '';
@@ -73,9 +78,14 @@ function filterBackgroundImageContent(canvas, imgElement, uuid) {
     const base64Img = canvas.toDataURL("image/png");
     const newBkgImgUrl = "url('" + base64Img + "')";
 
-    const actualEl = $("[" + ATTR_UUID + "=" + uuid + "]")[0];
+    let images = document.querySelectorAll('[' + ATTR_UUID + ']');
+    images = [...images];
+    const actualEl = images.filter((img) => {
+        return img.getAttribute(ATTR_UUID) === uuid;
+    })[0];
+
     if (actualEl !== undefined) {
-        $(actualEl).css("background-image", newBkgImgUrl);
+        actualEl.style.backgroundImage = newBkgImgUrl;
         actualEl[ATTR_PROCESSED] = true;
     }
 }
@@ -83,11 +93,14 @@ function filterBackgroundImageContent(canvas, imgElement, uuid) {
 // Sets attributes and styles for elements
 // which images have been already processed
 function LoadProcessed() {
-    $(this).removeClass(CSS_CLASS_HIDE);
-    $(this).attr(ATTR_PROCESSED, "true");
+    removeCssClass(this, CSS_CLASS_HIDE);
+    this.setAttribute(ATTR_PROCESSED, "true");
     this[ATTR_PROCESSED] = true;
-    const uuid = $(this).attr(ATTR_UUID);
-    $("#" + uuid + "-canvas").remove();
+    const uuid = this.getAttribute(ATTR_UUID);
+    const canvas = document.getElementById("#" + uuid + "-canvas");
+    if (canvas !== null) {
+        canvas.parentNode.removeChild(canvas);
+    }
 
     if (this[ATTR_PROCESSED]) { // already processed
         DoSkifImageBG(this, true); // Needed to enable eye icon in image

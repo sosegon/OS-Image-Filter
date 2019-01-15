@@ -24,7 +24,7 @@
     "content_scripts": [
     {
         "matches": ["<all_urls>"],
-        "js": ["js.js", "jquery.min.js", "imageProcessing.js", "flags.js", "domManipulation.js"],
+        "js": ["js.js", "imageProcessing.js", "flags.js", "domManipulation.js"],
         "run_at": "document_start",
         "all_frames": true
     }],

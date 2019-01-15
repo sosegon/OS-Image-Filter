@@ -43,17 +43,13 @@ function inIframe() {
 window.addEventListener('DOMContentLoaded', function() {
     canvas_global = document.createElement('canvas');
     canvas_global.setAttribute('id', CANVAS_GLOBAL_ID);
+    canvas_global.style.display = 'none';
     document.body.appendChild(canvas_global);
-    $('#' + CANVAS_GLOBAL_ID).css({
-        'display': 'none',
-    });
 
     canvases_room = document.createElement('div');
     canvases_room.setAttribute('id', CANVAS_CONTAINER_ID);
+    canvases_room.style.display = 'none';
     document.body.appendChild(canvases_room);
-    $('#' + CANVAS_CONTAINER_ID).css({
-        'display': 'none',
-    });
 
     contentLoaded = true;
 });
@@ -480,7 +476,7 @@ function DoWin(win, winContentLoaded) {
             // of suspects. This is due to the fact
             // that this function is executed more than
             // once over the same element.
-            if (!$(this).hasClass("wiz-to-process")) {
+            if (!this.classList.contains('wiz-to-process')) {
                 AddRandomWizUuid(this);
                 addCssClass(this, "wiz-to-process") // class used to trigger the load event once Nacl module is loaded
                 AddAsSuspect(this);
@@ -581,10 +577,10 @@ function DoWin(win, winContentLoaded) {
                 // Used to fetch image with xhr
                 var bgImgUrl = bgImg.slice(5, -2);
                 // Avoids quick display of original image
-                $(this).css("background-image", "url('')");
+                this.style.backgroundImage = "url('')";
                 // Reference for the element once the image is processed
                 AddRandomWizUuid(this);
-                var uuid = $(this).attr(ATTR_UUID);
+                var uuid = this.getAttribute(ATTR_UUID);
                 ProcessBkgImage(this, bgImgUrl, width, height, uuid);
 
                 AddAsSuspect(this);
@@ -619,7 +615,7 @@ function DoWin(win, winContentLoaded) {
 
     // Stores the original src of the image
     function DoImgSrc(el, toggle) {
-        if (toggle && !$(el).attr(ATTR_ALREADY_TOGGLED)) {
+        if (toggle && !el.getAttribute(ATTR_ALREADY_TOGGLED)) {
             //console.log("DoImgSrc: " + el.src.slice(0, 80));
             el.oldsrc = el.src;
             el.oldsrcset = el.srcset;
@@ -627,8 +623,8 @@ function DoWin(win, winContentLoaded) {
             // will result in an empty image
             //el.src = el.srcset = '';
             el.srcset = ''; // empty string to make sure filtered images are displayed in the img elements
-            $(el).attr(ATTR_ALREADY_TOGGLED, "true")
-        } else if (!toggle && $(el).attr(ATTR_ALREADY_TOGGLED) === "true") {
+            el.setAttribute(ATTR_ALREADY_TOGGLED, 'true');
+        } else if (!toggle && el.getAttribute(ATTR_ALREADY_TOGGLED) === 'true') {
             var oldsrc = el.oldsrc;
             el.oldsrc = el.src;
             el.src = oldsrc;
@@ -657,7 +653,7 @@ function DoWin(win, winContentLoaded) {
     function DoHover(el, toggle, evt) {
         var coords = el[ATTR_RECTANGLE];
         if (toggle && !el[ATTR_HAS_HOVER]) {
-            if (mouseOverEl && mouseOverEl != el){
+            if (mouseOverEl && mouseOverEl != el) {
                 DoHover(mouseOverEl, false);
             }
             mouseOverEl = el;
@@ -816,8 +812,8 @@ function DoWin(win, winContentLoaded) {
     }
 
     function AddRandomWizUuid(el) {
-        if ($(el).attr(ATTR_UUID) == null) {
-            $(el).attr(ATTR_UUID, guid());
+        if (el.getAttribute(ATTR_UUID) === null) {
+            el.setAttribute(ATTR_UUID, guid());
         }
     }
     // from https://stackoverflow.com/a/105074/1065981
