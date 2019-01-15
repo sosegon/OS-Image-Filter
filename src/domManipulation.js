@@ -66,3 +66,32 @@ function handleStyleClasses(domElement, classNames, add, flag) {
         domElement[flag] = false;
     }
 }
+
+// Adds a canvas sibling for an element
+// containing an image. The canvas is
+// meant to be used to get the data in
+// a readable format to be filtered
+// TODO: Use only the global canvas to
+// improve perfomance. Workers may be helpful
+function addCanvasSibling(domElement) {
+    const uuid = domElement.getAttribute(ATTR_UUID) + "-canvas";
+    const canvas = document.getElementById(uuid);
+
+    if (canvas === undefined || canvas === null) {
+        const canvas = document.createElement("canvas");
+        canvas.setAttribute("id", uuid);
+
+        const room = document.getElementById(CANVAS_CONTAINER_ID);
+        room.appendChild(canvas);
+        addCssClass(canvas, CSS_CLASS_HIDE);
+    }
+
+    return canvas;
+}
+
+function createCanvas(id) {
+    const canvas = document.createElement('canvas');
+    canvas.setAttribute('id', id);
+    canvas.style.display = 'none';
+    return canvas;
+}

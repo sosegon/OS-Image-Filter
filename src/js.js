@@ -41,16 +41,8 @@ function inIframe() {
 // and the container for the canvas elements
 // to process images fetched directly.
 window.addEventListener('DOMContentLoaded', function() {
-    canvas_global = document.createElement('canvas');
-    canvas_global.setAttribute('id', CANVAS_GLOBAL_ID);
-    canvas_global.style.display = 'none';
-    document.body.appendChild(canvas_global);
-
-    canvases_room = document.createElement('div');
-    canvases_room.setAttribute('id', CANVAS_CONTAINER_ID);
-    canvases_room.style.display = 'none';
-    document.body.appendChild(canvases_room);
-
+    document.body.appendChild(createCanvas(CANVAS_GLOBAL_ID));
+    document.body.appendChild(createCanvas(CANVAS_CONTAINER_ID));
     contentLoaded = true;
 });
 
@@ -356,7 +348,7 @@ function DoWin(win, winContentLoaded) {
     // it retrieves the data of the image with
     // an XHR and passes processes the result.
     function ProcessImage() {
-        var canvas = AddCanvasSibling(this);
+        var canvas = addCanvasSibling(this);
         if (canvas) {
             this[ATTR_PROCESSED] = true;
             var uuid = this.getAttribute(ATTR_UUID)
@@ -425,28 +417,6 @@ function DoWin(win, winContentLoaded) {
         xhr.open("GET", bkgImage);
         xhr.responseType = "blob";
         xhr.send();
-    }
-
-    // Adds a canvas sibling for an element
-    // containing an image. The canvas is
-    // meant to be used to get the data in
-    // a readable format to be filtered
-    // TODO: Use only the global canvas to
-    // improve perfomance. Workers may be helpful
-    function AddCanvasSibling(el) {
-        var uuid = el.getAttribute(ATTR_UUID) + "-canvas";
-        var canvas = document.getElementById(uuid);
-
-        if (canvas === undefined || canvas === null) {
-            var canvas = document.createElement("canvas");
-            canvas.setAttribute("id", uuid);
-
-            var room = document.getElementById(CANVAS_CONTAINER_ID);
-            room.appendChild(canvas);
-            //el.parentNode.insertBefore(canvas, el.nextSibling);
-            addCssClass(canvas, CSS_CLASS_HIDE);
-        }
-        return canvas;
     }
 
     // Adds or removes the listener for a
