@@ -2,7 +2,7 @@
  * Global variables.
  */
 let showAll = false,
-    extensionUrl = chrome.extension.getURL(''),
+let extensionUrl = chrome.extension.getURL(''),
     urlExtensionUrl = 'url("' + extensionUrl,
     blankImg = 'data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==',
     urlBlankImg = 'url("' + blankImg + '")',
@@ -201,6 +201,33 @@ function doWin(win, winContentLoaded) {
     doc.addEventListener('keydown', docKeyDown);
     doc.addEventListener('mousemove', docMouseMove);
     win.addEventListener('scroll', windowScroll);
+
+    win.skfShowImages = () => {
+        doc.removeEventListener('keydown', docKeyDown);
+        doc.removeEventListener('mousemove', docMouseMove);
+        win.removeEventListener('scroll', windowScroll);
+        for (let i = 0, max = elList.length; i < max; i++) {
+            showElement(elList[i]);
+        }
+        win.removeEventListener('DOMContentLoaded', Start);
+        for (let s in headStyles) {
+            removeHeadStyle(doc, headStyles, s);
+        }
+        if (mouseOverEl) {
+            doHover(mouseOverEl, false);
+            mouseOverEl = null;
+        }
+        if (eye) {
+            for (let i = 0, bodyChildren = doc.body.children; i < bodyChildren.length; i++) { //for some reason, sometimes the eye is removed before
+                if (bodyChildren[i] == eye) {
+                    doc.body.removeChild(eye);
+                }
+            }
+        }
+        if (observer) {
+            observer.disconnect();
+        }
+    }
 
     /**
      * Set **mouseEvent** object and **mouseMoved** flag.
@@ -937,32 +964,5 @@ function doWin(win, winContentLoaded) {
         }
         return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
             s4() + '-' + s4() + s4() + s4();
-    }
-
-    win.skfShowImages = function() {
-        doc.removeEventListener('keydown', docKeyDown);
-        doc.removeEventListener('mousemove', docMouseMove);
-        win.removeEventListener('scroll', windowScroll);
-        for (let i = 0, max = elList.length; i < max; i++) {
-            showElement(elList[i]);
-        }
-        win.removeEventListener('DOMContentLoaded', Start);
-        for (let s in headStyles) {
-            removeHeadStyle(doc, headStyles, s);
-        }
-        if (mouseOverEl) {
-            doHover(mouseOverEl, false);
-            mouseOverEl = null;
-        }
-        if (eye) {
-            for (let i = 0, bodyChildren = doc.body.children; i < bodyChildren.length; i++) { //for some reason, sometimes the eye is removed before
-                if (bodyChildren[i] == eye) {
-                    doc.body.removeChild(eye);
-                }
-            }
-        }
-        if (observer) {
-            observer.disconnect();
-        }
     }
 }
