@@ -93,6 +93,7 @@ const displayer = new ImagesDisplayer();
  * @param {boolean} winContentLoaded
  */
 function doWin(win, winContentLoaded) {
+    const suspects = new Suspects();
     let doc = win.document,
         headStyles = {},
         observer = null,
@@ -100,7 +101,6 @@ function doWin(win, winContentLoaded) {
         mouseMoved = false,
         mouseEvent = null,
         mouseOverEl = null,
-        elList = [],
         /**
          * This flag is used to check if the iteration over the
          * structure to find the elements and process the images has
@@ -168,9 +168,8 @@ function doWin(win, winContentLoaded) {
         doc.removeEventListener('keydown', docKeyDown);
         doc.removeEventListener('mousemove', docMouseMove);
         win.removeEventListener('scroll', windowScroll);
-        for (let i = 0, max = elList.length; i < max; i++) {
-            showElement(elList[i]);
-        }
+        suspects.applyCallback(showElement);
+
         win.removeEventListener('DOMContentLoaded', Start);
         for (let s in headStyles) {
             removeHeadStyle(doc, headStyles, s);
@@ -203,7 +202,7 @@ function doWin(win, winContentLoaded) {
 
     function windowScroll() {
         mouseMoved = true;
-        updateElementRectangles();
+        suspects.updateSuspectsRectangles();
         checkMousePosition();
     }
 
@@ -332,14 +331,18 @@ function doWin(win, winContentLoaded) {
         setInterval(checkMousePosition, 250);
 
         // Update the bounding boxes for every element with an image.
-        setInterval(updateElementRectangles, 3000);
+        setInterval(() => {
+            suspects.updateSuspectsRectangles()
+        }, 3000);
 
         // This is likely to be set based on an average time for a web
         // page to be loaded.
         // TODO: Improve this
         for (let i = 1; i < 7; i++) {
             if ((i % 2) > 0) {
-                setTimeout(updateElementRectangles, i * 1500);
+                setTimeout(() => {
+                    suspects.updateSuspectsRectangles()
+                }, i * 1500);
             }
         }
 
@@ -522,7 +525,7 @@ function doWin(win, winContentLoaded) {
             if (!this.classList.contains('wiz-to-process')) {
                 addRandomWizUuid(this);
                 addCssClass(this, "wiz-to-process");
-                addAsSuspect(this);
+                suspects.addSuspect(this);
             }
 
             /**
@@ -625,7 +628,7 @@ function doWin(win, winContentLoaded) {
                 const uuid = this.getAttribute(ATTR_UUID);
                 processBackgroundImage(this, bgImgUrl, width, height, uuid);
 
-                addAsSuspect(this);
+                suspects.addSuspect(this);
                 doSkifImageBG(this, true);
                 doMouseEventListeners(this, true);
                 if (this[ATTR_LAST_CHECKED_SRC] != bgImg) {
@@ -650,17 +653,6 @@ function doWin(win, winContentLoaded) {
         }
         this.onload = null;
     };
-    /**
-     * Add element to the lists of suspects.
-     *
-     * @param {Element} domElement
-     */
-    function addAsSuspect(domElement) {
-        if (elList.indexOf(domElement) == -1) {
-            elList.push(domElement);
-            domElement[ATTR_RECTANGLE] = domElement.getBoundingClientRect();
-        }
-    }
 
     /**
      * Store the original src of the image.
@@ -783,13 +775,6 @@ function doWin(win, winContentLoaded) {
         }
     }
 
-    function updateElementRectangles() {
-        for (let i = 0, max = elList.length; i < max; i++) {
-            const domElement = elList[i];
-            domElement[ATTR_RECTANGLE] = domElement.getBoundingClientRect();
-        }
-    }
-
     function checkMousePosition() {
         if (!mouseMoved || !mouseEvent || !contentLoaded || displayer.isShowAll()) {
             return;
@@ -811,35 +796,14 @@ function doWin(win, winContentLoaded) {
         }
         // Find element under mouse.
         let foundElement = mouseOverEl,
-            found = false,
-            foundSize = foundElement ? foundElement[ATTR_RECTANGLE].width * foundElement[ATTR_RECTANGLE].height : null;
-        for (let i = 0, max = elList.length; i < max; i++) {
-            let domElement = elList[i];
-            if (domElement == foundElement) {
-                continue;
-            }
-            const rect = domElement[ATTR_RECTANGLE];
-            if (isMouseIn(mouseEvent, rect)) {
-                // If not foundElement yet, use this. Else if
-                // foundElement has not got skfBG, then if ours does,
-                // use it. Else if foundElement is bigger, use this.
-                let useThis = false;
-                if (!foundElement) {
-                    useThis = true;
-                } else if (!foundElement[ATTR_HAS_BACKGROUND_IMAGE]) {
-                    if (domElement[ATTR_HAS_BACKGROUND_IMAGE]) {
-                        useThis = true;
-                    }
-                } else if ((foundSize > rect.width * rect.height) && foundElement[ATTR_HAS_BACKGROUND_IMAGE] == domElement[ATTR_HAS_BACKGROUND_IMAGE]) {
-                    useThis = true;
-                }
-                if (useThis) {
-                    foundElement = domElement;
-                    foundSize = rect.width * rect.height;
-                    found = true;
-                }
-            }
+            found = false;
+
+        const foundElements = suspects.findSuspectsUnderMouse(mouseOverEl, mouseEvent, isMouseIn);
+        if (foundElements.length > 0) {
+            found = true;
+            foundElement = foundElements[foundElements.length - 1];
         }
+
         if (found && (foundElement[ATTR_HAS_BACKGROUND_IMAGE] || !mouseOverEl)) {
             doHover(foundElement, true);
         }
