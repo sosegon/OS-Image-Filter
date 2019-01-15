@@ -225,7 +225,7 @@ function doWin(win, winContentLoaded) {
             ShowImages();
         } else if (mouseOverEl && event.altKey) {
             if (event.keyCode == 65 && mouseOverEl[ATTR_HAS_BACKGROUND_IMAGE]) { //ALT-a
-                showElement.call(mouseOverEl);
+                showElement(mouseOverEl);
                 eye.style.display = 'none';
             } else if (event.keyCode == 90 && !mouseOverEl[ATTR_HAS_BACKGROUND_IMAGE]) { //ALT-z
                 doElement.call(mouseOverEl);
@@ -657,7 +657,7 @@ function doWin(win, winContentLoaded) {
     function checkBackgroundImage() {
         const { height, width } = this;
         if (height <= settings.maxSafe || width <= settings.maxSafe) {
-            showElement.call(this.owner);
+            showElement(this.owner);
         }
         this.onload = null;
     };
@@ -772,7 +772,7 @@ function doWin(win, winContentLoaded) {
                     eye.style.backgroundImage = eyeCSSUrl;
                     eye.onclick = function(e) {
                         e.stopPropagation();
-                        showElement.call(domElement);
+                        showElement(domElement);
                         // Hide the eye icon and not allow undo option
                         // for now.
                         // TODO: Implement undo option
@@ -894,27 +894,27 @@ function doWin(win, winContentLoaded) {
         return event.x >= coords.left && event.x < coords.right && event.y >= coords.top && event.y < coords.bottom;
     }
 
-    function showElement() {
-        doHidden(this, false);
-        if (this.tagName == 'IMG') {
-            doLoadEventListener(this, false);
-            doImgSrc(this, false);
-            if (this.parentElement && this.parentElement.tagName == 'PICTURE') {
-                for (let i = 0; i < this.parentElement.childNodes.length; i++) {
-                    let node = this.parentElement.childNodes[i];
+    function showElement(domElement) {
+        doHidden(domElement, false);
+        if (domElement.tagName == 'IMG') {
+            doLoadEventListener(domElement, false);
+            doImgSrc(domElement, false);
+            if (domElement.parentElement && domElement.parentElement.tagName == 'PICTURE') {
+                for (let i = 0; i < domElement.parentElement.childNodes.length; i++) {
+                    let node = domElement.parentElement.childNodes[i];
                     if (node.tagName == 'SOURCE') {
                         doImgSrc(node, false);
                     }
                 }
             }
         }
-        doSkifImageBG(this, false);
-        if (this[ATTR_CHECK_TIMEOUT]) {
-            clearTimeout(this[ATTR_CHECK_TIMEOUT]);
-            this[ATTR_CHECK_TIMEOUT] = null;
+        doSkifImageBG(domElement, false);
+        if (domElement[ATTR_CHECK_TIMEOUT]) {
+            clearTimeout(domElement[ATTR_CHECK_TIMEOUT]);
+            domElement[ATTR_CHECK_TIMEOUT] = null;
         }
         if (showAll) {
-            doMouseEventListeners(this, false);
+            doMouseEventListeners(domElement, false);
         }
     }
 
@@ -944,7 +944,7 @@ function doWin(win, winContentLoaded) {
         doc.removeEventListener('mousemove', docMouseMove);
         win.removeEventListener('scroll', windowScroll);
         for (let i = 0, max = elList.length; i < max; i++) {
-            showElement.call(elList[i]);
+            showElement(elList[i]);
         }
         win.removeEventListener('DOMContentLoaded', Start);
         for (let s in headStyles) {
