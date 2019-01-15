@@ -215,10 +215,10 @@ function doWin(win, winContentLoaded) {
         } else if (mouseOverEl && event.altKey) {
             if (event.keyCode == 65 && mouseOverEl[ATTR_HAS_BACKGROUND_IMAGE]) { //ALT-a
                 showElement(mouseOverEl);
-                eye.getDomElement().style.display = 'none';
+                eye.hide();
             } else if (event.keyCode == 90 && !mouseOverEl[ATTR_HAS_BACKGROUND_IMAGE]) { //ALT-z
                 doElement.call(mouseOverEl);
-                eye.getDomElement().style.display = 'none';
+                eye.hide();
             }
         }
     }
@@ -755,7 +755,7 @@ function doWin(win, winContentLoaded) {
         if (toggle && !domElement[ATTR_HAS_HOVER_VISUAL] && domElement[ATTR_HAS_BACKGROUND_IMAGE]) {
             if (!settings.isNoEye) {
                 eye.position(domElement, coords, doc);
-                eye.getDomElement().style.display = 'block';
+                eye.show();
 
                 function setupEye() {
                     eye.getDomElement().style.backgroundImage = eyeCSSUrl;
@@ -765,7 +765,7 @@ function doWin(win, winContentLoaded) {
                         // Hide the eye icon and not allow undo option
                         // for now.
                         // TODO: Implement undo option
-                        eye.getDomElement().style.display = 'none';
+                        eye.hide();
                         // eye.style.backgroundImage = undoCSSUrl;
                         // doHoverVisualClearTimer(el, true);
                         // eye.onclick = function (e) {
@@ -784,7 +784,7 @@ function doWin(win, winContentLoaded) {
             domElement[ATTR_HAS_HOVER_VISUAL] = true;
         } else if (!toggle && domElement[ATTR_HAS_HOVER_VISUAL]) {
             if (!settings.isNoEye) {
-                eye.getDomElement().style.display = 'none';
+                eye.hide();
             } else {
                 removeCssClass(domElement, CSS_CLASS_BACKGROUND_LIGHT_PATTERN);
             }

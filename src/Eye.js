@@ -40,4 +40,10 @@ class Eye {
         }
         this.domElement.style.left = (left - 16) + 'px';
     }
+    hide() {
+    	this.domElement.style.display = 'none';
+    }
+    show() {
+    	this.domElement.style.display = 'block';
+    }
 }
