@@ -41,9 +41,29 @@ class Eye {
         this.domElement.style.left = (left - 16) + 'px';
     }
     hide() {
-    	this.domElement.style.display = 'none';
+        this.domElement.style.display = 'none';
     }
     show() {
-    	this.domElement.style.display = 'block';
+        this.domElement.style.display = 'block';
+    }
+    setAnchor(domElement, domElementCallback, eyeCSSUrl) {
+        const self = this;
+        this.domElement.style.backgroundImage = eyeCSSUrl;
+        this.domElement.onclick = event => {
+            event.stopPropagation();
+            domElementCallback(domElement);
+            // Hide the eye icon and not allow undo option
+            // for now.
+            // TODO: Implement undo option
+            self.hide();
+            // eye.style.backgroundImage = undoCSSUrl;
+            // doHoverVisualClearTimer(el, true);
+            // eye.onclick = function (e) {
+            //     e.stopPropagation();
+            //     doElement.call(el);
+            //     setupEye();
+            //     doHoverVisualClearTimer(el, true);
+            // }
+        };
     }
 }

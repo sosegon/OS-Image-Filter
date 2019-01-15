@@ -756,27 +756,7 @@ function doWin(win, winContentLoaded) {
             if (!settings.isNoEye) {
                 eye.position(domElement, coords, doc);
                 eye.show();
-
-                function setupEye() {
-                    eye.getDomElement().style.backgroundImage = eyeCSSUrl;
-                    eye.getDomElement().onclick = function(e) {
-                        e.stopPropagation();
-                        showElement(domElement);
-                        // Hide the eye icon and not allow undo option
-                        // for now.
-                        // TODO: Implement undo option
-                        eye.hide();
-                        // eye.style.backgroundImage = undoCSSUrl;
-                        // doHoverVisualClearTimer(el, true);
-                        // eye.onclick = function (e) {
-                        //     e.stopPropagation();
-                        //     doElement.call(el);
-                        //     setupEye();
-                        //     doHoverVisualClearTimer(el, true);
-                        // }
-                    }
-                }
-                setupEye();
+                eye.setAnchor(domElement, showElement, eyeCSSUrl);
             } else {
                 addCssClass(domElement, CSS_CLASS_BACKGROUND_LIGHT_PATTERN);
             }
