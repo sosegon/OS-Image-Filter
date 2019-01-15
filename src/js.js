@@ -267,7 +267,7 @@ function doWin(win, winContentLoaded) {
         }
 
         eye = new Eye(doc);
-        doc.body.appendChild(eye.getDomElement());
+        eye.attachTo(doc.body);
 
         // Create temporary div, to eager load background img light
         // for noEye to avoid flicker.
