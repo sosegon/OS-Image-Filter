@@ -406,6 +406,7 @@ function doWin(win, winContentLoaded) {
                 }
             }, 10);
     }
+
     function processImage() {
         imageProcessor.processDomImage(this);
         imageProcessor.handleLoadProcessImageListener(this, processImage, false);
@@ -464,7 +465,7 @@ function doWin(win, winContentLoaded) {
             // extension.
             if (this.src == blankImg) {
                 doHidden(this, false);
-                doSkifImageBG(this, true);
+                imageProcessor.handleBackgroundForElement(this, true);
                 this[ATTR_IS_BLOCKED] = true;
             }
 
@@ -509,7 +510,7 @@ function doWin(win, winContentLoaded) {
             // else if (this.tagName == 'VIDEO') {
             //     addAsSuspect(this);
             //     doHidden(this, true);
-            //     doSkifImageBG(this, true);
+            //     imageProcessor.handleBackgroundForElement(this, true);
             // }
 
         } else {
@@ -539,7 +540,7 @@ function doWin(win, winContentLoaded) {
                 imageProcessor.processBackgroundImage(this, bgImgUrl, width, height, uuid);
 
                 suspects.addSuspect(this);
-                doSkifImageBG(this, true);
+                imageProcessor.handleBackgroundForElement(this, true);
                 doMouseEventListeners(this, true);
                 if (this[ATTR_LAST_CHECKED_SRC] != bgImg) {
                     this[ATTR_LAST_CHECKED_SRC] = bgImg;
@@ -726,7 +727,7 @@ function doWin(win, winContentLoaded) {
                 }
             }
         }
-        doSkifImageBG(domElement, false);
+        imageProcessor.handleBackgroundForElement(domElement, false);
         if (domElement[ATTR_CHECK_TIMEOUT]) {
             clearTimeout(domElement[ATTR_CHECK_TIMEOUT]);
             domElement[ATTR_CHECK_TIMEOUT] = null;
