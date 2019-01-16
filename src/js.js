@@ -283,9 +283,8 @@ function doWin(win, winContentLoaded) {
 
         // Mutation observer checks when a change in the DOM tree has
         // occured.
-        observer = new WebKitMutationObserver(function(mutations, observer) {
-            for (let i = 0; i < mutations.length; i++) {
-                const m = mutations[i];
+        observer = new WebKitMutationObserver((mutations, observer) => {
+            mutations.map(m => {
                 // This is for changes in the nodes already in the DOM
                 // tree.
                 if (m.type == 'attributes') {
@@ -309,22 +308,15 @@ function doWin(win, winContentLoaded) {
                 }
                 // When new nodes have been added.
                 else if (m.addedNodes != null && m.addedNodes.length > 0) {
-                    for (let j = 0; j < m.addedNodes.length; j++) {
-                        const domElement = m.addedNodes[j];
-                        if (!domElement.tagName) { //eg text nodes
-                            continue;
-                        }
-                        if (domElement.tagName == 'CANVAS') {
-                            continue;
-                        }
-                        if (domElement.tagName == 'IFRAME') {
+                    m.addedNodes.forEach(domElement => {
+                        if (domElement.tagName && domElement.tagName === 'IFRAME') {
                             doIframe(domElement);
-                        } else {
+                        } else if (domElement.tagName && domElement.tagName !== 'CANVAS') {
                             doElements(domElement, true);
                         }
-                    }
+                    });
                 }
-            }
+            });
         });
         observer.observe(doc, { subtree: true, childList: true, attributes: true, attributeOldValue: true });
 
@@ -351,9 +343,9 @@ function doWin(win, winContentLoaded) {
         // At this point, the frame elements are already in the DOM
         // tree, but their content may not have been loaded.
         const iframes = doc.getElementsByTagName('iframe');
-        for (let i = 0, max = iframes.length; i < max; i++) {
-            doIframe(iframes[i]);
-        }
+        Array.from(iframes).map(iframe => {
+            doIframe(iframe);
+        });
 
         // Now the process has officially started.
         hasStarted = true;
@@ -369,10 +361,9 @@ function doWin(win, winContentLoaded) {
         if (includeChildren && tagList.indexOf(domElement.tagName) > -1) {
             doElement.call(domElement);
         }
-        const all = domElement.querySelectorAll(tagListCSS);
-        for (let i = 0, max = all.length; i < max; i++) {
-            doElement.call(all[i]);
-        }
+        domElement.querySelectorAll(tagListCSS).forEach(domElement => {
+            doElement.call(domElement);
+        });
     }
 
     /**
@@ -490,12 +481,11 @@ function doWin(win, winContentLoaded) {
                 displayer.hideElement(this, true);
                 displayer.handleSourceOfImage(this, true);
                 if (this.parentElement && this.parentElement.tagName == 'PICTURE') {
-                    for (let i = 0; i < this.parentElement.childNodes.length; i++) {
-                        const node = this.parentElement.childNodes[i];
+                    this.parentElement.childNodes.forEach(node => {
                         if (node.tagName == 'SOURCE') {
                             displayer.handleSourceOfImage(node, true);
                         }
-                    }
+                    });
                 }
                 //this.src = blankImg;
             }
@@ -546,7 +536,13 @@ function doWin(win, winContentLoaded) {
                     this[ATTR_LAST_CHECKED_SRC] = bgImg;
                     const image = new Image();
                     image.owner = this;
-                    image.onload = checkBackgroundImage;
+                    image.onload = () => {
+                        const { height, width } = this;
+                        if (height <= settings.maxSafe || width <= settings.maxSafe) {
+                            showElement(this.owner);
+                        }
+                        this.onload = null;
+                    };
                     const urlMatch = /\burl\(["']?(.*?)["']?\)/.exec(bgImg);
                     if (urlMatch) {
                         image.src = urlMatch[1];
@@ -556,14 +552,6 @@ function doWin(win, winContentLoaded) {
             }
         }
     }
-
-    function checkBackgroundImage() {
-        const { height, width } = this;
-        if (height <= settings.maxSafe || width <= settings.maxSafe) {
-            showElement(this.owner);
-        }
-        this.onload = null;
-    };
     /**
      * Add/remove mouse event listeners.
      *
@@ -686,12 +674,11 @@ function doWin(win, winContentLoaded) {
             imageProcessor.handleLoadEventListener(domElement, doElement, false);
             displayer.handleSourceOfImage(domElement, false);
             if (domElement.parentElement && domElement.parentElement.tagName == 'PICTURE') {
-                for (let i = 0; i < domElement.parentElement.childNodes.length; i++) {
-                    let node = domElement.parentElement.childNodes[i];
-                    if (node.tagName == 'SOURCE') {
+                domElement.parentElement.childNodes.forEach(node => {
+                    if (node.tagName === 'SOURCE') {
                         displayer.handleSourceOfImage(node, false);
                     }
-                }
+                });
             }
         }
         imageProcessor.handleBackgroundForElement(domElement, false);
