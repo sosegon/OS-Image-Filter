@@ -57,9 +57,6 @@ class MouseController {
     setEye(eye) {
         this.eye = eye;
     }
-    isMouseIn(event, coords) {
-        return event.x >= coords.left && event.x < coords.right && event.y >= coords.top && event.y < coords.bottom;
-    }
     /**
      * Control when the mouse pointer is over an element.
      *
@@ -82,7 +79,7 @@ class MouseController {
             this.setElement(domElement);
             this.setAttrElement(ATTR_HAS_HOVER, true);
 
-        } else if (!toggle && domElement[ATTR_HAS_HOVER] && (!event || !this.isMouseIn(event, coords))) {
+        } else if (!toggle && domElement[ATTR_HAS_HOVER] && (!event || !isMouseIn(event, coords))) {
 
             this.toggleHoverVisual(domElement, false, coords);
             domElement[ATTR_HAS_HOVER] = false;

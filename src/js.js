@@ -694,10 +694,6 @@ function doWin(win, winContentLoaded) {
         }
     }
 
-    function isMouseIn(event, coords) {
-        return event.x >= coords.left && event.x < coords.right && event.y >= coords.top && event.y < coords.bottom;
-    }
-
     function showElement(domElement) {
         // Unhide element
         hideElement(domElement, false);
@@ -731,29 +727,5 @@ function doWin(win, winContentLoaded) {
             mouseController.toggleMouseEventListeners(domElement, false);
 
         }
-    }
-
-    function addRandomWizUuid(domElement) {
-
-        if (domElement.getAttribute(ATTR_UUID) === null) {
-
-            domElement.setAttribute(ATTR_UUID, guid());
-
-        }
-    }
-    /**
-     * Generate a uuid number.
-     *
-     * @returns {number}
-     */
-    function guid() {
-        // See https://stackoverflow.com/a/105074/1065981
-        function s4() {
-            return Math.floor((1 + Math.random()) * 0x10000)
-                .toString(16)
-                .substring(1);
-        }
-        return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-            s4() + '-' + s4() + s4() + s4();
     }
 }
