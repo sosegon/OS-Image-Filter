@@ -518,8 +518,6 @@ function doWin(win, winContentLoaded) {
 
                 hideElement(this, false);
                 handleBackgroundForElement(this, true);
-                this[IS_BLOCKED] = true;
-
             }
 
             // An image greater than the dimensions in settings needs
@@ -634,9 +632,6 @@ function doWin(win, winContentLoaded) {
 
                     }
                 }
-
-                this[IS_BLOCKED] = true;
-
             }
         }
     }

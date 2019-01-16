@@ -3,11 +3,9 @@ CANVAS_CONTAINER_ID = 'skf-canvas-container';
 
 ATTR_UUID = 'skf-uuid';
 ATTR_RECTANGLE = 'skf-rectangle';
-ATTR_CHECK_TIMEOUT = 'skf-check-timeout';
 ATTR_LAST_CHECKED_SRC = 'skf-last-checked-src';
 
 IS_HIDDEN = 'skf-is-hidden';
-IS_BLOCKED = 'skf-is-blocked';
 IS_TOGGLED = 'skf-is-toggled';
 IS_PROCESSED = 'skf-is-processed';
 
