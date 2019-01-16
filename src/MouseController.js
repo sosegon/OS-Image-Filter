@@ -160,8 +160,8 @@ class MouseController {
      * @param {boolean} toggle
      */
     toggleMouseEventListeners(domElement, toggle) {
-        const mouseEntered = this.mouseEntered;
-        const mouseLeft = this.mouseLeft;
+        const mouseEntered = this.mouseEntered.bind(this);
+        const mouseLeft = this.mouseLeft.bind(this);
 
         handleListeners(domElement, {
             'mouseover': mouseEntered,
