@@ -209,17 +209,7 @@ function doWin(win, winContentLoaded) {
 
         }
 
-        if (eye.getDomElement()) {
-
-            for (let i = 0, bodyChildren = doc.body.children; i < bodyChildren.length; i++) { //for some reason, sometimes the eye is removed before
-
-                if (bodyChildren[i] === eye.getDomElement()) {
-
-                    doc.body.removeChild(eye.getDomElement());
-
-                }
-            }
-        }
+        eye.detach();
 
         if (observer) {
 

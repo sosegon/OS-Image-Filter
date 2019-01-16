@@ -67,6 +67,11 @@ class Eye {
         };
     }
     attachTo(domElement) {
-    	domElement.appendChild(this.domElement);
+        domElement.appendChild(this.domElement);
+    }
+    detach() {
+        if (this.domElement && this.domElement.parentNode) {
+            this.domElement.parentNode.removeChild(this.domElement);
+        }
     }
 }
