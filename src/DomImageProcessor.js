@@ -195,7 +195,7 @@ class DomImageProcessor {
 
         if (domElement[ATTR_PROCESSED]) { // already processed
             // Needed to enable eye icon in image
-            this.handleBackgroundForElement(domElement, true);
+            handleBackgroundForElement(domElement, true);
             //DoImgSrc(this, true);
             return;
         }
@@ -224,31 +224,5 @@ class DomImageProcessor {
 
         return canvas;
     }
-    // doSkifImageBG(domElement, toggle) {
-    handleBackgroundForElement(domElement, toggle) {
-        handleStyleClasses(domElement, [], toggle, ATTR_HAS_BACKGROUND_IMAGE)
-    }
-    /**
-     * Add or remove the listener for a **load** event in an IMG
-     * element.
-     *
-     * @param {HTMLImageElement} domElement
-     * @param {boolean} toggle
-     */
-    handleLoadProcessImageListener(domElement, callback, toggle) {
-        handleListeners(domElement, {
-            'load': callback
-        }, toggle, ATTR_HAS_PROCESS_IMAGE_LISTENER);
-    }
-    /**
-     * Add / remove a load event listener.
-     *
-     * @param {Element} domElement
-     * @param {boolean} toggle
-     */
-    handleLoadEventListener(domElement, callback, toggle) {
-        handleListeners(domElement, {
-            'load': callback
-        }, toggle, ATTR_HAS_LOAD_LISTENER);
-    }
+
 }

@@ -73,4 +73,64 @@ function createCanvas(id) {
     canvas.style.display = 'none';
     return canvas;
 }
+/**
+ * Hide element.
+ *
+ * @param {Element} domElement
+ * @param {boolean} toggle
+ */
+function hideElement(domElement, toggle) {
+    handleStyleClasses(domElement, [CSS_CLASS_HIDE], toggle, ATTR_IS_HID);
+}
+/**
+ * Store the original src of the image.
+ *
+ * @param {HTMLImageElement} domElement
+ * @param {boolean} toggle
+ */
+function handleSourceOfImage(domElement, toggle) {
+    if (toggle && !domElement.getAttribute(ATTR_ALREADY_TOGGLED)) {
+        domElement.oldsrc = domElement.src;
+        domElement.oldsrcset = domElement.srcset;
+        // Do not set to empty string, otherwise the processing
+        // will result in an empty image
+        // el.src = el.srcset = '';
 
+        // Empty string to make sure filtered images are displayed
+        // in the img elements
+        domElement.srcset = '';
+        domElement.setAttribute(ATTR_ALREADY_TOGGLED, 'true');
+    } else if (!toggle && domElement.getAttribute(ATTR_ALREADY_TOGGLED) === 'true') {
+        const oldsrc = domElement.oldsrc;
+        domElement.oldsrc = domElement.src;
+        domElement.src = oldsrc;
+        domElement.srcset = domElement.oldsrcset;
+    }
+}
+
+function handleBackgroundForElement(domElement, toggle) {
+    handleStyleClasses(domElement, [], toggle, ATTR_HAS_BACKGROUND_IMAGE)
+}
+/**
+ * Add or remove the listener for a **load** event in an IMG
+ * element.
+ *
+ * @param {HTMLImageElement} domElement
+ * @param {boolean} toggle
+ */
+function handleLoadProcessImageListener(domElement, callback, toggle) {
+    handleListeners(domElement, {
+        'load': callback
+    }, toggle, ATTR_HAS_PROCESS_IMAGE_LISTENER);
+}
+/**
+ * Add / remove a load event listener.
+ *
+ * @param {Element} domElement
+ * @param {boolean} toggle
+ */
+function handleLoadEventListener(domElement, callback, toggle) {
+    handleListeners(domElement, {
+        'load': callback
+    }, toggle, ATTR_HAS_LOAD_LISTENER);
+}

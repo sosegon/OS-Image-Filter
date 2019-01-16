@@ -455,8 +455,8 @@ function doWin(win, winContentLoaded) {
     function processImage() {
 
         imageProcessor.processDomImage(this);
-        imageProcessor.handleLoadProcessImageListener(this, processImage, false);
-        imageProcessor.handleLoadEventListener(this, doElement, false);
+        handleLoadProcessImageListener(this, processImage, false);
+        handleLoadEventListener(this, doElement, false);
 
     }
     /**
@@ -498,14 +498,14 @@ function doWin(win, winContentLoaded) {
              *
              * 2) In case the img gets changed to something else later
              */
-            imageProcessor.handleLoadProcessImageListener(this, processImage, true);
-            imageProcessor.handleLoadEventListener(this, doElement, true);
+            handleLoadProcessImageListener(this, processImage, true);
+            handleLoadEventListener(this, doElement, true);
 
             // See if not yet loaded
             if (!this.complete) {
 
                 // Hide, to avoid flash until load event is handled.
-                displayer.hideElement(this, true);
+                hideElement(this, true);
                 return;
 
             }
@@ -517,8 +517,8 @@ function doWin(win, winContentLoaded) {
             // extension.
             if (this.src == blankImg) {
 
-                displayer.hideElement(this, false);
-                imageProcessor.handleBackgroundForElement(this, true);
+                hideElement(this, false);
+                handleBackgroundForElement(this, true);
                 this[ATTR_IS_BLOCKED] = true;
 
             }
@@ -550,15 +550,15 @@ function doWin(win, winContentLoaded) {
                     this[ATTR_HAS_TITLE_AND_SIZE] = true;
                 }
 
-                displayer.hideElement(this, true);
-                displayer.handleSourceOfImage(this, true);
+                hideElement(this, true);
+                handleSourceOfImage(this, true);
 
                 if (this.parentElement && this.parentElement.tagName == 'PICTURE') {
 
                     this.parentElement.childNodes.forEach(node => {
                         if (node.tagName == 'SOURCE') {
 
-                            displayer.handleSourceOfImage(node, true);
+                            handleSourceOfImage(node, true);
 
                         }
                     });
@@ -570,7 +570,7 @@ function doWin(win, winContentLoaded) {
             // that this happens.
             else {
 
-                displayer.hideElement(this, false);
+                hideElement(this, false);
 
             }
             // TODO: Uncomment this when the logic for video is
@@ -578,7 +578,7 @@ function doWin(win, winContentLoaded) {
             // else if (this.tagName == 'VIDEO') {
             //     addAsSuspect(this);
             //     displayer.hideElement(this, true);
-            //     imageProcessor.handleBackgroundForElement(this, true);
+            //     handleBackgroundForElement(this, true);
             // }
 
         } else {
@@ -607,7 +607,7 @@ function doWin(win, winContentLoaded) {
                 imageProcessor.processBackgroundImage(this, bgImgUrl, width, height, uuid);
 
                 suspects.addSuspect(this);
-                imageProcessor.handleBackgroundForElement(this, true);
+                handleBackgroundForElement(this, true);
                 mouseController.toggleMouseEventListeners(this, true);
 
                 if (this[ATTR_LAST_CHECKED_SRC] != bgImg) {
@@ -701,14 +701,14 @@ function doWin(win, winContentLoaded) {
 
     function showElement(domElement) {
         // Unhide element
-        displayer.hideElement(domElement, false);
+        hideElement(domElement, false);
 
         if (domElement.tagName === 'IMG') {
             // Remove callback for 'load'.
-            imageProcessor.handleLoadEventListener(domElement, doElement, false);
+            handleLoadEventListener(domElement, doElement, false);
 
             // Swap the src and srcset attributes of element.
-            displayer.handleSourceOfImage(domElement, false);
+            handleSourceOfImage(domElement, false);
 
             // Do the same for source tags if picture is used
             if (domElement.parentElement && domElement.parentElement.tagName === 'PICTURE') {
@@ -717,7 +717,7 @@ function doWin(win, winContentLoaded) {
 
                     if (node.tagName === 'SOURCE') {
 
-                        displayer.handleSourceOfImage(node, false);
+                        handleSourceOfImage(node, false);
 
                     }
 
@@ -725,7 +725,7 @@ function doWin(win, winContentLoaded) {
             }
         }
 
-        imageProcessor.handleBackgroundForElement(domElement, false);
+        handleBackgroundForElement(domElement, false);
 
         if (displayer.isShowAll()) {
 
