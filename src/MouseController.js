@@ -67,7 +67,7 @@ class MouseController {
     toggleHover(domElement, toggle, event) {
         const coords = domElement[ATTR_RECTANGLE];
 
-        if (toggle && !domElement[ATTR_HAS_HOVER]) {
+        if (toggle && !domElement[HAS_HOVER]) {
 
             if (this.hasElement() && !this.hasThatElement(domElement)) {
 
@@ -77,12 +77,12 @@ class MouseController {
 
             this.toggleHoverVisual(domElement, true, coords);
             this.setElement(domElement);
-            this.setAttrElement(ATTR_HAS_HOVER, true);
+            this.setAttrElement(HAS_HOVER, true);
 
-        } else if (!toggle && domElement[ATTR_HAS_HOVER] && (!event || !isMouseIn(event, coords))) {
+        } else if (!toggle && domElement[HAS_HOVER] && (!event || !isMouseIn(event, coords))) {
 
             this.toggleHoverVisual(domElement, false, coords);
-            domElement[ATTR_HAS_HOVER] = false;
+            domElement[HAS_HOVER] = false;
 
             if (this.hasThatElement(domElement)) {
 
@@ -100,7 +100,7 @@ class MouseController {
      * @param {object} coords
      */
     toggleHoverVisual(domElement, toggle, coords) {
-        if (toggle && !domElement[ATTR_HAS_HOVER_VISUAL] && domElement[ATTR_HAS_BACKGROUND_IMAGE]) {
+        if (toggle && !domElement[HAS_HOVER_VISUAL] && domElement[HAS_BACKGROUND_IMAGE]) {
 
             if (!settings.isNoEye) {
 
@@ -115,9 +115,9 @@ class MouseController {
             }
 
             this.toggleHoverVisualClearTimer(domElement, true);
-            domElement[ATTR_HAS_HOVER_VISUAL] = true;
+            domElement[HAS_HOVER_VISUAL] = true;
 
-        } else if (!toggle && domElement[ATTR_HAS_HOVER_VISUAL]) {
+        } else if (!toggle && domElement[HAS_HOVER_VISUAL]) {
 
             if (!settings.isNoEye) {
 
@@ -130,7 +130,7 @@ class MouseController {
             }
 
             this.toggleHoverVisualClearTimer(domElement, false);
-            domElement[ATTR_HAS_HOVER_VISUAL] = false;
+            domElement[HAS_HOVER_VISUAL] = false;
 
         }
     }
@@ -163,7 +163,7 @@ class MouseController {
         handleListeners(domElement, {
             'mouseover': mouseEntered,
             'mouseout': mouseLeft
-        }, toggle, ATTR_HAS_MOUSE_LISTENERS);
+        }, toggle, HAS_MOUSE_LISTENERS);
     }
 
     /**

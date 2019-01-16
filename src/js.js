@@ -232,12 +232,12 @@ function doWin(win, winContentLoaded) {
 
         } else if (mouseController.hasElement() && event.altKey) {
 
-            if (event.keyCode == 65 && mouseController.getAttrValueElement(ATTR_HAS_BACKGROUND_IMAGE)) { //ALT-a
+            if (event.keyCode == 65 && mouseController.getAttrValueElement(HAS_BACKGROUND_IMAGE)) { //ALT-a
 
                 showElement(mouseController.getElement());
                 eye.hide();
 
-            } else if (event.keyCode == 90 && !mouseController.getAttrValueElement(ATTR_HAS_BACKGROUND_IMAGE)) { //ALT-z
+            } else if (event.keyCode == 90 && !mouseController.getAttrValueElement(HAS_BACKGROUND_IMAGE)) { //ALT-z
 
                 doElement.call(mouseController.getElement());
                 eye.hide();
@@ -518,7 +518,7 @@ function doWin(win, winContentLoaded) {
 
                 hideElement(this, false);
                 handleBackgroundForElement(this, true);
-                this[ATTR_IS_BLOCKED] = true;
+                this[IS_BLOCKED] = true;
 
             }
 
@@ -529,7 +529,7 @@ function doWin(win, winContentLoaded) {
 
                 mouseController.toggleMouseEventListeners(this, true);
 
-                if (!this[ATTR_HAS_TITLE_AND_SIZE]) {
+                if (!this[HAS_TITLE_AND_SIZE]) {
                     // this.style.width = elWidth + 'px';
                     // this.style.height = elHeight + 'px';
                     if (!this.title) {
@@ -546,7 +546,7 @@ function doWin(win, winContentLoaded) {
                         }
                     }
 
-                    this[ATTR_HAS_TITLE_AND_SIZE] = true;
+                    this[HAS_TITLE_AND_SIZE] = true;
                 }
 
                 hideElement(this, true);
@@ -593,7 +593,7 @@ function doWin(win, winContentLoaded) {
             if (bgImg != 'none' && (width == 0 || width > settings.maxSafe) && (height == 0 || height > settings.maxSafe) &&
                 bgImg.indexOf('url(') != -1 &&
                 !bgImg.startsWith(urlExtensionUrl) && bgImg != urlBlankImg &&
-                !this[ATTR_PROCESSED]
+                !this[IS_PROCESSED]
             ) {
                 // Used to fetch image with xhr.
                 const bgImgUrl = bgImg.slice(5, -2);
@@ -635,7 +635,7 @@ function doWin(win, winContentLoaded) {
                     }
                 }
 
-                this[ATTR_IS_BLOCKED] = true;
+                this[IS_BLOCKED] = true;
 
             }
         }
@@ -659,9 +659,9 @@ function doWin(win, winContentLoaded) {
 
                 mouseController.toggleHover(mouseController.getElement(), false);
 
-            } else if (mouseController.getAttrValueElement(ATTR_HAS_BACKGROUND_IMAGE)) {
+            } else if (mouseController.getAttrValueElement(HAS_BACKGROUND_IMAGE)) {
 
-                if (!mouseController.getAttrValueElement(ATTR_HAS_HOVER_VISUAL)) {
+                if (!mouseController.getAttrValueElement(HAS_HOVER_VISUAL)) {
 
                     mouseController.toggleHoverVisual(mouseController.getElement(), true, coords);
 
@@ -687,7 +687,7 @@ function doWin(win, winContentLoaded) {
 
         }
 
-        if (found && (foundElement[ATTR_HAS_BACKGROUND_IMAGE] || mouseController.hasElement())) {
+        if (found && (foundElement[HAS_BACKGROUND_IMAGE] || mouseController.hasElement())) {
 
             mouseController.toggleHover(foundElement, true);
 

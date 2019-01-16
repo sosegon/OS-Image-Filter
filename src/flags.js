@@ -2,21 +2,24 @@ CANVAS_GLOBAL_ID = 'skf-canvas-global';
 CANVAS_CONTAINER_ID = 'skf-canvas-container';
 
 ATTR_UUID = 'skf-uuid';
-ATTR_IS_HID = 'skf-is-hid';
-ATTR_HAS_HOVER = 'skf-has-hover';
 ATTR_RECTANGLE = 'skf-rectangle';
-ATTR_PROCESSED = 'skf-processed';
-ATTR_IS_BLOCKED = 'skf-is-blocked';
 ATTR_CHECK_TIMEOUT = 'skf-check-timeout';
-ATTR_ALREADY_TOGGLED = 'skf-already-toggled';
 ATTR_LAST_CHECKED_SRC = 'skf-last-checked-src';
-ATTR_HAS_HOVER_VISUAL = 'skf-has-hover-visual';
-ATTR_HAS_LOAD_LISTENER = 'skf-has-load-listener';
-ATTR_HAS_TITLE_AND_SIZE = 'skf-has-title-and-size';
-ATTR_HAS_MOUSE_LISTENERS = 'skf-has-mouse-listeners';
-ATTR_HAS_BACKGROUND_IMAGE = 'skf-has-background-image';
+
+IS_HIDDEN = 'skf-is-hidden';
+IS_BLOCKED = 'skf-is-blocked';
+IS_TOGGLED = 'skf-is-toggled';
+IS_PROCESSED = 'skf-is-processed';
+
+HAS_HOVER = 'skf-has-hover';
+HAS_HOVER_VISUAL = 'skf-has-hover-visual';
+HAS_LOAD_LISTENER = 'skf-has-load-listener';
+HAS_TITLE_AND_SIZE = 'skf-has-title-and-size';
+HAS_MOUSE_LISTENERS = 'skf-has-mouse-listeners';
+HAS_BACKGROUND_IMAGE = 'skf-has-background-image';
+HAS_PROCESS_IMAGE_LISTENER = 'skf-has-process-image-listener';
+
 ATTR_CLEAR_HOVER_VISUAL_TIMER = 'skf-clear-hover-visual-timer';
-ATTR_HAS_PROCESS_IMAGE_LISTENER = 'skf-has-process-image-listener';
 
 CSS_CLASS_HIDE = 'skf-hide';
 CSS_CLASS_SHADE = 'skf-shade';

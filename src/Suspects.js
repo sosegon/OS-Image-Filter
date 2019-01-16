@@ -38,11 +38,11 @@ class Suspects {
                 let isValid = false;
                 if (!defaultElement) {
                     isValid = true;
-                } else if (!defaultElement[ATTR_HAS_BACKGROUND_IMAGE] &&
-                    suspect[ATTR_HAS_BACKGROUND_IMAGE]) {
+                } else if (!defaultElement[HAS_BACKGROUND_IMAGE] &&
+                    suspect[HAS_BACKGROUND_IMAGE]) {
                     isValid = true;
                 } else if ((foundSize > rect.width * rect.height) &&
-                    defaultElement[ATTR_HAS_BACKGROUND_IMAGE] === suspect[ATTR_HAS_BACKGROUND_IMAGE]) {
+                    defaultElement[HAS_BACKGROUND_IMAGE] === suspect[HAS_BACKGROUND_IMAGE]) {
                     isValid = true;
                 }
                 if (isValid) {

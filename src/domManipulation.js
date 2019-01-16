@@ -80,7 +80,7 @@ function createCanvas(id) {
  * @param {boolean} toggle
  */
 function hideElement(domElement, toggle) {
-    handleStyleClasses(domElement, [CSS_CLASS_HIDE], toggle, ATTR_IS_HID);
+    handleStyleClasses(domElement, [CSS_CLASS_HIDE], toggle, IS_HIDDEN);
 }
 /**
  * Store the original src of the image.
@@ -89,7 +89,7 @@ function hideElement(domElement, toggle) {
  * @param {boolean} toggle
  */
 function handleSourceOfImage(domElement, toggle) {
-    if (toggle && !domElement.getAttribute(ATTR_ALREADY_TOGGLED)) {
+    if (toggle && !domElement.getAttribute(IS_TOGGLED)) {
         domElement.oldsrc = domElement.src;
         domElement.oldsrcset = domElement.srcset;
         // Do not set to empty string, otherwise the processing
@@ -99,8 +99,8 @@ function handleSourceOfImage(domElement, toggle) {
         // Empty string to make sure filtered images are displayed
         // in the img elements
         domElement.srcset = '';
-        domElement.setAttribute(ATTR_ALREADY_TOGGLED, 'true');
-    } else if (!toggle && domElement.getAttribute(ATTR_ALREADY_TOGGLED) === 'true') {
+        domElement.setAttribute(IS_TOGGLED, 'true');
+    } else if (!toggle && domElement.getAttribute(IS_TOGGLED) === 'true') {
         const oldsrc = domElement.oldsrc;
         domElement.oldsrc = domElement.src;
         domElement.src = oldsrc;
@@ -109,7 +109,7 @@ function handleSourceOfImage(domElement, toggle) {
 }
 
 function handleBackgroundForElement(domElement, toggle) {
-    handleStyleClasses(domElement, [], toggle, ATTR_HAS_BACKGROUND_IMAGE)
+    handleStyleClasses(domElement, [], toggle, HAS_BACKGROUND_IMAGE)
 }
 /**
  * Add or remove the listener for a **load** event in an IMG
@@ -121,7 +121,7 @@ function handleBackgroundForElement(domElement, toggle) {
 function handleLoadProcessImageListener(domElement, callback, toggle) {
     handleListeners(domElement, {
         'load': callback
-    }, toggle, ATTR_HAS_PROCESS_IMAGE_LISTENER);
+    }, toggle, HAS_PROCESS_IMAGE_LISTENER);
 }
 /**
  * Add / remove a load event listener.
@@ -132,14 +132,14 @@ function handleLoadProcessImageListener(domElement, callback, toggle) {
 function handleLoadEventListener(domElement, callback, toggle) {
     handleListeners(domElement, {
         'load': callback
-    }, toggle, ATTR_HAS_LOAD_LISTENER);
+    }, toggle, HAS_LOAD_LISTENER);
 }
 
 function processDomImage(domElement) {
     const canvas = this.addCanvasSibling(domElement);
     const uuid = domElement.getAttribute(ATTR_UUID);
 
-    domElement[ATTR_PROCESSED] = true;
+    domElement[IS_PROCESSED] = true;
 
     try {
         filterImageElement(canvas, domElement, uuid);
@@ -239,7 +239,7 @@ function filterBackgroundImageContent(canvas, imgElement, uuid) {
 
     if (actualEl !== undefined) {
         actualEl.style.backgroundImage = newBkgImgUrl;
-        actualEl[ATTR_PROCESSED] = true;
+        actualEl[IS_PROCESSED] = true;
     }
 }
 // TODO: Implement option to remove face features. Convex hull or flooding may work.
@@ -315,15 +315,15 @@ function filterImageElement(canvas, imgElement, uuid) {
  */
 function loadProcessed(domElement) {
     removeCssClass(domElement, CSS_CLASS_HIDE);
-    domElement.setAttribute(ATTR_PROCESSED, "true");
-    domElement[ATTR_PROCESSED] = true;
+    domElement.setAttribute(IS_PROCESSED, "true");
+    domElement[IS_PROCESSED] = true;
     const uuid = domElement.getAttribute(ATTR_UUID);
     const canvas = document.getElementById("#" + uuid + "-canvas");
     if (canvas !== null) {
         canvas.parentNode.removeChild(canvas);
     }
 
-    if (domElement[ATTR_PROCESSED]) { // already processed
+    if (domElement[IS_PROCESSED]) { // already processed
         // Needed to enable eye icon in image
         handleBackgroundForElement(domElement, true);
         //DoImgSrc(this, true);
