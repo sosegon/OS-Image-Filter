@@ -54,16 +54,28 @@ function handleListeners(domElement, listeners, add, flag) {
 }
 
 function handleStyleClasses(domElement, classNames, add, flag) {
-    if (add && domElement[flag]) {
+    if (add && !domElement[flag]) {
         classNames.map(className => {
-            self.addClassToStyle(domElement, className);
+            addClassToStyle(domElement, className);
         });
         domElement[flag] = true;
     } else if (!add && domElement[flag]) {
         classNames.map(className => {
-            self.removeClassFromStyle(domElement, className);
+            removeClassFromStyle(domElement, className);
         });
         domElement[flag] = false;
+    }
+}
+
+function addClassToStyle(domElement, className) {
+    domElement.className += ' ' + className;
+}
+
+function removeClassFromStyle(domElement, className) {
+    const oldClass = domElement.className;
+    const newClass = domElement.className.replace(new RegExp('\\b' + className + '\\b'), '');
+    if (oldClass !== newClass) {
+        domElement.className = newClass;
     }
 }
 

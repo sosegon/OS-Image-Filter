@@ -107,7 +107,6 @@ function doWin(win, winContentLoaded) {
     const suspects = new Suspects();
     const eye = new Eye(win.document);
     const mouseController = new MouseController();
-    mouseController.setEye(eye);
 
     let doc = win.document,
         headStyles = {},
@@ -203,7 +202,7 @@ function doWin(win, winContentLoaded) {
 
         if (mouseController.hasElement()) {
 
-            mouseController.toggleHover(mouseController.getElement(), false);
+            toggleHover(mouseController.getElement(), false);
             mouseController.clearElement();
 
         }
@@ -525,7 +524,7 @@ function doWin(win, winContentLoaded) {
             // images start off as zero.
             else if ((width == 0 || width > settings.maxSafe) && (height == 0 || height > settings.maxSafe)) {
 
-                mouseController.toggleMouseEventListeners(this, true);
+                toggleMouseEventListeners(this, true);
 
                 if (!this[HAS_TITLE_AND_SIZE]) {
                     // this.style.width = elWidth + 'px';
@@ -605,7 +604,7 @@ function doWin(win, winContentLoaded) {
 
                 suspects.addSuspect(this);
                 handleBackgroundForElement(this, true);
-                mouseController.toggleMouseEventListeners(this, true);
+                toggleMouseEventListeners(this, true);
 
                 if (this[ATTR_LAST_CHECKED_SRC] != bgImg) {
 
@@ -652,17 +651,17 @@ function doWin(win, winContentLoaded) {
 
             if (!isMouseIn(mouseController.getEvent(), coords)) {
 
-                mouseController.toggleHover(mouseController.getElement(), false);
+                toggleHover(mouseController.getElement(), false);
 
             } else if (mouseController.getAttrValueElement(HAS_BACKGROUND_IMAGE)) {
 
                 if (!mouseController.getAttrValueElement(HAS_HOVER_VISUAL)) {
 
-                    mouseController.toggleHoverVisual(mouseController.getElement(), true, coords);
+                    toggleHoverVisual(mouseController.getElement(), true, coords);
 
                 } else {
 
-                    mouseController.toggleHoverVisualClearTimer(mouseController.getElement(), true);
+                    toggleHoverVisualClearTimer(mouseController.getElement(), true);
                     eye.position(mouseController.getElement(), coords, doc);
 
                 }
@@ -684,7 +683,7 @@ function doWin(win, winContentLoaded) {
 
         if (found && (foundElement[HAS_BACKGROUND_IMAGE] || mouseController.hasElement())) {
 
-            mouseController.toggleHover(foundElement, true);
+            toggleHover(foundElement, true);
 
         }
     }
@@ -719,8 +718,126 @@ function doWin(win, winContentLoaded) {
 
         if (displayer.isShowAll()) {
 
-            mouseController.toggleMouseEventListeners(domElement, false);
+            toggleMouseEventListeners(domElement, false);
 
         }
+    }
+    /**
+     * Control when the mouse pointer is over an element.
+     *
+     * @param {Element} domElement
+     * @param {boolean} toggle
+     * @param {Event} event
+     */
+    function toggleHover(domElement, toggle, event) {
+        const coords = domElement[ATTR_RECTANGLE];
+
+        if (toggle && !domElement[HAS_HOVER]) {
+
+            if (mouseController.hasElement() && !mouseController.hasThatElement(domElement)) {
+
+                toggleHover(mouseController.getElement(), false);
+
+            }
+
+            toggleHoverVisual(domElement, true, coords);
+            mouseController.setElement(domElement);
+            mouseController.setAttrElement(HAS_HOVER, true);
+
+        } else if (!toggle && domElement[HAS_HOVER] && (!event || !isMouseIn(event, coords))) {
+
+            toggleHoverVisual(domElement, false, coords);
+            domElement[HAS_HOVER] = false;
+
+            if (mouseController.hasThatElement(domElement)) {
+
+                mouseController.clearElement();
+
+            }
+        }
+    }
+        /**
+     * Position and display the eye icon ver the image hovered by the
+     * mouse pointer.
+     *
+     * @param {Element} domElement
+     * @param {boolean} toggle
+     * @param {object} coords
+     */
+    function toggleHoverVisual(domElement, toggle, coords) {
+        if (toggle && !domElement[HAS_HOVER_VISUAL] && domElement[HAS_BACKGROUND_IMAGE]) {
+
+            if (!settings.isNoEye) {
+
+                eye.position(domElement, coords, doc);
+                eye.show();
+                eye.setAnchor(domElement, showElement, eyeCSSUrl);
+
+            } else {
+
+                addCssClass(domElement, CSS_CLASS_BACKGROUND_LIGHT_PATTERN);
+
+            }
+
+            toggleHoverVisualClearTimer(domElement, true);
+            domElement[HAS_HOVER_VISUAL] = true;
+
+        } else if (!toggle && domElement[HAS_HOVER_VISUAL]) {
+
+            if (!settings.isNoEye) {
+
+                eye.hide();
+
+            } else {
+
+                removeCssClass(domElement, CSS_CLASS_BACKGROUND_LIGHT_PATTERN);
+
+            }
+
+            toggleHoverVisualClearTimer(domElement, false);
+            domElement[HAS_HOVER_VISUAL] = false;
+
+        }
+    }
+
+    function toggleHoverVisualClearTimer(domElement, toggle) {
+        if (toggle) {
+            toggleHoverVisualClearTimer(domElement, false);
+            domElement[ATTR_CLEAR_HOVER_VISUAL_TIMER] = setTimeout(() => {
+                toggleHoverVisual(domElement, false);
+            }, 2500);
+
+        } else if (!toggle && domElement[ATTR_CLEAR_HOVER_VISUAL_TIMER]) {
+
+            clearTimeout(domElement[ATTR_CLEAR_HOVER_VISUAL_TIMER]);
+            domElement[ATTR_CLEAR_HOVER_VISUAL_TIMER] = null;
+
+        }
+    }
+    /**
+     * Add/remove mouse event listeners.
+     *
+     * @param {Element} domElement
+     * @param {boolean} toggle
+     */
+    function toggleMouseEventListeners(domElement, toggle) {
+        handleListeners(domElement, {
+            'mouseover': mouseEntered,
+            'mouseout': mouseLeft
+        }, toggle, HAS_MOUSE_LISTENERS);
+    }
+
+    /**
+     * Keep track in which **IMG** element the mouse is over.
+     *
+     * @param {Event} event
+     */
+    function mouseEntered(event) {
+        toggleHover(this, true, event);
+        event.stopPropagation();
+    }
+
+    function mouseLeft(event) {
+        toggleHover(this, false, event);
     }
 }
