@@ -33,15 +33,16 @@ class ImagesDisplayer {
             window.skfShowImages();
         }
 
-        for (let i = 0, max = this.iframes.length; i < max; i++) {
+        this.iframes.map(iframe => {
             try {
-                if (this.iframes[i].contentWindow && this.iframes[i].contentWindow.skfShowImages) {
-                    this.iframes[i].contentWindow.skfShowImages();
+                if (iframe.contentWindow && iframe.contentWindow.skfShowImages) {
+                    iframe.contentWindow.skfShowImages();
                 }
+
             } catch (err) {
-                // Iframe may have been rewritten.
+
             }
-        }
+        });
     }
     /**
      * Store the original src of the image.
