@@ -454,7 +454,7 @@ function doWin(win, winContentLoaded) {
             if (!this.complete) {
 
                 // Hide, to avoid flash until load event is handled.
-                doHidden(this, true);
+                displayer.hideElement(this, true);
                 return;
             }
 
@@ -464,7 +464,7 @@ function doWin(win, winContentLoaded) {
             // TODO: Check this because it comes from the original
             // extension.
             if (this.src == blankImg) {
-                doHidden(this, false);
+                displayer.hideElement(this, false);
                 imageProcessor.handleBackgroundForElement(this, true);
                 this[ATTR_IS_BLOCKED] = true;
             }
@@ -487,7 +487,7 @@ function doWin(win, winContentLoaded) {
                     }
                     this[ATTR_HAS_TITLE_AND_SIZE] = true;
                 }
-                doHidden(this, true);
+                displayer.hideElement(this, true);
                 displayer.handleSourceOfImage(this, true);
                 if (this.parentElement && this.parentElement.tagName == 'PICTURE') {
                     for (let i = 0; i < this.parentElement.childNodes.length; i++) {
@@ -503,13 +503,13 @@ function doWin(win, winContentLoaded) {
             // TODO: Add a rule in the settings to let the user know
             // that this happens.
             else {
-                doHidden(this, false);
+                displayer.hideElement(this, false);
             }
             // TODO: Uncomment this when the logic for video is
             // implemented.
             // else if (this.tagName == 'VIDEO') {
             //     addAsSuspect(this);
-            //     doHidden(this, true);
+            //     displayer.hideElement(this, true);
             //     imageProcessor.handleBackgroundForElement(this, true);
             // }
 
@@ -564,15 +564,6 @@ function doWin(win, winContentLoaded) {
         }
         this.onload = null;
     };
-    /**
-     * Hide element.
-     *
-     * @param {Element} domElement
-     * @param {boolean} toggle
-     */
-    function doHidden(domElement, toggle) {
-        handleStyleClasses(domElement, [CSS_CLASS_HIDE], toggle, ATTR_IS_HID);
-    }
     /**
      * Add/remove mouse event listeners.
      *
@@ -642,7 +633,9 @@ function doWin(win, winContentLoaded) {
     function doHoverVisualClearTimer(domElement, toggle) {
         if (toggle) {
             doHoverVisualClearTimer(domElement, false);
-            domElement[ATTR_CLEAR_HOVER_VISUAL_TIMER] = setTimeout(function() { doHoverVisual(domElement, false); }, 2500);
+            domElement[ATTR_CLEAR_HOVER_VISUAL_TIMER] = setTimeout(() => {
+                doHoverVisual(domElement, false);
+            }, 2500);
         } else if (!toggle && domElement[ATTR_CLEAR_HOVER_VISUAL_TIMER]) {
             clearTimeout(domElement[ATTR_CLEAR_HOVER_VISUAL_TIMER]);
             domElement[ATTR_CLEAR_HOVER_VISUAL_TIMER] = null;
@@ -688,7 +681,7 @@ function doWin(win, winContentLoaded) {
     }
 
     function showElement(domElement) {
-        doHidden(domElement, false);
+        displayer.hideElement(domElement, false);
         if (domElement.tagName == 'IMG') {
             imageProcessor.handleLoadEventListener(domElement, doElement, false);
             displayer.handleSourceOfImage(domElement, false);

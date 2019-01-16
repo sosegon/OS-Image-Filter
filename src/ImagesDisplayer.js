@@ -68,4 +68,13 @@ class ImagesDisplayer {
             domElement.srcset = domElement.oldsrcset;
         }
     }
+    /**
+     * Hide element.
+     *
+     * @param {Element} domElement
+     * @param {boolean} toggle
+     */
+    hideElement(domElement, toggle) {
+        handleStyleClasses(domElement, [CSS_CLASS_HIDE], toggle, ATTR_IS_HID);
+    }
 }
