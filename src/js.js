@@ -95,11 +95,11 @@ const displayer = new ImagesDisplayer();
 function doWin(win, winContentLoaded) {
     const suspects = new Suspects();
     const imageProcessor = new DomImageProcessor();
+    const eye = new Eye(win.document);
 
     let doc = win.document,
         headStyles = {},
         observer = null,
-        eye = null,
         mouseMoved = false,
         mouseEvent = null,
         mouseOverEl = null,
@@ -267,7 +267,6 @@ function doWin(win, winContentLoaded) {
             removeHeadStyle(doc, headStyles, 'body');
         }
 
-        eye = new Eye(doc);
         eye.attachTo(doc.body);
 
         // Create temporary div, to eager load background img light
