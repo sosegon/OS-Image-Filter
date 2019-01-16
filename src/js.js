@@ -108,6 +108,7 @@ function doWin(win, winContentLoaded) {
     const imageProcessor = new DomImageProcessor();
     const eye = new Eye(win.document);
     const mouseController = new MouseController();
+    mouseController.setEye(eye);
 
     let doc = win.document,
         headStyles = {},
@@ -203,7 +204,7 @@ function doWin(win, winContentLoaded) {
 
         if (mouseController.hasElement()) {
 
-            doHover(mouseController.getElement(), false);
+            mouseController.toggleHover(mouseController.getElement(), false);
             mouseController.clearElement();
 
         }
@@ -263,14 +264,14 @@ function doWin(win, winContentLoaded) {
      */
     function mouseEntered(event) {
 
-        doHover(this, true, event);
+        mouseController.toggleHover(this, true, event);
         event.stopPropagation();
 
     }
 
     function mouseLeft(event) {
 
-        doHover(this, false, event);
+        mouseController.toggleHover(this, false, event);
 
     }
 
@@ -682,99 +683,6 @@ function doWin(win, winContentLoaded) {
         }, toggle, ATTR_HAS_MOUSE_LISTENERS);
 
     }
-    /**
-     * Control when the mouse pointer is over an element.
-     *
-     * @param {Element} domElement
-     * @param {boolean} toggle
-     * @param {Event} event
-     */
-    function doHover(domElement, toggle, event) {
-        const coords = domElement[ATTR_RECTANGLE];
-
-        if (toggle && !domElement[ATTR_HAS_HOVER]) {
-
-            if (mouseController.hasElement() && !mouseController.hasThatElement(domElement)) {
-
-                doHover(mouseController.getElement(), false);
-
-            }
-
-            doHoverVisual(domElement, true, coords);
-            mouseController.setElement(domElement);
-            mouseController.setAttrElement(ATTR_HAS_HOVER, true);
-
-        } else if (!toggle && domElement[ATTR_HAS_HOVER] && (!event || !isMouseIn(event, coords))) {
-
-            doHoverVisual(domElement, false, coords);
-            domElement[ATTR_HAS_HOVER] = false;
-
-            if (mouseController.hasThatElement(domElement)) {
-
-                mouseController.clearElement();
-
-            }
-        }
-    }
-    /**
-     * Position and display the eye icon ver the image hovered by the
-     * mouse pointer.
-     *
-     * @param {Element} domElement
-     * @param {boolean} toggle
-     * @param {object} coords
-     */
-    function doHoverVisual(domElement, toggle, coords) {
-        if (toggle && !domElement[ATTR_HAS_HOVER_VISUAL] && domElement[ATTR_HAS_BACKGROUND_IMAGE]) {
-
-            if (!settings.isNoEye) {
-
-                eye.position(domElement, coords, doc);
-                eye.show();
-                eye.setAnchor(domElement, showElement, eyeCSSUrl);
-
-            } else {
-
-                addCssClass(domElement, CSS_CLASS_BACKGROUND_LIGHT_PATTERN);
-
-            }
-
-            doHoverVisualClearTimer(domElement, true);
-            domElement[ATTR_HAS_HOVER_VISUAL] = true;
-
-        } else if (!toggle && domElement[ATTR_HAS_HOVER_VISUAL]) {
-
-            if (!settings.isNoEye) {
-
-                eye.hide();
-
-            } else {
-
-                removeCssClass(domElement, CSS_CLASS_BACKGROUND_LIGHT_PATTERN);
-
-            }
-
-            doHoverVisualClearTimer(domElement, false);
-            domElement[ATTR_HAS_HOVER_VISUAL] = false;
-
-        }
-    }
-
-    function doHoverVisualClearTimer(domElement, toggle) {
-        if (toggle) {
-
-            doHoverVisualClearTimer(domElement, false);
-            domElement[ATTR_CLEAR_HOVER_VISUAL_TIMER] = setTimeout(() => {
-                doHoverVisual(domElement, false);
-            }, 2500);
-
-        } else if (!toggle && domElement[ATTR_CLEAR_HOVER_VISUAL_TIMER]) {
-
-            clearTimeout(domElement[ATTR_CLEAR_HOVER_VISUAL_TIMER]);
-            domElement[ATTR_CLEAR_HOVER_VISUAL_TIMER] = null;
-
-        }
-    }
 
     function checkMousePosition() {
         if (!mouseController.hasMoved() ||
@@ -792,17 +700,17 @@ function doWin(win, winContentLoaded) {
 
             if (!isMouseIn(mouseController.getEvent(), coords)) {
 
-                doHover(mouseController.getElement(), false);
+                mouseController.toggleHover(mouseController.getElement(), false);
 
             } else if (mouseController.getAttrValueElement(ATTR_HAS_BACKGROUND_IMAGE)) {
 
                 if (!mouseController.getAttrValueElement(ATTR_HAS_HOVER_VISUAL)) {
 
-                    doHoverVisual(mouseController.getElement(), true, coords);
+                    mouseController.toggleHoverVisual(mouseController.getElement(), true, coords);
 
                 } else {
 
-                    doHoverVisualClearTimer(mouseController.getElement(), true);
+                    mouseController.toggleHoverVisualClearTimer(mouseController.getElement(), true);
                     eye.position(mouseController.getElement(), coords, doc);
 
                 }
@@ -824,7 +732,7 @@ function doWin(win, winContentLoaded) {
 
         if (found && (foundElement[ATTR_HAS_BACKGROUND_IMAGE] || mouseController.hasElement())) {
 
-            doHover(foundElement, true);
+            mouseController.toggleHover(foundElement, true);
 
         }
     }
