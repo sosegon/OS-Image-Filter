@@ -488,12 +488,12 @@ function doWin(win, winContentLoaded) {
                     this[ATTR_HAS_TITLE_AND_SIZE] = true;
                 }
                 doHidden(this, true);
-                doImgSrc(this, true);
+                displayer.handleSourceOfImage(this, true);
                 if (this.parentElement && this.parentElement.tagName == 'PICTURE') {
                     for (let i = 0; i < this.parentElement.childNodes.length; i++) {
                         const node = this.parentElement.childNodes[i];
                         if (node.tagName == 'SOURCE') {
-                            doImgSrc(node, true);
+                            displayer.handleSourceOfImage(node, true);
                         }
                     }
                 }
@@ -564,32 +564,6 @@ function doWin(win, winContentLoaded) {
         }
         this.onload = null;
     };
-
-    /**
-     * Store the original src of the image.
-     *
-     * @param {HTMLImageElement} domElement
-     * @param {boolean} toggle
-     */
-    function doImgSrc(domElement, toggle) {
-        if (toggle && !domElement.getAttribute(ATTR_ALREADY_TOGGLED)) {
-            domElement.oldsrc = domElement.src;
-            domElement.oldsrcset = domElement.srcset;
-            // Do not set to empty string, otherwise the processing
-            // will result in an empty image
-            // el.src = el.srcset = '';
-
-            // Empty string to make sure filtered images are displayed
-            // in the img elements
-            domElement.srcset = '';
-            domElement.setAttribute(ATTR_ALREADY_TOGGLED, 'true');
-        } else if (!toggle && domElement.getAttribute(ATTR_ALREADY_TOGGLED) === 'true') {
-            const oldsrc = domElement.oldsrc;
-            domElement.oldsrc = domElement.src;
-            domElement.src = oldsrc;
-            domElement.srcset = domElement.oldsrcset;
-        }
-    }
     /**
      * Hide element.
      *
@@ -717,12 +691,12 @@ function doWin(win, winContentLoaded) {
         doHidden(domElement, false);
         if (domElement.tagName == 'IMG') {
             imageProcessor.handleLoadEventListener(domElement, doElement, false);
-            doImgSrc(domElement, false);
+            displayer.handleSourceOfImage(domElement, false);
             if (domElement.parentElement && domElement.parentElement.tagName == 'PICTURE') {
                 for (let i = 0; i < domElement.parentElement.childNodes.length; i++) {
                     let node = domElement.parentElement.childNodes[i];
                     if (node.tagName == 'SOURCE') {
-                        doImgSrc(node, false);
+                        displayer.handleSourceOfImage(node, false);
                     }
                 }
             }

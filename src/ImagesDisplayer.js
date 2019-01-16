@@ -10,7 +10,7 @@ class ImagesDisplayer {
         return this.showAll;
     }
     addIFrame(iframe) {
-    	this.iframes.push(iframe);
+        this.iframes.push(iframe);
     }
     /**
      * Display images in webpage and iframes
@@ -41,6 +41,31 @@ class ImagesDisplayer {
             } catch (err) {
                 // Iframe may have been rewritten.
             }
+        }
+    }
+    /**
+     * Store the original src of the image.
+     *
+     * @param {HTMLImageElement} domElement
+     * @param {boolean} toggle
+     */
+    handleSourceOfImage(domElement, toggle) {
+        if (toggle && !domElement.getAttribute(ATTR_ALREADY_TOGGLED)) {
+            domElement.oldsrc = domElement.src;
+            domElement.oldsrcset = domElement.srcset;
+            // Do not set to empty string, otherwise the processing
+            // will result in an empty image
+            // el.src = el.srcset = '';
+
+            // Empty string to make sure filtered images are displayed
+            // in the img elements
+            domElement.srcset = '';
+            domElement.setAttribute(ATTR_ALREADY_TOGGLED, 'true');
+        } else if (!toggle && domElement.getAttribute(ATTR_ALREADY_TOGGLED) === 'true') {
+            const oldsrc = domElement.oldsrc;
+            domElement.oldsrc = domElement.src;
+            domElement.src = oldsrc;
+            domElement.srcset = domElement.oldsrcset;
         }
     }
 }
