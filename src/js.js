@@ -105,7 +105,6 @@ const displayer = new ImagesDisplayer();
  */
 function doWin(win, winContentLoaded) {
     const suspects = new Suspects();
-    const imageProcessor = new DomImageProcessor();
     const eye = new Eye(win.document);
     const mouseController = new MouseController();
     mouseController.setEye(eye);
@@ -454,7 +453,7 @@ function doWin(win, winContentLoaded) {
 
     function processImage() {
 
-        imageProcessor.processDomImage(this);
+        processDomImage(this);
         handleLoadProcessImageListener(this, processImage, false);
         handleLoadEventListener(this, doElement, false);
 
@@ -604,7 +603,7 @@ function doWin(win, winContentLoaded) {
                 // processed.
                 addRandomWizUuid(this);
                 const uuid = this.getAttribute(ATTR_UUID);
-                imageProcessor.processBackgroundImage(this, bgImgUrl, width, height, uuid);
+                processBackgroundImage(this, bgImgUrl, width, height, uuid);
 
                 suspects.addSuspect(this);
                 handleBackgroundForElement(this, true);
