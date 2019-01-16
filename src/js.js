@@ -107,13 +107,11 @@ function doWin(win, winContentLoaded) {
     const suspects = new Suspects();
     const imageProcessor = new DomImageProcessor();
     const eye = new Eye(win.document);
+    const mouseController = new MouseController();
 
     let doc = win.document,
         headStyles = {},
         observer = null,
-        mouseMoved = false,
-        mouseEvent = null,
-        mouseOverEl = null,
         /**
          * This flag is used to check if the iteration over the
          * structure to find the elements and process the images has
@@ -185,13 +183,13 @@ function doWin(win, winContentLoaded) {
     }, 1);
 
     //ALT-a, ALT-z
+    mouseController.watchDocument(doc);
     doc.addEventListener('keydown', docKeyDown);
-    doc.addEventListener('mousemove', docMouseMove);
     win.addEventListener('scroll', windowScroll);
 
     win.skfShowImages = () => {
+        mouseController.unwatchDocument(doc);
         doc.removeEventListener('keydown', docKeyDown);
-        doc.removeEventListener('mousemove', docMouseMove);
         win.removeEventListener('scroll', windowScroll);
         suspects.applyCallback(showElement);
 
@@ -203,10 +201,10 @@ function doWin(win, winContentLoaded) {
 
         }
 
-        if (mouseOverEl) {
+        if (mouseController.hasElement()) {
 
-            doHover(mouseOverEl, false);
-            mouseOverEl = null;
+            doHover(mouseController.getElement(), false);
+            mouseController.clearElement();
 
         }
 
@@ -229,18 +227,8 @@ function doWin(win, winContentLoaded) {
         }
     }
 
-    /**
-     * Set **mouseEvent** object and **mouseMoved** flag.
-     *
-     * @param {Event} event
-     */
-    function docMouseMove(event) {
-        mouseEvent = event;
-        mouseMoved = true;
-    };
-
     function windowScroll() {
-        mouseMoved = true;
+        mouseController.move();
         suspects.updateSuspectsRectangles();
         checkMousePosition();
     }
@@ -252,16 +240,16 @@ function doWin(win, winContentLoaded) {
             chrome.runtime.sendMessage({ r: 'pause', toggle: true });
             displayer.showImages();
 
-        } else if (mouseOverEl && event.altKey) {
+        } else if (mouseController.hasElement() && event.altKey) {
 
-            if (event.keyCode == 65 && mouseOverEl[ATTR_HAS_BACKGROUND_IMAGE]) { //ALT-a
+            if (event.keyCode == 65 && mouseController.getAttrValueElement(ATTR_HAS_BACKGROUND_IMAGE)) { //ALT-a
 
-                showElement(mouseOverEl);
+                showElement(mouseController.getElement());
                 eye.hide();
 
-            } else if (event.keyCode == 90 && !mouseOverEl[ATTR_HAS_BACKGROUND_IMAGE]) { //ALT-z
+            } else if (event.keyCode == 90 && !mouseController.getAttrValueElement(ATTR_HAS_BACKGROUND_IMAGE)) { //ALT-z
 
-                doElement.call(mouseOverEl);
+                doElement.call(mouseController.getElement());
                 eye.hide();
 
             }
@@ -706,24 +694,24 @@ function doWin(win, winContentLoaded) {
 
         if (toggle && !domElement[ATTR_HAS_HOVER]) {
 
-            if (mouseOverEl && mouseOverEl != domElement) {
+            if (mouseController.hasElement() && !mouseController.hasThatElement(domElement)) {
 
-                doHover(mouseOverEl, false);
+                doHover(mouseController.getElement(), false);
 
             }
 
-            mouseOverEl = domElement;
             doHoverVisual(domElement, true, coords);
-            domElement[ATTR_HAS_HOVER] = true;
+            mouseController.setElement(domElement);
+            mouseController.setAttrElement(ATTR_HAS_HOVER, true);
 
         } else if (!toggle && domElement[ATTR_HAS_HOVER] && (!event || !isMouseIn(event, coords))) {
 
             doHoverVisual(domElement, false, coords);
             domElement[ATTR_HAS_HOVER] = false;
 
-            if (domElement == mouseOverEl) {
+            if (mouseController.hasThatElement(domElement)) {
 
-                mouseOverEl = null;
+                mouseController.clearElement();
 
             }
         }
@@ -789,39 +777,43 @@ function doWin(win, winContentLoaded) {
     }
 
     function checkMousePosition() {
-        if (!mouseMoved || !mouseEvent || !contentLoaded || displayer.isShowAll()) {
+        if (!mouseController.hasMoved() ||
+            !mouseController.hasEvent() ||
+            !contentLoaded ||
+            displayer.isShowAll()) {
             return;
         }
 
-        mouseMoved = false;
+        mouseController.unmove();
 
         // See if needs to defocus current.
-        if (mouseOverEl) {
-            const coords = mouseOverEl[ATTR_RECTANGLE];
+        if (mouseController.hasElement()) {
+            const coords = mouseController.getAttrValueElement(ATTR_RECTANGLE);
 
-            if (!isMouseIn(mouseEvent, coords)) {
+            if (!isMouseIn(mouseController.getEvent(), coords)) {
 
-                doHover(mouseOverEl, false);
+                doHover(mouseController.getElement(), false);
 
-            } else if (mouseOverEl[ATTR_HAS_BACKGROUND_IMAGE]) {
+            } else if (mouseController.getAttrValueElement(ATTR_HAS_BACKGROUND_IMAGE)) {
 
-                if (!mouseOverEl[ATTR_HAS_HOVER_VISUAL]) {
+                if (!mouseController.getAttrValueElement(ATTR_HAS_HOVER_VISUAL)) {
 
-                    doHoverVisual(mouseOverEl, true, coords);
+                    doHoverVisual(mouseController.getElement(), true, coords);
 
                 } else {
 
-                    doHoverVisualClearTimer(mouseOverEl, true);
-                    eye.position(mouseOverEl, coords, doc);
+                    doHoverVisualClearTimer(mouseController.getElement(), true);
+                    eye.position(mouseController.getElement(), coords, doc);
 
                 }
             }
         }
         // Find element under mouse.
-        let foundElement = mouseOverEl;
+        let foundElement = mouseController.getElement();
         let found = false;
 
-        const foundElements = suspects.findSuspectsUnderMouse(mouseOverEl, mouseEvent, isMouseIn);
+        const foundElements = suspects.findSuspectsUnderMouse(
+            mouseController.getElement(), mouseController.getEvent(), isMouseIn);
 
         if (foundElements.length > 0) {
 
@@ -830,7 +822,7 @@ function doWin(win, winContentLoaded) {
 
         }
 
-        if (found && (foundElement[ATTR_HAS_BACKGROUND_IMAGE] || !mouseOverEl)) {
+        if (found && (foundElement[ATTR_HAS_BACKGROUND_IMAGE] || mouseController.hasElement())) {
 
             doHover(foundElement, true);
 
