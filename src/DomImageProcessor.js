@@ -3,7 +3,7 @@ class DomImageProcessor {
 
     }
     processDomImage(domElement) {
-        const canvas = addCanvaSibling(domElement);
+        const canvas = this.addCanvasSibling(domElement);
         const uuid = domElement.getAttribute(ATTR_UUID);
 
         domElement[ATTR_PROCESSED] = true;
@@ -94,7 +94,7 @@ class DomImageProcessor {
         const imageData = context.getImageData(0, 0, width, height);
         const rgbaArray = imageData.data;
 
-        filterRgbaArray(rgbaArray);
+        this.filterRgbaArray(rgbaArray);
         imageData.data.set(rgbaArray);
         context.putImageData(imageData, 0, 0);
         const base64Img = canvas.toDataURL("image/png");
@@ -120,14 +120,14 @@ class DomImageProcessor {
      */
     filterRgbaArray(rgbaArray) {
         for (let i = 0; i < rgbaArray.length; i += 4) {
-            rIndex = i
-            gIndex = i + 1
-            bIndex = i + 2
-            aIndex = i + 3
+            const rIndex = i;
+            const gIndex = i + 1;
+            const bIndex = i + 2;
+            const aIndex = i + 3;
 
-            r = rgbaArray[rIndex];
-            g = rgbaArray[gIndex];
-            b = rgbaArray[bIndex];
+            const r = rgbaArray[rIndex];
+            const g = rgbaArray[gIndex];
+            const b = rgbaArray[bIndex];
 
             if (
                 (r > 95 && g > 40 && b > 20) &&
@@ -159,7 +159,7 @@ class DomImageProcessor {
         const imageData = context.getImageData(0, 0, width, height);
         const rgbaArray = imageData.data;
 
-        filterRgbaArray(rgbaArray);
+        this.filterRgbaArray(rgbaArray);
         imageData.data.set(rgbaArray);
         context.putImageData(imageData, 0, 0);
         const urlData = canvas.toDataURL('image/png');
@@ -175,7 +175,7 @@ class DomImageProcessor {
             actualImg.src = urlData;
             actualImg.srcset = '';
             actualImg.onload = () => {
-                self.loadProcessed(this);
+                self.loadProcessed(actualImg);
             }
         }
     }
@@ -199,6 +199,30 @@ class DomImageProcessor {
             //DoImgSrc(this, true);
             return;
         }
+    }
+    // TODO: Use only the global canvas to
+    // improve perfomance. Workers may be helpful
+    /**
+     * Add a canvas sibling for an element containing an image. The
+     * canvas is meant to be used to get the data in a readable format to
+     * be filtered.
+     *
+     * @param {Element} domElement
+     */
+    addCanvasSibling(domElement) {
+        const uuid = domElement.getAttribute(ATTR_UUID) + "-canvas";
+        const canvas = document.getElementById(uuid);
+
+        if (canvas === undefined || canvas === null) {
+            const canvas = document.createElement("canvas");
+            canvas.setAttribute("id", uuid);
+
+            const room = document.getElementById(CANVAS_CONTAINER_ID);
+            room.appendChild(canvas);
+            addCssClass(canvas, CSS_CLASS_HIDE);
+        }
+
+        return canvas;
     }
     // doSkifImageBG(domElement, toggle) {
     handleBackgroundForElement(domElement, toggle) {
