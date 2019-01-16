@@ -248,24 +248,6 @@ function doWin(win, winContentLoaded) {
     }
 
     /**
-     * Keep track in which **IMG** element the mouse is over.
-     *
-     * @param {Event} event
-     */
-    function mouseEntered(event) {
-
-        mouseController.toggleHover(this, true, event);
-        event.stopPropagation();
-
-    }
-
-    function mouseLeft(event) {
-
-        mouseController.toggleHover(this, false, event);
-
-    }
-
-    /**
      * Start the process to filter images.
      */
     function Start() {
@@ -546,7 +528,7 @@ function doWin(win, winContentLoaded) {
             // images start off as zero.
             else if ((width == 0 || width > settings.maxSafe) && (height == 0 || height > settings.maxSafe)) {
 
-                doMouseEventListeners(this, true);
+                mouseController.toggleMouseEventListeners(this, true);
 
                 if (!this[ATTR_HAS_TITLE_AND_SIZE]) {
                     // this.style.width = elWidth + 'px';
@@ -626,7 +608,7 @@ function doWin(win, winContentLoaded) {
 
                 suspects.addSuspect(this);
                 imageProcessor.handleBackgroundForElement(this, true);
-                doMouseEventListeners(this, true);
+                mouseController.toggleMouseEventListeners(this, true);
 
                 if (this[ATTR_LAST_CHECKED_SRC] != bgImg) {
 
@@ -658,20 +640,6 @@ function doWin(win, winContentLoaded) {
 
             }
         }
-    }
-    /**
-     * Add/remove mouse event listeners.
-     *
-     * @param {Element} domElement
-     * @param {boolean} toggle
-     */
-    function doMouseEventListeners(domElement, toggle) {
-
-        handleListeners(domElement, {
-            'mouseover': mouseEntered,
-            'mouseout': mouseLeft
-        }, toggle, ATTR_HAS_MOUSE_LISTENERS);
-
     }
 
     function checkMousePosition() {
@@ -761,7 +729,7 @@ function doWin(win, winContentLoaded) {
 
         if (displayer.isShowAll()) {
 
-            doMouseEventListeners(domElement, false);
+            mouseController.toggleMouseEventListeners(domElement, false);
 
         }
     }

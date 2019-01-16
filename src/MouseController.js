@@ -153,4 +153,33 @@ class MouseController {
 
         }
     }
+    /**
+     * Add/remove mouse event listeners.
+     *
+     * @param {Element} domElement
+     * @param {boolean} toggle
+     */
+    toggleMouseEventListeners(domElement, toggle) {
+        const mouseEntered = this.mouseEntered;
+        const mouseLeft = this.mouseLeft;
+
+        handleListeners(domElement, {
+            'mouseover': mouseEntered,
+            'mouseout': mouseLeft
+        }, toggle, ATTR_HAS_MOUSE_LISTENERS);
+    }
+
+    /**
+     * Keep track in which **IMG** element the mouse is over.
+     *
+     * @param {Event} event
+     */
+    mouseEntered(event) {
+        this.toggleHover(event.target, true, event);
+        event.stopPropagation();
+    }
+
+    mouseLeft(event) {
+        this.toggleHover(event.target, false, event);
+    }
 }
