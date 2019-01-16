@@ -463,7 +463,7 @@ function doWin(win, winContentLoaded) {
 
         // Similar to the main page. The logic is set to be executed
         // until the iframe is ready to be processed.
-        const pollNum = 0;
+        let pollNum = 0;
         const pollID = setInterval(() => {
             if (doc.body) {
 
