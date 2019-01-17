@@ -103,121 +103,127 @@ const displayer = ImagesDisplayer();
  * @param {boolean} winContentLoaded
  */
 function doWin(win, winContentLoaded) {
-    const suspects = Suspects();
-    const eye = Eye(win.document);
-    const mouseController = MouseController();
+    const mSuspects = Suspects();
+    const mEye = Eye(win.document);
+    const mMouseController = MouseController();
 
-    let doc = win.document,
-        headStyles = {},
-        observer = null,
+    let mWin = win;
+    let mDoc = mWin.document;
+    let mHeadStyles = {};
+    let mObserver = null;
+    /**
+     * This flag is used to check if the iteration over the
+     * structure to find the elements and process the images has
+     * started.
+     */
+    let mHasStarted = false;
+    let mContentLoaded = winContentLoaded;
+
+    setEverythingUp();
+
+    function setEverythingUp() {
         /**
-         * This flag is used to check if the iteration over the
-         * structure to find the elements and process the images has
-         * started.
+         * Start, or register start. There is no way to control the order
+         * in which the listener for **DOMContentLoaded** and the callback
+         * to get the settings from background are executed. This
+         * condition is the way to handle that situation. **doWin** is
+         * called after receiving the settings from the background.
+         * However, at that moment, the listener for **DOMContentLoaded**
+         * that sets the flag **contentLoaded** passed here as
+         * **winContentLoaded** has been already triggered. In short, the
+         * listener was executed first.
          */
-        hasStarted = false;
+        if (mContentLoaded) {
 
-    /**
-     * Start, or register start. There is no way to control the order
-     * in which the listener for **DOMContentLoaded** and the callback
-     * to get the settings from background are executed. This
-     * condition is the way to handle that situation. **doWin** is
-     * called after receiving the settings from the background.
-     * However, at that moment, the listener for **DOMContentLoaded**
-     * that sets the flag **contentLoaded** passed here as
-     * **winContentLoaded** has been already triggered. In short, the
-     * listener was executed first.
-     */
-    if (winContentLoaded) {
+            Start();
 
-        Start();
+        }
+        // The callback was executed first
+        else {
 
-    }
-    // The callback was executed first
-    else {
+            mWin.addEventListener('DOMContentLoaded', Start);
 
-        win.addEventListener('DOMContentLoaded', Start);
+        }
 
-    }
+        /**
+         * Set some css as soon as possible. These styles are going to be
+         * used in the elements containing images, and other additional
+         * items added by the chrome extension. The logic is set to repeat
+         * every 1ms. At this point we do not know if the DOM tree is
+         * ready for manipulation. The variable doc.head is check to see
+         * if the styles can be added.
+         */
+        const pollID = setInterval(function() {
+            // Nothing to add. All images will be shown. Stop the
+            // iteration.
+            if (displayer.isShowAll()) {
 
-    /**
-     * Set some css as soon as possible. These styles are going to be
-     * used in the elements containing images, and other additional
-     * items added by the chrome extension. The logic is set to repeat
-     * every 1ms. At this point we do not know if the DOM tree is
-     * ready for manipulation. The variable doc.head is check to see
-     * if the styles can be added.
-     */
-    const pollID = setInterval(function() {
-        // Nothing to add. All images will be shown. Stop the
-        // iteration.
-        if (displayer.isShowAll()) {
+                clearInterval(pollID);
 
-            clearInterval(pollID);
+            } else if (mDoc.head) {
+                // If process has not started. Make the webpage
+                // transparent. That way no images are displayed.
+                if (!mHasStarted) {
 
-        } else if (doc.head) {
-            // If process has not started. Make the webpage
-            // transparent. That way no images are displayed.
-            if (!hasStarted) {
+                    addHeadStyle(mDoc, mHeadStyles, 'body', '{opacity: 0 !important; }');
 
-                addHeadStyle(doc, headStyles, 'body', '{opacity: 0 !important; }');
+                }
+
+                addHeadStyle(mDoc, mHeadStyles, 'body ', '{background-image: none !important;}');
+                addHeadStyle(mDoc, mHeadStyles, '.' + CSS_CLASS_HIDE, '{opacity: 0 !important;}');
+                addHeadStyle(mDoc, mHeadStyles, '.' + CSS_CLASS_BACKGROUND_PATTERN, '{ background-repeat: repeat !important;text-indent:0 !important;}'); //text-indent to show alt text
+                addHeadStyle(mDoc, mHeadStyles, '.' + CSS_CLASS_PAYPAL_DONATION, '{left: 0px; bottom: 0px; width: 100%; z-index: 9000; background: #d09327}');
+
+                for (let i = 0; i < 8; i++) {
+
+                    addHeadStyle(mDoc, mHeadStyles, '.' + CSS_CLASS_BACKGROUND_PATTERN + '.' + CSS_CLASS_SHADE + i, '{background-image: ' + (settings.isNoPattern ? 'none' : 'url(' + extensionUrl + "pattern" + i + ".png" + ')') + ' !important; }');
+                    addHeadStyle(mDoc, mHeadStyles, '.' + CSS_CLASS_BACKGROUND_PATTERN + '.' + CSS_CLASS_BACKGROUND_LIGHT_PATTERN + '.' + CSS_CLASS_SHADE + i, '{background-image: ' + (settings.isNoPattern ? 'none' : 'url(' + extensionUrl + "pattern-light" + i + ".png" + ')') + ' !important; }');
+
+                }
+
+                clearInterval(pollID);
+            }
+        }, 1);
+
+        //ALT-a, ALT-z
+        mMouseController.watchDocument(mDoc);
+        mDoc.addEventListener('keydown', docKeyDown);
+        mWin.addEventListener('scroll', windowScroll);
+
+        mWin.skfShowImages = () => {
+            mMouseController.unwatchDocument(mDoc);
+            mDoc.removeEventListener('keydown', docKeyDown);
+            mWin.removeEventListener('scroll', windowScroll);
+            mSuspects.applyCallback(showElement);
+
+            mWin.removeEventListener('DOMContentLoaded', Start);
+
+            for (let s in mHeadStyles) {
+
+                removeHeadStyle(mDoc, mHeadStyles, s);
 
             }
 
-            addHeadStyle(doc, headStyles, 'body ', '{background-image: none !important;}');
-            addHeadStyle(doc, headStyles, '.' + CSS_CLASS_HIDE, '{opacity: 0 !important;}');
-            addHeadStyle(doc, headStyles, '.' + CSS_CLASS_BACKGROUND_PATTERN, '{ background-repeat: repeat !important;text-indent:0 !important;}'); //text-indent to show alt text
-            addHeadStyle(doc, headStyles, '.' + CSS_CLASS_PAYPAL_DONATION, '{left: 0px; bottom: 0px; width: 100%; z-index: 9000; background: #d09327}');
+            if (mMouseController.hasElement()) {
 
-            for (let i = 0; i < 8; i++) {
-
-                addHeadStyle(doc, headStyles, '.' + CSS_CLASS_BACKGROUND_PATTERN + '.' + CSS_CLASS_SHADE + i, '{background-image: ' + (settings.isNoPattern ? 'none' : 'url(' + extensionUrl + "pattern" + i + ".png" + ')') + ' !important; }');
-                addHeadStyle(doc, headStyles, '.' + CSS_CLASS_BACKGROUND_PATTERN + '.' + CSS_CLASS_BACKGROUND_LIGHT_PATTERN + '.' + CSS_CLASS_SHADE + i, '{background-image: ' + (settings.isNoPattern ? 'none' : 'url(' + extensionUrl + "pattern-light" + i + ".png" + ')') + ' !important; }');
+                toggleHover(mMouseController.getElement(), false);
+                mMouseController.clearElement();
 
             }
 
-            clearInterval(pollID);
-        }
-    }, 1);
+            mEye.detach();
 
-    //ALT-a, ALT-z
-    mouseController.watchDocument(doc);
-    doc.addEventListener('keydown', docKeyDown);
-    win.addEventListener('scroll', windowScroll);
+            if (mObserver) {
 
-    win.skfShowImages = () => {
-        mouseController.unwatchDocument(doc);
-        doc.removeEventListener('keydown', docKeyDown);
-        win.removeEventListener('scroll', windowScroll);
-        suspects.applyCallback(showElement);
+                mObserver.disconnect();
 
-        win.removeEventListener('DOMContentLoaded', Start);
-
-        for (let s in headStyles) {
-
-            removeHeadStyle(doc, headStyles, s);
-
-        }
-
-        if (mouseController.hasElement()) {
-
-            toggleHover(mouseController.getElement(), false);
-            mouseController.clearElement();
-
-        }
-
-        eye.detach();
-
-        if (observer) {
-
-            observer.disconnect();
-
+            }
         }
     }
 
     function windowScroll() {
-        mouseController.move();
-        suspects.updateSuspectsRectangles();
+        mMouseController.move();
+        mSuspects.updateSuspectsRectangles();
         checkMousePosition();
     }
 
@@ -228,17 +234,17 @@ function doWin(win, winContentLoaded) {
             chrome.runtime.sendMessage({ r: 'pause', toggle: true });
             displayer.showImages();
 
-        } else if (mouseController.hasElement() && event.altKey) {
+        } else if (mMouseController.hasElement() && event.altKey) {
 
-            if (event.keyCode == 65 && mouseController.getAttrValueElement(HAS_BACKGROUND_IMAGE)) { //ALT-a
+            if (event.keyCode == 65 && mMouseController.getAttrValueElement(HAS_BACKGROUND_IMAGE)) { //ALT-a
 
-                showElement(mouseController.getElement());
-                eye.hide();
+                showElement(mMouseController.getElement());
+                mEye.hide();
 
-            } else if (event.keyCode == 90 && !mouseController.getAttrValueElement(HAS_BACKGROUND_IMAGE)) { //ALT-z
+            } else if (event.keyCode == 90 && !mMouseController.getAttrValueElement(HAS_BACKGROUND_IMAGE)) { //ALT-z
 
-                doElement.call(mouseController.getElement());
-                eye.hide();
+                doElement.call(mMouseController.getElement());
+                mEye.hide();
 
             }
         }
@@ -249,7 +255,7 @@ function doWin(win, winContentLoaded) {
      */
     function Start() {
         // With iFrames it happens.
-        if (!doc.body) {
+        if (!mDoc.body) {
 
             return;
 
@@ -257,9 +263,9 @@ function doWin(win, winContentLoaded) {
 
         // Do not hide an image opened in the browser. The user
         // actually WANTS to see it.
-        if (win == top &&
-            doc.body.children.length == 1 &&
-            doc.body.children[0].tagName == 'IMG') {
+        if (mWin == top &&
+            mDoc.body.children.length == 1 &&
+            mDoc.body.children[0].tagName == 'IMG') {
 
             displayer.showImages();
             return;
@@ -269,16 +275,16 @@ function doWin(win, winContentLoaded) {
 
         // Filter any image in the body. Here the image can be a
         // background set in a css style.
-        doElements(doc.body, false);
+        doElements(mDoc.body, false);
 
         // Once body has been done, show it.
-        if (headStyles['body']) {
+        if (mHeadStyles['body']) {
 
-            removeHeadStyle(doc, headStyles, 'body');
+            removeHeadStyle(mDoc, mHeadStyles, 'body');
 
         }
 
-        eye.attachTo(doc.body);
+        mEye.attachTo(mDoc.body);
 
         // Create temporary div, to eager load background img light
         // for noEye to avoid flicker.
@@ -286,10 +292,10 @@ function doWin(win, winContentLoaded) {
 
             for (let i = 0; i < 8; i++) {
 
-                const div = doc.createElement('div');
+                const div = mDoc.createElement('div');
                 div.style.opacity = div.style.width = div.style.height = 0;
                 div.className = CSS_CLASS_BACKGROUND_PATTERN + ' ' + CSS_CLASS_BACKGROUND_LIGHT_PATTERN + ' ' + CSS_CLASS_SHADE + i;
-                doc.body.appendChild(div);
+                mDoc.body.appendChild(div);
 
             }
 
@@ -297,7 +303,7 @@ function doWin(win, winContentLoaded) {
 
         // Mutation observer checks when a change in the DOM tree has
         // occured.
-        observer = new WebKitMutationObserver((mutations, observer) => {
+        mObserver = new WebKitMutationObserver((mutations, observer) => {
 
             mutations.map(m => {
                 // This is for changes in the nodes already in the DOM
@@ -352,7 +358,7 @@ function doWin(win, winContentLoaded) {
                 }
             });
         });
-        observer.observe(doc, { subtree: true, childList: true, attributes: true, attributeOldValue: true });
+        mObserver.observe(mDoc, { subtree: true, childList: true, attributes: true, attributeOldValue: true });
 
         // checkMousePosition every so often. This is to update the
         // positon of the eye when the mouse pointer is over an image.
@@ -360,7 +366,7 @@ function doWin(win, winContentLoaded) {
 
         // Update the bounding boxes for every element with an image.
         setInterval(() => {
-            suspects.updateSuspectsRectangles()
+            mSuspects.updateSuspectsRectangles()
         }, 3000);
 
         // This is likely to be set based on an average time for a web
@@ -371,7 +377,7 @@ function doWin(win, winContentLoaded) {
             if ((i % 2) > 0) {
 
                 setTimeout(() => {
-                    suspects.updateSuspectsRectangles()
+                    mSuspects.updateSuspectsRectangles()
                 }, i * 1500);
 
             }
@@ -379,13 +385,13 @@ function doWin(win, winContentLoaded) {
 
         // At this point, the frame elements are already in the DOM
         // tree, but their content may not have been loaded.
-        const iframes = doc.getElementsByTagName('iframe');
+        const iframes = mDoc.getElementsByTagName('iframe');
         Array.from(iframes).map(iframe => {
             doIframe(iframe);
         });
 
         // Now the process has officially started.
-        hasStarted = true;
+        mHasStarted = true;
     }
 
     /**
@@ -434,7 +440,7 @@ function doWin(win, winContentLoaded) {
         // until the iframe is ready to be processed.
         let pollNum = 0;
         const pollID = setInterval(() => {
-            if (doc.body) {
+            if (mDoc.body) {
 
                 clearInterval(pollID);
                 doWin(win, true);
@@ -483,7 +489,7 @@ function doWin(win, winContentLoaded) {
 
                 addRandomWizUuid(this);
                 addCssClass(this, "wiz-to-process");
-                suspects.addSuspect(this);
+                mSuspects.addSuspect(this);
 
             }
 
@@ -601,7 +607,7 @@ function doWin(win, winContentLoaded) {
                 const uuid = this.getAttribute(ATTR_UUID);
                 processBackgroundImage(this, bgImgUrl, width, height, uuid);
 
-                suspects.addSuspect(this);
+                mSuspects.addSuspect(this);
                 handleBackgroundForElement(this, true);
                 toggleMouseEventListeners(this, true);
 
@@ -635,43 +641,43 @@ function doWin(win, winContentLoaded) {
     }
 
     function checkMousePosition() {
-        if (!mouseController.hasMoved() ||
-            !mouseController.hasEvent() ||
-            !contentLoaded ||
+        if (!mMouseController.hasMoved() ||
+            !mMouseController.hasEvent() ||
+            !mContentLoaded ||
             displayer.isShowAll()) {
             return;
         }
 
-        mouseController.unmove();
+        mMouseController.unmove();
 
         // See if needs to defocus current.
-        if (mouseController.hasElement()) {
-            const coords = mouseController.getAttrValueElement(ATTR_RECTANGLE);
+        if (mMouseController.hasElement()) {
+            const coords = mMouseController.getAttrValueElement(ATTR_RECTANGLE);
 
-            if (!isMouseIn(mouseController.getEvent(), coords)) {
+            if (!isMouseIn(mMouseController.getEvent(), coords)) {
 
-                toggleHover(mouseController.getElement(), false);
+                toggleHover(mMouseController.getElement(), false);
 
-            } else if (mouseController.getAttrValueElement(HAS_BACKGROUND_IMAGE)) {
+            } else if (mMouseController.getAttrValueElement(HAS_BACKGROUND_IMAGE)) {
 
-                if (!mouseController.getAttrValueElement(HAS_HOVER_VISUAL)) {
+                if (!mMouseController.getAttrValueElement(HAS_HOVER_VISUAL)) {
 
-                    toggleHoverVisual(mouseController.getElement(), true, coords);
+                    toggleHoverVisual(mMouseController.getElement(), true, coords);
 
                 } else {
 
-                    toggleHoverVisualClearTimer(mouseController.getElement(), true);
-                    eye.position(mouseController.getElement(), coords, doc);
+                    toggleHoverVisualClearTimer(mMouseController.getElement(), true);
+                    mEye.position(mMouseController.getElement(), coords, mDoc);
 
                 }
             }
         }
         // Find element under mouse.
-        let foundElement = mouseController.getElement();
+        let foundElement = mMouseController.getElement();
         let found = false;
 
-        const foundElements = suspects.findSuspectsUnderMouse(
-            mouseController.getElement(), mouseController.getEvent(), isMouseIn);
+        const foundElements = mSuspects.findSuspectsUnderMouse(
+            mMouseController.getElement(), mMouseController.getEvent(), isMouseIn);
 
         if (foundElements.length > 0) {
 
@@ -680,7 +686,7 @@ function doWin(win, winContentLoaded) {
 
         }
 
-        if (found && (foundElement[HAS_BACKGROUND_IMAGE] || mouseController.hasElement())) {
+        if (found && (foundElement[HAS_BACKGROUND_IMAGE] || mMouseController.hasElement())) {
 
             toggleHover(foundElement, true);
 
@@ -733,29 +739,29 @@ function doWin(win, winContentLoaded) {
 
         if (toggle && !domElement[HAS_HOVER]) {
 
-            if (mouseController.hasElement() && !mouseController.hasThatElement(domElement)) {
+            if (mMouseController.hasElement() && !mMouseController.hasThatElement(domElement)) {
 
-                toggleHover(mouseController.getElement(), false);
+                toggleHover(mMouseController.getElement(), false);
 
             }
 
             toggleHoverVisual(domElement, true, coords);
-            mouseController.setElement(domElement);
-            mouseController.setAttrElement(HAS_HOVER, true);
+            mMouseController.setElement(domElement);
+            mMouseController.setAttrElement(HAS_HOVER, true);
 
         } else if (!toggle && domElement[HAS_HOVER] && (!event || !isMouseIn(event, coords))) {
 
             toggleHoverVisual(domElement, false, coords);
             domElement[HAS_HOVER] = false;
 
-            if (mouseController.hasThatElement(domElement)) {
+            if (mMouseController.hasThatElement(domElement)) {
 
-                mouseController.clearElement();
+                mMouseController.clearElement();
 
             }
         }
     }
-        /**
+    /**
      * Position and display the eye icon ver the image hovered by the
      * mouse pointer.
      *
@@ -768,9 +774,9 @@ function doWin(win, winContentLoaded) {
 
             if (!settings.isNoEye) {
 
-                eye.position(domElement, coords, doc);
-                eye.show();
-                eye.setAnchor(domElement, showElement, eyeCSSUrl);
+                mEye.position(domElement, coords, mDoc);
+                mEye.show();
+                mEye.setAnchor(domElement, showElement, eyeCSSUrl);
 
             } else {
 
@@ -785,7 +791,7 @@ function doWin(win, winContentLoaded) {
 
             if (!settings.isNoEye) {
 
-                eye.hide();
+                mEye.hide();
 
             } else {
 
