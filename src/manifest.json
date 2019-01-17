@@ -30,7 +30,7 @@
             "Eye.js",
             "ImagesDisplayer.js",
             "js.js",
-            "flags.js",
+            "constants.js",
             "domManipulation.js"
         ],
         "run_at": "document_start",
