@@ -2,11 +2,18 @@
  * Add css style to the head of a
  * {@link https://developer.mozilla.org/en-US/docs/Web/API/Document|document}.
  *
- * @param {Document} doc
+ * @param {Document} doc - Document to hold the style.
  * @param {object} headStyles - Object to keep reference of the style
  * added.
  * @param {string} styleName - Name of the css style.
- * @param {string} style - css style.
+ * @param {string} style - Css style.
+ *
+ * @example
+ * const headStyles = {};
+ * const styleName = 'classA';
+ * const style = '{background-image: none !important;}'
+ *
+ * addHeadStyle(document, headStyles, styleName, style);
  */
 function addHeadStyle(doc, headStyles, styleName, style) {
     const styleElement = doc.createElement('style');
@@ -19,24 +26,46 @@ function addHeadStyle(doc, headStyles, styleName, style) {
  * Remove css style from the head of a
  * {@link https://developer.mozilla.org/en-US/docs/Web/API/Document|document}.
  *
- * @param {Document} doc
+ * @param {Document} doc - Document that holds the style to be
+ * removed.
  * @param {object} headStyles - Object that keeps the reference of the
- * style.
+ * styles.
  * @param {string} styleName - Name of the css style.
+ *
+ * @example
+ * const headStyles = {};
+ * const styleName = 'classA';
+ * const style = '{background-image: none !important;}'
+ *
+ * addHeadStyle(document, headStyles, styleName, style);
+ * removeHeadStyle(document, headStyles, styleName);
  */
 function removeHeadStyle(doc, headStyles, styleName) {
     doc.head.removeChild(headStyles[styleName]);
     delete headStyles[styleName];
 }
 /**
- * Add script tp the head of a
+ * Add script to the head of a
  * {@link https://developer.mozilla.org/en-US/docs/Web/API/Document|document}.
  *
- * @param {Document} doc
- * @param {string} - Path or url to the script.
- * @param {string} - Code of the script.
- * @param {function} - Callback to be called once the script element
+ * @param {Document} doc - Document to hold the script
+ * @param {string} [src] - Path or url to the script.
+ * @param {string} [code] - Code of the script.
+ * @param {function} [onload]- Callback to be called once the script element
  * is loaded.
+ *
+ * @example
+ * const src = './js/script.js';
+ * const code = "const a = 'example'; console.log(a);"
+ * const onload = () => {
+ *      // do something
+ * };
+ *
+ * addHeadScript(document, src);
+ * addHeadScript(document, src, code);
+ * addHeadScript(document, src, code, onload);
+ * addHeadScript(document, src, null, onload);
+ * addHeadScript(document, null, code);
  */
 function addHeadScript(doc, src, code, onload) {
     const scriptElement = doc.createElement('script');
@@ -53,21 +82,31 @@ function addHeadScript(doc, src, code, onload) {
     doc.head.appendChild(scriptElement);
 }
 /**
- * Add css class to
+ * Add css class to an
  * {@link https://developer.mozilla.org/en-US/docs/Web/API/Element|element}.
  *
  * @param {Element} domElement
  * @param {string} className
+ *
+ * @example
+ * const domElement = document.getElementById('id');
+ * const className = 'classA';
+ * addCssClass(domElement, className);
  */
 function addCssClass(domElement, className) {
     domElement.className += ' ' + className;
 }
 /**
- * Remove css class from
+ * Remove css class from an
  * {@link https://developer.mozilla.org/en-US/docs/Web/API/Element|element}.
  *
  * @param {Element} domElement
  * @param {string} className
+ *
+ * @example
+ * const domElement = document.getElementById('id');
+ * const className = 'classA';
+ * removeCssClass(domElement, className);
  */
 function removeCssClass(domElement, className) {
     const oldClass = domElement.className;
@@ -78,7 +117,7 @@ function removeCssClass(domElement, className) {
     }
 }
 /**
- * Add/remove listeners to/from an
+ * Add|remove listeners to|from an
  * {@link https://developer.mozilla.org/en-US/docs/Web/API/Element|element}.
  * for different types of
  * {@link https://developer.mozilla.org/en-US/docs/Web/API/Event|events}.
@@ -86,14 +125,18 @@ function removeCssClass(domElement, className) {
  * @param {Element} domElement
  * @param {object} listeners - Object that define the events and the
  * callbacks.
- * @param {boolean} add - Flag to add/remove the listeners.
+ * @param {boolean} add - Flag to add|remove the listeners.
  * @param {string} flag - Name of the property to be added to the
  * element. It is used to check if listeners have been added to the
  * element.
  *
  * @example
- * const mousemove = () => {// do something};
- * const mouseover = () => {// do something};
+ * const mousemove = () => {
+ *      // do something
+ * };
+ * const mouseover = () => {
+ *      // do something
+ * };
  * const listeners = {
  *   'mousemove': mousemove,
  *   'mouseover': mouseover
@@ -101,8 +144,8 @@ function removeCssClass(domElement, className) {
  * const element = document.getElementById('id');
  * const flag = 'has-mouse-listeners';
  *
- * handleListeners(element, listeners, true, flag); // adds listeners
- * handleListeners(element, listeners, false, flag); // removes listeners
+ * handleListeners(element, listeners, true, flag); // add listeners
+ * handleListeners(element, listeners, false, flag); // remove listeners
  */
 function handleListeners(domElement, listeners, add, flag) {
     if (add && !domElement[flag]) {
@@ -118,12 +161,12 @@ function handleListeners(domElement, listeners, add, flag) {
     }
 }
 /**
- * Add/remove css classes to/from an
+ * Add|remove css classes to|from an
  * {@link https://developer.mozilla.org/en-US/docs/Web/API/Element|element}.
  *
  * @param {Element} domElement
  * @param {array} classNames - List of css class names.
- * @param {boolean} add - Flag to add/remove the class names.
+ * @param {boolean} add - Flag to add|remove the class names.
  * @param {string} flag - Name of the property to be added to the
  * element. It is used to check if css classes have been added to the
  * element.
@@ -154,7 +197,7 @@ function handleStyleClasses(domElement, classNames, add, flag) {
  * {@link https://developer.mozilla.org/en-US/docs/Web/API/Element|element}.
  *
  * @param {Element} domElement
- * @param {string} className - css class name.
+ * @param {string} className - Css class name.
  *
  * @example
  * const element = document.getElementById('id');
@@ -169,7 +212,7 @@ function addClassToStyle(domElement, className) {
  * {@link https://developer.mozilla.org/en-US/docs/Web/API/Element|element}.
  *
  * @param {Element} domElement
- * @param {string} className - css class name.
+ * @param {string} className - Css class name.
  *
  * @example
  * const element = document.getElementById('id');
@@ -200,9 +243,11 @@ function createCanvas(id) {
     return canvas;
 }
 /**
- * Hide / show an
+ * Hide|show an
  * {@link https://developer.mozilla.org/en-US/docs/Web/API/Element|element}.
- * It works by handling the css style of the element.
+ * It works by handling the css style of the element by using the
+ * {@link CSS_CLASS_HIDE} css class, the {@link IS_HIDDEN} flag, and
+ * the {@link handleStyleClasses} function.
  *
  * @param {Element} domElement
  * @param {boolean} toggle
@@ -218,6 +263,7 @@ function hideElement(domElement, toggle) {
 /**
  * Swap the original srcset parameter of an
  * {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement|image}.
+ * It uses the {@link IS_TOGGLED} flag.
  *
  * @param {HTMLImageElement} domElement
  * @param {boolean} toggle
@@ -257,8 +303,9 @@ function handleSourceOfImage(domElement, toggle) {
     }
 }
 /**
- * Sets the {@link HAS_BACKGROUND_IMAGE} attribute in an
- * {@link https://developer.mozilla.org/en-US/docs/Web/API/Element|element}.
+ * Sets the {@link HAS_BACKGROUND_IMAGE} flag in an
+ * {@link https://developer.mozilla.org/en-US/docs/Web/API/Element|element}
+ * by setting the {@link handleStyleClasses} function.
  *
  * @param {Element} domElement
  * @param {boolean} toggle
@@ -277,9 +324,9 @@ function handleBackgroundForElement(domElement, toggle) {
     handleStyleClasses(domElement, [], toggle, HAS_BACKGROUND_IMAGE)
 }
 /**
- * Add / remove a listener for load event in an
+ * Add|remove a listener for load event in an
  * {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement|image}.
- * The listener is meant to process the actual image.
+ * The listener is meant to process the actual bitmap of the image.
  *
  * @param {HTMLImageElement} domElement
  * @param {function} callback
@@ -287,11 +334,12 @@ function handleBackgroundForElement(domElement, toggle) {
  *
  * @example
  * const element = document.getElementById('id');
- * const processImage = () => {// Do stuff to process the image};
+ * const processImage = () => {
+ *      // Do stuff to process the image
+ * };
  *
  * handleLoadProcessImageListener(element, processImage, true); // Add listener
  * handleLoadProcessImageListener(element, processImage, false); // Remove listener
- *
  */
 function handleLoadProcessImageListener(domElement, callback, toggle) {
     handleListeners(domElement, {
@@ -299,7 +347,7 @@ function handleLoadProcessImageListener(domElement, callback, toggle) {
     }, toggle, HAS_PROCESS_IMAGE_LISTENER);
 }
 /**
- * Add / remove a listener for load event in an
+ * Add|remove a listener for load event in an
  * {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement|image}.
  *
  * @param {HTMLImageElement} domElement
@@ -308,7 +356,9 @@ function handleLoadProcessImageListener(domElement, callback, toggle) {
  *
  * @example
  * const element = document.getElementById('id');
- * const listener = () => {// Do stuff};
+ * const listener = () => {
+ *      // Do stuff
+ * };
  *
  * handleLoadProcessImageListener(element, listener, true); // Add listener
  * handleLoadProcessImageListener(element, listener, false); // Remove listener
@@ -324,7 +374,7 @@ function handleLoadEventListener(domElement, callback, toggle) {
  * {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement|image}.
  *
  * @param {HTMLImageElement} domElement
- * @param {HTMLCanvasElement} canvas
+ * @param {HTMLCanvasElement} canvas - Canvas to make the processing.
  *
  * @example
  * const image = document.getElementById('image-to-process');
@@ -343,29 +393,45 @@ function processDomImage(domElement, canvas) {
     }
 }
 /**
- * Process the image of an
- * {@link https://developer.mozilla.org/en-US/docs/Web/API/Element|element}.
+ * Process the bitmap of an
+ * {@link https://developer.mozilla.org/en-US/docs/Web/API/Element|element}
  * that has been passed as url in the background-image css attribute.
  * The url is used to retrieve the image with an
  * {@link https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest|XHR}
  * object.
  *
- * @param {HTMLImageElement} domElement
+ * @param {Element} domElement
  * @param {string} url - Url obtained from the background-image css
- * attribute in the style of the element.s
- * @param {number} width
- * @param {number} height
- * @param {string} uuid - Custom unique identifier of the domElement.
- * @param {HTMLCanvasElement} canvas
+ * attribute in the style of the element.
+ * @param {HTMLCanvasElement} canvas - Canvas to do the processing.
+ *
+ * @example
+ * const element = document.getElementById('id');
+ * const url = 'http://example.com/image.jpg';
+ * const canvas = document.getElementById('canvas-id');
+ *
+ * processBackgroundImage(element, url, canvas);
  */
 function processBackgroundImage(domElement, url, canvas) {
     const uuid = domElement.getAttribute(ATTR_UUID);
 
     fetchAndReadImage(url).then(image => {
-        filterBackgroundImageContent(image, uuid, canvas);
+        filterImageElementAsBackground(image, uuid, canvas);
     });
 }
-
+/**
+ * Fetch and read an image from an url.
+ *
+ * @param {string} url
+ *
+ * @returns {Promise}
+ *
+ * @example
+ * const url = 'http://example.com/image.jpg';
+ * fetchAndReadImage(url).then(image => {
+ *      // do something
+ * });
+ */
 function fetchAndReadImage(url) {
     const xhr = new XMLHttpRequest();
     xhr.open("GET", url);
@@ -392,14 +458,25 @@ function fetchAndReadImage(url) {
     });
 }
 /**
- * Filter the background image in an
- * {@link https://developer.mozilla.org/en-US/docs/Web/API/Element|element}.
+ * Filter the bitmap in an
+ * {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement|image}.
+ * and update the background-image attribute in the style of the
+ * {@link https://developer.mozilla.org/en-US/docs/Web/API/Element|element}
+ * identified with an uuid.
  *
- * @param {HTMLCanvasElement} canvas
  * @param {HTMLImageElement} imgElement
- * @param {number} uuid
+ * @param {string} uuid - Unique identifier of the element which
+ * background-image style attribute will be updated.
+ * @param {HTMLCanvasElement} canvas - Canvas to do the filtering.
+ *
+ * @example
+ * const element = document.getElementById('id');
+ * const uuid = 'some-unique-identifier';
+ * const canvas = document.getElementById('canvas-id');
+ *
+ * filterImageElementAsBackground(element, uuid, canvas);
  */
-function filterBackgroundImageContent(imgElement, uuid, canvas) {
+function filterImageElementAsBackground(imgElement, uuid, canvas) {
     const base64Img = filterSkinColor(imgElement, uuid, canvas);
     const newBackgroundImgUrl = "url('" + base64Img + "')";
     const actualElement = findElementByUuid(document, uuid);
@@ -410,11 +487,23 @@ function filterBackgroundImageContent(imgElement, uuid, canvas) {
     }
 }
 /**
- * Filter the image in an IMG element.
+ * Filter the bitmap in an
+ * {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement|image}.
+ * and update the src attribute in the
+ * {@link https://developer.mozilla.org/en-US/docs/Web/API/Element|element}
+ * identified with an uuid.
  *
- * @param {HTMLCanvasElement} canvas
  * @param {HTMLImageElement} imgElement
- * @param {number} uuid
+ * @param {number} uuid - Unique identifier of the element which
+ * src attribute will be updated.
+ * @param {HTMLCanvasElement} canvas - Canvas to do the filtering.
+ *
+ * @example
+ * const element = document.getElementById('id');
+ * const uuid = 'some-unique-identifier';
+ * const canvas = document.getElementById('canvas-id');
+ *
+ * filterImageElement(element, uuid, canvas);
  */
 function filterImageElement(imgElement, uuid, canvas) {
     const urlData = filterSkinColor(imgElement, uuid, canvas)
@@ -431,7 +520,22 @@ function filterImageElement(imgElement, uuid, canvas) {
         }
     }
 }
-
+/**
+ * Find the
+ * {@link https://developer.mozilla.org/en-US/docs/Web/API/Element|element}
+ * in the corresponding
+ * {@link https://developer.mozilla.org/en-US/docs/Web/API/Document|document}
+ * by using element's uuid.
+ *
+ * @param {Document} doc
+ * @param {string} uuid
+ *
+ * @returns {Element}
+ *
+ * @example
+ * const uuid = 'some-unique-identifier';
+ * const actualElement = findElementByUuid(document, uuid);
+ */
 function findElementByUuid(doc, uuid) {
     let elements = doc.querySelectorAll('[' + ATTR_UUID + ']');
     elements = [...elements];
@@ -446,7 +550,23 @@ function findElementByUuid(doc, uuid) {
 
     return null;
 }
-
+/**
+ * Filter the pixels with skin color in the bitmap of an
+ * {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement|image}.
+ *
+ * @param {HTMLImageElement} imgElement
+ * @param {string} uuis
+ * @param {HTMLCanvasElement} canvas - Canvas to do the filtering.
+ *
+ * @returns {string} Base64 string encoding the filtered bitmap.
+ *
+ * @example
+ * const element = document.getElementById('id');
+ * const uuid = 'some-unique-identifier';
+ * const canvas = document.getElementById('canvas-id');
+ *
+ * const base64Image = filterSkinColor(element, uuid, canvas);
+ */
 function filterSkinColor(imgElement, uuid, canvas) {
     const { width, height } = imgElement;
     canvas.setAttribute('width', width);
@@ -486,7 +606,16 @@ function filterSkinColor(imgElement, uuid, canvas) {
 
     return base64Img;
 }
-
+/**
+ * Add a random uuid to an
+ * {@link https://developer.mozilla.org/en-US/docs/Web/API/Element|element}.
+ *
+ * @param {Element} domElement
+ *
+ * @example
+ * const element = document.getElementById('id');
+ * addRandomWizUuid(element);
+ */
 function addRandomWizUuid(domElement) {
 
     if (domElement.getAttribute(ATTR_UUID) === null) {
@@ -496,9 +625,12 @@ function addRandomWizUuid(domElement) {
     }
 }
 /**
- * Generate a uuid number.
+ * Generate an uuid.
  *
- * @returns {number}
+ * @returns {string}
+ *
+ * @example
+ * const uuid = guid();
  */
 function guid() {
     // See https://stackoverflow.com/a/105074/1065981
@@ -510,7 +642,23 @@ function guid() {
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
         s4() + '-' + s4() + s4() + s4();
 }
-
+/**
+ * Determine if a
+ * {@link https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent|mouse event}
+ * ocurred within the boundaries of a rectangle.
+ *
+ * @param {Event} event
+ * @param {object} coords - Object defining the coordinates of a
+ * rectangle.
+ *
+ * @example
+ * const event = new MouseEvent();
+ * event.x = 50;
+ * event.y = 50;
+ * const coords = {left: 10, top: 10, right: 100, bottom: 100};
+ *
+ * console.log(isMouseIn(event, coords)); // true
+ */
 function isMouseIn(event, coords) {
     return event.x >= coords.left && event.x < coords.right && event.y >= coords.top && event.y < coords.bottom;
 }
