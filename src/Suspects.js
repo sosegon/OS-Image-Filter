@@ -1,13 +1,25 @@
+/**
+ * Factory function to handle a list of potential
+ * {@link https://developer.mozilla.org/en-US/docs/Web/API/Element|elements}.
+ */
 function Suspects() {
-    let mList = [];
 
+    let mList = [];
+    /**
+     * Apply a callback to the list of
+     * {@link https://developer.mozilla.org/en-US/docs/Web/API/Element|elements}.
+     *
+     * @param {function} callback
+     */
     function applyCallback(callback) {
         mList.map(suspect => {
             callback(suspect);
         });
     }
     /**
-     * Add element to the lists of suspects.
+     * Add an
+     * {@link https://developer.mozilla.org/en-US/docs/Web/API/Element|element}
+     * to the list.
      *
      * @param {Element} domElement
      */
@@ -17,13 +29,25 @@ function Suspects() {
             domElement[ATTR_RECTANGLE] = domElement.getBoundingClientRect();
         }
     }
-
+    /**
+     * Update the bounding rectangles of the
+     * {@link https://developer.mozilla.org/en-US/docs/Web/API/Element|elements}
+     * in the list.
+     */
     function updateSuspectsRectangles() {
         mList.map(suspect => {
             suspect[ATTR_RECTANGLE] = suspect.getBoundingClientRect();
         });
     }
-
+    /**
+     * Find the
+     * {@link https://developer.mozilla.org/en-US/docs/Web/API/Element|elements}
+     * that are under the mouse pointer.
+     *
+     * @param {Element} defaultElement
+     * @param {MouseEvent} mouseEvent
+     * @param {function} checkMouseCallback
+     */
     function findSuspectsUnderMouse(defaultElement, mouseEvent, checkMouseCallback) {
         let foundSize = defaultElement ?
             defaultElement[ATTR_RECTANGLE].width * defaultElement[ATTR_RECTANGLE].height :
