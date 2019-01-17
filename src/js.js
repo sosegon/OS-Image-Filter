@@ -93,7 +93,7 @@ chrome.runtime.onMessage.addListener(request => {
     }
 });
 
-const displayer = new ImagesDisplayer();
+const displayer = ImagesDisplayer();
 
 /**
  * Contain all the logic related to handle the DOM structure and
@@ -103,9 +103,9 @@ const displayer = new ImagesDisplayer();
  * @param {boolean} winContentLoaded
  */
 function doWin(win, winContentLoaded) {
-    const suspects = new Suspects();
-    const eye = new Eye(win.document);
-    const mouseController = new MouseController();
+    const suspects = Suspects();
+    const eye = Eye(win.document);
+    const mouseController = MouseController();
 
     let doc = win.document,
         headStyles = {},

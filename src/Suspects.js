@@ -1,9 +1,8 @@
-class Suspects {
-    constructor() {
-        this.list = [];
-    }
-    applyCallback(callback) {
-        this.list.map(suspect => {
+function Suspects() {
+    let mList = [];
+
+    function applyCallback(callback) {
+        mList.map(suspect => {
             callback(suspect);
         });
     }
@@ -12,23 +11,25 @@ class Suspects {
      *
      * @param {Element} domElement
      */
-    addSuspect(domElement) {
-        if (this.list.indexOf(domElement) === -1) {
-            this.list.push(domElement);
+    function addSuspect(domElement) {
+        if (mList.indexOf(domElement) === -1) {
+            mList.push(domElement);
             domElement[ATTR_RECTANGLE] = domElement.getBoundingClientRect();
         }
     }
-    updateSuspectsRectangles() {
-        this.list.map(suspect => {
+
+    function updateSuspectsRectangles() {
+        mList.map(suspect => {
             suspect[ATTR_RECTANGLE] = suspect.getBoundingClientRect();
         });
     }
-    findSuspectsUnderMouse(defaultElement, mouseEvent, checkMouseCallback) {
+
+    function findSuspectsUnderMouse(defaultElement, mouseEvent, checkMouseCallback) {
         let foundSize = defaultElement ?
             defaultElement[ATTR_RECTANGLE].width * defaultElement[ATTR_RECTANGLE].height :
             null;
 
-        return this.list.filter(suspect => {
+        return mList.filter(suspect => {
             if (suspect === defaultElement) {
                 return false;
             }
@@ -53,4 +54,11 @@ class Suspects {
             return false;
         });
     }
+
+    return Object.freeze({
+        applyCallback,
+        addSuspect,
+        updateSuspectsRectangles,
+        findSuspectsUnderMouse
+    });
 }

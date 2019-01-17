@@ -1,56 +1,84 @@
-class MouseController {
-    constructor() {
-        this.moved = false;
-        this.event = null;
-        this.element = null;
+function MouseController() {
+    let mMoved = false;
+    let mEvent = null;
+    let mElement = null;
+
+    function watchDocument(doc) {
+        doc.addEventListener('mousemove', mouseMoveCallback);
     }
-    watchDocument(doc) {
-        doc.addEventListener('mousemove', this.mouseMoveCallback);
+
+    function unwatchDocument(doc) {
+        doc.removeEventListener('mousemove', mouseMoveCallback);
     }
-    unwatchDocument(doc) {
-        doc.removeEventListener('mousemove', this.mouseMoveCallback);
+
+    function mouseMoveCallback(event) {
+        mMoved = true;
+        mEvent = event;
     }
-    mouseMoveCallback(event) {
-        this.moved = true;
-        this.event = event;
+
+    function hasElement() {
+        return mElement !== null;
     }
-    hasElement() {
-        return this.element !== null;
+
+    function clearElement() {
+        mElement = null;
     }
-    clearElement() {
-        this.element = null;
+
+    function setElement(domElement) {
+        mElement = domElement;
     }
-    setElement(domElement) {
-        this.element = domElement;
+
+    function getElement() {
+        return mElement;
     }
-    getElement() {
-        return this.element;
+
+    function setAttrElement(flag, value) {
+        mElement[flag] = value;
     }
-    setAttrElement(flag, value) {
-        this.element[flag] = value;
+
+    function getAttrValueElement(flag) {
+        return mElement[flag];
     }
-    getAttrValueElement(flag) {
-        return this.element[flag];
+
+    function hasThatElement(domElement) {
+        return mElement === domElement;
     }
-    hasThatElement(domElement) {
-        return this.element === domElement;
+
+    function move() {
+        mMoved = true;
     }
-    move() {
-        this.moved = true;
+
+    function unmove() {
+        mMoved = false;
     }
-    unmove() {
-        this.moved = false;
+
+    function hasMoved() {
+        mMoved;
     }
-    hasMoved() {
-        return this.moved;
+
+    function hasEvent() {
+        mEvent !== null;
     }
-    hasEvent() {
-        return this.event !== null;
+
+    function getEvent() {
+        mEvent;
     }
-    getEvent() {
-        return this.event;
-    }
-    setEvent(event) {
-        this.event = event;
-    }
+
+    return Object.freeze({
+        watchDocument,
+        unwatchDocument,
+        mouseMoveCallback,
+        hasElement,
+        clearElement,
+        setElement,
+        getEvent,
+        setAttrElement,
+        getAttrValueElement,
+        hasThatElement,
+        move,
+        unmove,
+        hasMoved,
+        hasEvent,
+        getEvent
+    });
 }

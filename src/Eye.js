@@ -1,7 +1,7 @@
-class Eye {
-    constructor(doc) {
-        this.domElement = this.createEye(doc);
-    }
+function Eye(doc) {
+
+    let mDomElement = createEye(doc);
+
     /**
      * Create eye icon. There is one single icon that is positioned
      * accordingly in the corresponding element that can be displayed at
@@ -9,7 +9,7 @@ class Eye {
      *
      * @param {Document} doc
      */
-    createEye(doc) {
+    function createEye(doc) {
         const eye = doc.createElement('div');
 
         eye.style.display = 'none';
@@ -23,8 +23,9 @@ class Eye {
 
         return eye;
     }
-    getDomElement() {
-        return this.domElement;
+
+    function getDomElement() {
+        return mDomElement;
     }
     /**
      * Position the eye in the top right corner of an image.
@@ -32,30 +33,32 @@ class Eye {
      * @param {Element} domElement
      * @param {object} coords
      */
-    position(domElement, coords, doc) {
-        this.domElement.style.top = (coords.top < 0 ? 0 : coords.top) + 'px';
+    function position(domElement, coords, doc) {
+        mDomElement.style.top = (coords.top < 0 ? 0 : coords.top) + 'px';
         let left = coords.right;
         if (left > doc.documentElement.clientWidth) {
             left = doc.documentElement.clientWidth;
         }
-        this.domElement.style.left = (left - 16) + 'px';
+        mDomElement.style.left = (left - 16) + 'px';
     }
-    hide() {
-        this.domElement.style.display = 'none';
+
+    function hide() {
+        mDomElement.style.display = 'none';
     }
-    show() {
-        this.domElement.style.display = 'block';
+
+    function show() {
+        mDomElement.style.display = 'block';
     }
-    setAnchor(domElement, domElementCallback, eyeCSSUrl) {
-        const self = this;
-        this.domElement.style.backgroundImage = eyeCSSUrl;
-        this.domElement.onclick = event => {
+
+    function setAnchor(domElement, domElementCallback, eyeCSSUrl) {
+        mDomElement.style.backgroundImage = eyeCSSUrl;
+        mDomElement.onclick = event => {
             event.stopPropagation();
             domElementCallback(domElement);
             // Hide the eye icon and not allow undo option
             // for now.
             // TODO: Implement undo option
-            self.hide();
+            hide();
             // eye.style.backgroundImage = undoCSSUrl;
             // doHoverVisualClearTimer(el, true);
             // eye.onclick = function (e) {
@@ -66,12 +69,25 @@ class Eye {
             // }
         };
     }
-    attachTo(domElement) {
-        domElement.appendChild(this.domElement);
+
+    function attachTo(domElement) {
+        domElement.appendChild(mDomElement);
     }
-    detach() {
-        if (this.domElement && this.domElement.parentNode) {
-            this.domElement.parentNode.removeChild(this.domElement);
+
+    function detach() {
+        if (mDomElement && mDomElement.parentNode) {
+            mDomElement.parentNode.removeChild(mDomElement);
         }
     }
+
+    return Object.freeze({
+        createEye,
+        getDomElement,
+        position,
+        hide,
+        show,
+        setAnchor,
+        attachTo,
+        detach
+    });
 }

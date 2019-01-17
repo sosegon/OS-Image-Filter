@@ -1,26 +1,27 @@
-class ImagesDisplayer {
-    constructor() {
-        this.showAll = false;
-        this.iframes = [];
+function ImagesDisplayer() {
+    let mShowAll = false;
+    let mIframes = [];
+
+    function setShowAll(show) {
+        mShowAll = show;
     }
-    setShowAll(show) {
-        this.showAll = show;
+
+    function isShowAll() {
+        return mShowAll;
     }
-    isShowAll() {
-        return this.showAll;
-    }
-    addIFrame(iframe) {
-        this.iframes.push(iframe);
+
+    function addIFrame(iframe) {
+        mIframes.push(iframe);
     }
     /**
      * Display images in webpage and iframes
      */
-    showImages() {
-        if (this.showAll) {
+    function showImages() {
+        if (mShowAll) {
             return;
         }
 
-        this.showAll = true;
+        mShowAll = true;
 
         if (window === top) {
             chrome.runtime.sendMessage({
@@ -33,7 +34,7 @@ class ImagesDisplayer {
             window.skfShowImages();
         }
 
-        this.iframes.map(iframe => {
+        mIframes.map(iframe => {
             try {
                 if (iframe.contentWindow && iframe.contentWindow.skfShowImages) {
                     iframe.contentWindow.skfShowImages();
@@ -44,4 +45,11 @@ class ImagesDisplayer {
             }
         });
     }
+
+    return Object.freeze({
+        setShowAll,
+        isShowAll,
+        addIFrame,
+        showImages
+    });
 }
