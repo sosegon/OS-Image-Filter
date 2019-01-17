@@ -1,3 +1,8 @@
+/**
+ * Identifier for the global
+ * {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement|canvas}
+ * to process the images of a webpage and gray them out.
+ */
 CANVAS_GLOBAL_ID = 'skf-canvas-global';
 
 ATTR_UUID = 'skf-uuid';
@@ -13,6 +18,11 @@ HAS_HOVER_VISUAL = 'skf-has-hover-visual';
 HAS_LOAD_LISTENER = 'skf-has-load-listener';
 HAS_TITLE_AND_SIZE = 'skf-has-title-and-size';
 HAS_MOUSE_LISTENERS = 'skf-has-mouse-listeners';
+/**
+* Attribute name to identify if an
+* {@link https://developer.mozilla.org/en-US/docs/Web/API/Element|element}
+* has a background image.
+*/
 HAS_BACKGROUND_IMAGE = 'skf-has-background-image';
 HAS_PROCESS_IMAGE_LISTENER = 'skf-has-process-image-listener';
 

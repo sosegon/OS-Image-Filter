@@ -605,7 +605,8 @@ function doWin(win, winContentLoaded) {
                 // processed.
                 addRandomWizUuid(this);
                 const uuid = this.getAttribute(ATTR_UUID);
-                processBackgroundImage(this, bgImgUrl, width, height, uuid);
+                const canvas = document.getElementById(CANVAS_GLOBAL_ID);
+                processBackgroundImage(this, bgImgUrl, width, height, uuid, canvas);
 
                 mSuspects.addSuspect(this);
                 handleBackgroundForElement(this, true);
