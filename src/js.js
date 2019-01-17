@@ -1,30 +1,30 @@
 // Global variables.
-let extensionUrl = chrome.extension.getURL(''),
-    urlExtensionUrl = 'url("' + extensionUrl,
-    blankImg = 'data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==',
-    urlBlankImg = 'url("' + blankImg + '")',
-    eyeCSSUrl = 'url(' + extensionUrl + "eye.png" + ')',
-    undoCSSUrl = 'url(' + extensionUrl + "undo.png" + ')',
-    // This is the list of elements that can actually hold images.
-    // These are the ones that have to be checked.
-    tagList = ['IMG', 'DIV', 'SPAN',
-        'A', 'UL', 'LI',
-        'TD', 'H1', 'H2',
-        'H3', 'H4', 'H5',
-        'H6', 'I', 'STRONG',
-        'B', 'BIG', 'BUTTON',
-        'CENTER', 'SECTION', 'TABLE',
-        'FIGURE', 'ASIDE', 'HEADER',
-        'VIDEO', 'P', 'ARTICLE'
-    ],
-    tagListCSS = tagList.join(),
+let extensionUrl = chrome.extension.getURL('');
+let urlExtensionUrl = 'url("' + extensionUrl;
+let blankImg = 'data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
+let urlBlankImg = 'url("' + blankImg + '")';
+let eyeCSSUrl = 'url(' + extensionUrl + "eye.png" + ')';
+let undoCSSUrl = 'url(' + extensionUrl + "undo.png" + ')';
+// This is the list of elements that can actually hold images.
+// These are the ones that have to be checked.
+let tagList = ['IMG', 'DIV', 'SPAN',
+    'A', 'UL', 'LI',
+    'TD', 'H1', 'H2',
+    'H3', 'H4', 'H5',
+    'H6', 'I', 'STRONG',
+    'B', 'BIG', 'BUTTON',
+    'CENTER', 'SECTION', 'TABLE',
+    'FIGURE', 'ASIDE', 'HEADER',
+    'VIDEO', 'P', 'ARTICLE'
+];
+let tagListCSS = tagList.join();
 
-    // Flag that triggers the process of iterating over the entire
-    // structure to process the images and add elements like the eye
-    // icon.
-    contentLoaded = false,
-    settings = null,
-    quotesRegex = /['"]/g;
+// Flag that triggers the process of iterating over the entire
+// structure to process the images and add elements like the eye
+// icon.
+let contentLoaded = false;
+let settings = null;
+let quotesRegex = /['"]/g;
 
 // Detect if the script is being executed within an iframe. It is
 // useful when trying to accomplish something just in the main page
