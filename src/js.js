@@ -58,7 +58,6 @@ function inIframe() {
 window.addEventListener('DOMContentLoaded', () => {
 
     document.body.appendChild(createCanvas(CANVAS_GLOBAL_ID));
-    document.body.appendChild(createCanvas(CANVAS_CONTAINER_ID));
     contentLoaded = true;
 
 });
@@ -452,7 +451,7 @@ function doWin(win, winContentLoaded) {
 
     function processImage() {
 
-        processDomImage(this);
+        processDomImage(this, document.getElementById(CANVAS_GLOBAL_ID));
         handleLoadProcessImageListener(this, processImage, false);
         handleLoadEventListener(this, doElement, false);
 

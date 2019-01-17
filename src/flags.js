@@ -1,5 +1,4 @@
 CANVAS_GLOBAL_ID = 'skf-canvas-global';
-CANVAS_CONTAINER_ID = 'skf-canvas-container';
 
 ATTR_UUID = 'skf-uuid';
 ATTR_RECTANGLE = 'skf-rectangle';

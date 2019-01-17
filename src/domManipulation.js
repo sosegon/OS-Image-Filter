@@ -147,8 +147,7 @@ function handleLoadEventListener(domElement, callback, toggle) {
     }, toggle, HAS_LOAD_LISTENER);
 }
 
-function processDomImage(domElement) {
-    const canvas = addCanvasSibling(domElement);
+function processDomImage(domElement, canvas) {
     const uuid = domElement.getAttribute(ATTR_UUID);
 
     domElement[IS_PROCESSED] = true;
@@ -166,13 +165,7 @@ function processDomImage(domElement) {
                 image.src = reader.result;
                 image.uuid = this.uuid;
                 image.onload = function() {
-                    const { width, height } = this;
-
-                    const canvas_global = document.getElementById(CANVAS_GLOBAL_ID);
-                    canvas_global.setAttribute("width", width);
-                    canvas_global.setAttribute("height", height);
-
-                    filterImageElement(canvas_global, this, this.uuid);
+                    filterImageElement(canvas, this, this.uuid);
                 };
             }
             reader.readAsDataURL(xhr.response);
@@ -329,11 +322,6 @@ function loadProcessed(domElement) {
     removeCssClass(domElement, CSS_CLASS_HIDE);
     domElement.setAttribute(IS_PROCESSED, "true");
     domElement[IS_PROCESSED] = true;
-    const uuid = domElement.getAttribute(ATTR_UUID);
-    const canvas = document.getElementById("#" + uuid + "-canvas");
-    if (canvas !== null) {
-        canvas.parentNode.removeChild(canvas);
-    }
 
     if (domElement[IS_PROCESSED]) { // already processed
         // Needed to enable eye icon in image
@@ -341,30 +329,6 @@ function loadProcessed(domElement) {
         //DoImgSrc(this, true);
         return;
     }
-}
-// TODO: Use only the global canvas to
-// improve perfomance. Workers may be helpful
-/**
- * Add a canvas sibling for an element containing an image. The
- * canvas is meant to be used to get the data in a readable format to
- * be filtered.
- *
- * @param {Element} domElement
- */
-function addCanvasSibling(domElement) {
-    const uuid = domElement.getAttribute(ATTR_UUID) + "-canvas";
-    const canvas = document.getElementById(uuid);
-
-    if (canvas === undefined || canvas === null) {
-        const canvas = document.createElement("canvas");
-        canvas.setAttribute("id", uuid);
-
-        const room = document.getElementById(CANVAS_CONTAINER_ID);
-        room.appendChild(canvas);
-        addCssClass(canvas, CSS_CLASS_HIDE);
-    }
-
-    return canvas;
 }
 
 function addRandomWizUuid(domElement) {
