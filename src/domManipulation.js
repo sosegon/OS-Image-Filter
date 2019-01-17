@@ -334,29 +334,10 @@ function handleLoadEventListener(domElement, callback, toggle) {
 function processDomImage(domElement, canvas) {
     const uuid = domElement.getAttribute(ATTR_UUID);
 
-    domElement[IS_PROCESSED] = true;
-
     try {
-        filterImageElement(canvas, domElement, uuid);
+        filterImageElement(domElement, uuid, canvas);
     } catch (err) {
-        const xhr = new XMLHttpRequest();
-        xhr.onload = function() {
-            const reader = new FileReader();
-            reader.uuid = uuid;
-            reader.onloadend = function() {
-                const image = new Image();
-                image.crossOrigin = "anonymous";
-                image.src = reader.result;
-                image.uuid = this.uuid;
-                image.onload = function() {
-                    filterImageElement(canvas, this, this.uuid);
-                };
-            }
-            reader.readAsDataURL(xhr.response);
-        };
-        xhr.open("GET", domElement.src);
-        xhr.responseType = "blob";
-        xhr.send();
+        fetchAndFilterImage(domElement.src, uuid, canvas, filterImageElement);
     }
 }
 /**
@@ -375,18 +356,24 @@ function processDomImage(domElement, canvas) {
  * @param {string} uuid - Custom unique identifier of the domElement.
  * @param {HTMLCanvasElement} canvas
  */
-function processBackgroundImage(domElement, url, width, height, uuid, canvas) {
+function processBackgroundImage(domElement, url, canvas) {
+    const uuid = domElement.getAttribute(ATTR_UUID);
+
+    fetchAndFilterImage(url, uuid, canvas, filterBackgroundImageContent);
+}
+
+function fetchAndFilterImage(url, uuid, canvas, processCallback) {
     const xhr = new XMLHttpRequest();
-    xhr.onload = function() {
+    xhr.onload = () => {
         const reader = new FileReader();
         reader.uuid = uuid;
-        reader.onloadend = function() {
+        reader.onloadend = () => {
             const image = new Image();
             image.crossOrigin = "anonymous";
             image.src = reader.result;
             image.uuid = this.uuid;
-            image.onload = function() {
-                filterBackgroundImageContent(canvas, this, uuid);
+            image.onload = () => {
+                processCallback(image, uuid, canvas);
             };
         }
         reader.readAsDataURL(xhr.response);
@@ -403,7 +390,55 @@ function processBackgroundImage(domElement, url, width, height, uuid, canvas) {
  * @param {HTMLImageElement} imgElement
  * @param {number} uuid
  */
-function filterBackgroundImageContent(canvas, imgElement, uuid) {
+function filterBackgroundImageContent(imgElement, uuid, canvas) {
+    const base64Img = filterSkinColor(imgElement, uuid, canvas);
+    const newBackgroundImgUrl = "url('" + base64Img + "')";
+    const actualElement = findElementByUuid(document, uuid);
+
+    if (actualElement) {
+        actualElement.style.backgroundImage = newBackgroundImgUrl;
+        actualElement[IS_PROCESSED] = true;
+    }
+}
+/**
+ * Filter the image in an IMG element.
+ *
+ * @param {HTMLCanvasElement} canvas
+ * @param {HTMLImageElement} imgElement
+ * @param {number} uuid
+ */
+function filterImageElement(imgElement, uuid, canvas) {
+    const urlData = filterSkinColor(imgElement, uuid, canvas)
+    const actualElement = findElementByUuid(document, uuid);
+
+    if (actualElement) {
+        actualElement.src = urlData;
+        actualElement.srcset = '';
+        actualElement.onload = () => {
+            removeCssClass(actualElement, CSS_CLASS_HIDE);
+            actualElement.setAttribute(IS_PROCESSED, 'true');
+            actualElement[IS_PROCESSED] = true;
+            handleBackgroundForElement(actualElement, true);
+        }
+    }
+}
+
+function findElementByUuid(doc, uuid) {
+    let elements = doc.querySelectorAll('[' + ATTR_UUID + ']');
+    elements = [...elements];
+
+    elements = elements.filter((element) => {
+        return element.getAttribute(ATTR_UUID) === uuid;
+    });
+
+    if (elements.length > 0) {
+        return elements[0];
+    }
+
+    return null;
+}
+
+function filterSkinColor(imgElement, uuid, canvas) {
     const { width, height } = imgElement;
     canvas.setAttribute('width', width);
     canvas.setAttribute('height', height);
@@ -414,31 +449,6 @@ function filterBackgroundImageContent(canvas, imgElement, uuid) {
     const imageData = context.getImageData(0, 0, width, height);
     const rgbaArray = imageData.data;
 
-    filterRgbaArray(rgbaArray);
-    imageData.data.set(rgbaArray);
-    context.putImageData(imageData, 0, 0);
-    const base64Img = canvas.toDataURL("image/png");
-    const newBkgImgUrl = "url('" + base64Img + "')";
-
-    let images = document.querySelectorAll('[' + ATTR_UUID + ']');
-    images = [...images];
-    const actualEl = images.filter((img) => {
-        return img.getAttribute(ATTR_UUID) === uuid;
-    })[0];
-
-    if (actualEl !== undefined) {
-        actualEl.style.backgroundImage = newBkgImgUrl;
-        actualEl[IS_PROCESSED] = true;
-    }
-}
-// TODO: Implement option to remove face features. Convex hull or flooding may work.
-/**
- * Gray skin color out. Pixels that are not human skin may be grayed
- * out; some pixels that are human skin may be skipped.
- *
- * @param {array} rgbaArray
- */
-function filterRgbaArray(rgbaArray) {
     for (let i = 0; i < rgbaArray.length; i += 4) {
         const rIndex = i;
         const gIndex = i + 1;
@@ -460,59 +470,12 @@ function filterRgbaArray(rgbaArray) {
             rgbaArray[aIndex] = 255;
         }
     }
-}
-/**
- * Filter the image in an IMG element.
- *
- * @param {HTMLCanvasElement} canvas
- * @param {HTMLImageElement} imgElement
- * @param {number} uuid
- */
-function filterImageElement(canvas, imgElement, uuid) {
-    const { width, height } = imgElement;
-    canvas.setAttribute('width', width);
-    canvas.setAttribute('height', height);
 
-    const context = canvas.getContext('2d');
-    context.drawImage(imgElement, 0, 0);
-
-    const imageData = context.getImageData(0, 0, width, height);
-    const rgbaArray = imageData.data;
-
-    filterRgbaArray(rgbaArray);
     imageData.data.set(rgbaArray);
     context.putImageData(imageData, 0, 0);
-    const urlData = canvas.toDataURL('image/png');
+    const base64Img = canvas.toDataURL("image/png");
 
-    let images = document.querySelectorAll('[' + ATTR_UUID + ']');
-    images = [...images];
-    const actualImg = images.filter((img) => {
-        return img.getAttribute(ATTR_UUID) === uuid;
-    })[0];
-
-    if (actualImg !== undefined) {
-        actualImg.src = urlData;
-        actualImg.srcset = '';
-        actualImg.onload = () => {
-            loadProcessed(actualImg);
-        }
-    }
-}
-/**
- * Set attributes and styles for elements which images have been
- * already processed.
- */
-function loadProcessed(domElement) {
-    removeCssClass(domElement, CSS_CLASS_HIDE);
-    domElement.setAttribute(IS_PROCESSED, "true");
-    domElement[IS_PROCESSED] = true;
-
-    if (domElement[IS_PROCESSED]) { // already processed
-        // Needed to enable eye icon in image
-        handleBackgroundForElement(domElement, true);
-        //DoImgSrc(this, true);
-        return;
-    }
+    return base64Img;
 }
 
 function addRandomWizUuid(domElement) {

@@ -604,9 +604,8 @@ function doWin(win, winContentLoaded) {
                 // Reference for the element once the image is
                 // processed.
                 addRandomWizUuid(this);
-                const uuid = this.getAttribute(ATTR_UUID);
                 const canvas = document.getElementById(CANVAS_GLOBAL_ID);
-                processBackgroundImage(this, bgImgUrl, width, height, uuid, canvas);
+                processBackgroundImage(this, bgImgUrl, canvas);
 
                 mSuspects.addSuspect(this);
                 handleBackgroundForElement(this, true);
