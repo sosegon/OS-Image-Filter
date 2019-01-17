@@ -1,16 +1,12 @@
-/**
- * Global variables.
- */
+// Global variables.
 let extensionUrl = chrome.extension.getURL(''),
     urlExtensionUrl = 'url("' + extensionUrl,
     blankImg = 'data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==',
     urlBlankImg = 'url("' + blankImg + '")',
     eyeCSSUrl = 'url(' + extensionUrl + "eye.png" + ')',
     undoCSSUrl = 'url(' + extensionUrl + "undo.png" + ')',
-    /**
-     * This is the list of elements that can actually hold images.
-     * These are the ones that have to be checked.
-     */
+    // This is the list of elements that can actually hold images.
+    // These are the ones that have to be checked.
     tagList = ['IMG', 'DIV', 'SPAN',
         'A', 'UL', 'LI',
         'TD', 'H1', 'H2',
@@ -23,20 +19,16 @@ let extensionUrl = chrome.extension.getURL(''),
     ],
     tagListCSS = tagList.join(),
 
-    /**
-     * Flag that triggers the process of iterating over the entire
-     * structure to process the images and add elements like the eye
-     * icon.
-     */
+    // Flag that triggers the process of iterating over the entire
+    // structure to process the images and add elements like the eye
+    // icon.
     contentLoaded = false,
     settings = null,
     quotesRegex = /['"]/g;
 
-/**
- * Detect if the script is being executed within an iframe. It is
- * useful when trying to accomplish something just in the main page
- * e.g. displaying a bar for donations.
- */
+// Detect if the script is being executed within an iframe. It is
+// useful when trying to accomplish something just in the main page
+// e.g. displaying a bar for donations.
 function inIframe() {
     try {
 
@@ -49,12 +41,10 @@ function inIframe() {
     }
 }
 
-/**
- * Keep track of flag **contentLoaded**. Once the DOM tree is ready we
- * can start to modify it. In this case, we add the canvas element to
- * process images fetched with XHR and the container for the canvas
- * elements to process images fetched directly.
- */
+// Keep track of flag contentLoaded. Once the DOM tree is ready we
+// can start to modify it. In this case, we add the canvas element to
+// process images fetched with XHR and the container for the canvas
+// elements to process images fetched directly.
 window.addEventListener('DOMContentLoaded', () => {
 
     document.body.appendChild(createCanvas(CANVAS_GLOBAL_ID));
@@ -62,9 +52,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
 });
 
-/**
- * Get settings to check status of extension.
- */
+// Get settings to check status of extension.
 chrome.runtime.sendMessage({
     r: 'getSettings'
 }, (s) => {
@@ -76,14 +64,12 @@ chrome.runtime.sendMessage({
             r: 'setColorIcon',
             toggle: true
         });
-        doWin(window, contentLoaded);
+        ProcessWin(window, contentLoaded);
 
     }
 });
 
-/**
- * Catches 'Show Images' option from browser actions
- */
+// Catches 'Show Images' option from browser actions
 chrome.runtime.onMessage.addListener(request => {
 
     if (request.r === 'showImages') {
@@ -96,13 +82,15 @@ chrome.runtime.onMessage.addListener(request => {
 const displayer = ImagesDisplayer();
 
 /**
- * Contain all the logic related to handle the DOM structure and
- * process the images.
+ * Factory function to do the process to filter the skin in
+ * {@link https://developer.mozilla.org/en-US/docs/Web/API/Element|elements}
+ * within a
+ * {@link https://developer.mozilla.org/en-US/docs/Web/API/Window|window}
  *
- * @param {object} win
+ * @param {Window} win
  * @param {boolean} winContentLoaded
  */
-function doWin(win, winContentLoaded) {
+function ProcessWin(win, winContentLoaded) {
     const mSuspects = Suspects();
     const mEye = Eye(win.document);
     const mMouseController = MouseController();
@@ -111,48 +99,44 @@ function doWin(win, winContentLoaded) {
     let mDoc = mWin.document;
     let mHeadStyles = {};
     let mObserver = null;
-    /**
-     * This flag is used to check if the iteration over the
-     * structure to find the elements and process the images has
-     * started.
-     */
+    // This flag is used to check if the iteration over the
+    // structure to find the elements and process the images has
+    // started.
     let mHasStarted = false;
     let mContentLoaded = winContentLoaded;
 
     setEverythingUp();
-
+    /**
+     * Set listeners, styles and local variables.
+     */
     function setEverythingUp() {
-        /**
-         * Start, or register start. There is no way to control the order
-         * in which the listener for **DOMContentLoaded** and the callback
-         * to get the settings from background are executed. This
-         * condition is the way to handle that situation. **doWin** is
-         * called after receiving the settings from the background.
-         * However, at that moment, the listener for **DOMContentLoaded**
-         * that sets the flag **contentLoaded** passed here as
-         * **winContentLoaded** has been already triggered. In short, the
-         * listener was executed first.
-         */
+        // Start, or register start. There is no way to control the order
+        // in which the listener for DOMContentLoaded and the callback
+        // to get the settings from background are executed. This
+        // condition is the way to handle that situation. **ProcessWin** is
+        // called after receiving the settings from the background.
+        // However, at that moment, the listener for DOMContentLoaded
+        // that sets the flag contentLoaded passed here as
+        // winContentLoaded has been already triggered. In short, the
+        // listener was executed first.
         if (mContentLoaded) {
 
-            Start();
+            start();
 
         }
         // The callback was executed first
         else {
 
-            mWin.addEventListener('DOMContentLoaded', Start);
+            mWin.addEventListener('DOMContentLoaded', start);
 
         }
 
-        /**
-         * Set some css as soon as possible. These styles are going to be
-         * used in the elements containing images, and other additional
-         * items added by the chrome extension. The logic is set to repeat
-         * every 1ms. At this point we do not know if the DOM tree is
-         * ready for manipulation. The variable doc.head is check to see
-         * if the styles can be added.
-         */
+        // Set some css as soon as possible. These styles are going to be
+        // used in the elements containing images, and other additional
+        // items added by the chrome extension. The logic is set to repeat
+        // every 1ms. At this point we do not know if the DOM tree is
+        // ready for manipulation. The variable doc.head is check to see
+        // if the styles can be added.
         const pollID = setInterval(function() {
             // Nothing to add. All images will be shown. Stop the
             // iteration.
@@ -196,7 +180,7 @@ function doWin(win, winContentLoaded) {
             mWin.removeEventListener('scroll', windowScroll);
             mSuspects.applyCallback(showElement);
 
-            mWin.removeEventListener('DOMContentLoaded', Start);
+            mWin.removeEventListener('DOMContentLoaded', start);
 
             for (let s in mHeadStyles) {
 
@@ -220,13 +204,22 @@ function doWin(win, winContentLoaded) {
             }
         }
     }
-
+    /** Listener for {@link https://developer.mozilla.org/en-US/docs/Web/API/MouseScrollEvent|scroll}
+     * event for the local
+     * {@link https://developer.mozilla.org/en-US/docs/Web/API/Window|window}.
+     */
     function windowScroll() {
         mMouseController.move();
         mSuspects.updateSuspectsRectangles();
         checkMousePosition();
     }
-
+    /**
+     * Listener for the {@link https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent|keydown}
+     * event for the local
+     * {@link https://developer.mozilla.org/en-US/docs/Web/API/Document|document}.
+     * Controls logic to pause the extension and show original
+     * unfiltered images.
+     */
     function docKeyDown(event) {
         if (event.altKey && event.keyCode == 80 && !settings.isPaused) { //ALT-p
 
@@ -249,11 +242,12 @@ function doWin(win, winContentLoaded) {
             }
         }
     }
-
     /**
-     * Start the process to filter images.
+     * Start the process to filter images. Observes the changes in the
+     * DOM tree to filter images in new
+     * {@link https://developer.mozilla.org/en-US/docs/Web/API/Element|elements}.
      */
-    function Start() {
+    function start() {
         // With iFrames it happens.
         if (!mDoc.body) {
 
@@ -393,9 +387,10 @@ function doWin(win, winContentLoaded) {
         // Now the process has officially started.
         mHasStarted = true;
     }
-
     /**
-     * Get an element to star the process.
+     * Do the process to filter images in an
+     * {@link https://developer.mozilla.org/en-US/docs/Web/API/Element|element}
+     * and its children.
      *
      * @param {Element} domElement
      * @param {boolean} includeChildren
@@ -412,10 +407,9 @@ function doWin(win, winContentLoaded) {
             doElement.call(domElement);
         });
     }
-
     /**
-     * Do the process over an iframe. An iframe contains another
-     * webpage embedded in the main one.
+     * Do the process to filter the skin in an
+     * {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLIFrameElement|iframe}.
      *
      * @param {HTMLIFrameElement} iframe
      */
@@ -443,7 +437,7 @@ function doWin(win, winContentLoaded) {
             if (mDoc.body) {
 
                 clearInterval(pollID);
-                doWin(win, true);
+                ProcessWin(win, true);
 
             }
 
@@ -454,7 +448,10 @@ function doWin(win, winContentLoaded) {
             }
         }, 10);
     }
-
+    /**
+     * Listener for the load event of an
+     * {@link https://developer.mozilla.org/en-US/docs/Web/API/Element|element}.
+     */
     function processImage() {
 
         processDomImage(this, document.getElementById(CANVAS_GLOBAL_ID));
@@ -463,8 +460,9 @@ function doWin(win, winContentLoaded) {
 
     }
     /**
-     * Analyse an element to proceed to process its image if it has
-     * one.
+     * Analyse an
+     * {@link https://developer.mozilla.org/en-US/docs/Web/API/Element|element}.
+     * to process the related images.
      */
     function doElement() {
         // No need to do anything when all the images are going to be
@@ -478,13 +476,11 @@ function doWin(win, winContentLoaded) {
         if (this.tagName == 'IMG') {
             // this.crossOrigin = "Anonymous"; // To process images from other domains
 
-            /**
-             * wiz-to-process class does not exist. It is just a
-             * workaround to avoid setting an wiz-uuid in an element
-             * that already has one and it is also in the lists of
-             * suspects. This is due to the fact that this function is
-             * executed more than once over the same element.
-             */
+            // wiz-to-process class does not exist. It is just a
+            // workaround to avoid setting an wiz-uuid in an element
+            // that already has one and it is also in the lists of
+            // suspects. This is due to the fact that this function is
+            // executed more than once over the same element.
             if (!this.classList.contains('wiz-to-process')) {
 
                 addRandomWizUuid(this);
@@ -493,14 +489,12 @@ function doWin(win, winContentLoaded) {
 
             }
 
-            /**
-             * Attach load event need for the following:
-             *
-             * 1) As we need to catch it after, it is switched for the
-             * base64 image.
-             *
-             * 2) In case the img gets changed to something else later
-             */
+            // Attach load event need for the following:
+            //
+            // 1) As we need to catch it after, it is switched for the
+            // base64 image.
+            //
+            // 2) In case the img gets changed to something else later
             handleLoadProcessImageListener(this, processImage, true);
             handleLoadEventListener(this, doElement, true);
 
@@ -639,7 +633,10 @@ function doWin(win, winContentLoaded) {
             }
         }
     }
-
+    /**
+     * Check the position of the mouse to display the {@link Eye|eye}
+     * element.
+     */
     function checkMousePosition() {
         if (!mMouseController.hasMoved() ||
             !mMouseController.hasEvent() ||
@@ -692,7 +689,12 @@ function doWin(win, winContentLoaded) {
 
         }
     }
-
+    /**
+     * Show the original unfiltered image of an
+     * {@link https://developer.mozilla.org/en-US/docs/Web/API/Element|element}.
+     *
+     * @param {Element} domElement
+     */
     function showElement(domElement) {
         // Unhide element
         hideElement(domElement, false);
@@ -728,7 +730,8 @@ function doWin(win, winContentLoaded) {
         }
     }
     /**
-     * Control when the mouse pointer is over an element.
+     * Control the visuals when the mouse pointer is over an
+     * {@link https://developer.mozilla.org/en-US/docs/Web/API/Element|element}.
      *
      * @param {Element} domElement
      * @param {boolean} toggle
@@ -804,7 +807,9 @@ function doWin(win, winContentLoaded) {
 
         }
     }
-
+    /**
+     * Stop the execution of {@link toggleHoverVisual}.
+     */
     function toggleHoverVisualClearTimer(domElement, toggle) {
         if (toggle) {
             toggleHoverVisualClearTimer(domElement, false);
@@ -820,7 +825,8 @@ function doWin(win, winContentLoaded) {
         }
     }
     /**
-     * Add/remove mouse event listeners.
+     * Add|remove {@link https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent|mouse event}
+     * listeners, which are {@link mouseEntered} {@link mouseLeft}
      *
      * @param {Element} domElement
      * @param {boolean} toggle
@@ -831,9 +837,10 @@ function doWin(win, winContentLoaded) {
             'mouseout': mouseLeft
         }, toggle, HAS_MOUSE_LISTENERS);
     }
-
     /**
-     * Keep track in which **IMG** element the mouse is over.
+     * Listener for the mouseover event of an
+     * {@link https://developer.mozilla.org/en-US/docs/Web/API/Element|element}.
+     * Used to control the position of the {@link Eye}
      *
      * @param {Event} event
      */
@@ -841,7 +848,13 @@ function doWin(win, winContentLoaded) {
         toggleHover(this, true, event);
         event.stopPropagation();
     }
-
+    /**
+     * Listener for the mouseout event of an
+     * {@link https://developer.mozilla.org/en-US/docs/Web/API/Element|element}.
+     * Used to control the position of the {@link Eye}
+     *
+     * @param {Event} event
+     */
     function mouseLeft(event) {
         toggleHover(this, false, event);
     }
