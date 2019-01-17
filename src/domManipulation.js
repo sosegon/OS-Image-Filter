@@ -148,7 +148,7 @@ function handleLoadEventListener(domElement, callback, toggle) {
 }
 
 function processDomImage(domElement) {
-    const canvas = this.addCanvasSibling(domElement);
+    const canvas = addCanvasSibling(domElement);
     const uuid = domElement.getAttribute(ATTR_UUID);
 
     domElement[IS_PROCESSED] = true;
