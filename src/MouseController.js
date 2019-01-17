@@ -71,7 +71,7 @@ function MouseController() {
         hasElement,
         clearElement,
         setElement,
-        getEvent,
+        getElement,
         setAttrElement,
         getAttrValueElement,
         hasThatElement,
