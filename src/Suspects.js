@@ -46,9 +46,8 @@ function Suspects() {
      *
      * @param {Element} defaultElement
      * @param {MouseEvent} mouseEvent
-     * @param {function} checkMouseCallback
      */
-    function findSuspectsUnderMouse(defaultElement, mouseEvent, checkMouseCallback) {
+    function findSuspectsUnderMouse(defaultElement, mouseEvent) {
         let foundSize = defaultElement ?
             defaultElement[ATTR_RECTANGLE].width * defaultElement[ATTR_RECTANGLE].height :
             null;
@@ -59,7 +58,7 @@ function Suspects() {
             }
 
             const rect = suspect[ATTR_RECTANGLE];
-            if (checkMouseCallback(mouseEvent, rect)) {
+            if (isMouseIn(mouseEvent, rect)) {
                 let isValid = false;
                 if (!defaultElement) {
                     isValid = true;

@@ -674,7 +674,7 @@ function ProcessWin(win, winContentLoaded) {
         let found = false;
 
         const foundElements = mSuspects.findSuspectsUnderMouse(
-            mMouseController.getElement(), mMouseController.getEvent(), isMouseIn);
+            mMouseController.getElement(), mMouseController.getEvent());
 
         if (foundElements.length > 0) {
 
