@@ -1,0 +1,7375 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset='utf-8' />
+  <title>  | Documentation</title>
+  <meta name='viewport' content='width=device-width,initial-scale=1'>
+  <link href='assets/bass.css' type='text/css' rel='stylesheet' />
+  <link href='assets/style.css' type='text/css' rel='stylesheet' />
+  <link href='assets/github.css' type='text/css' rel='stylesheet' />
+  <link href='assets/split.css' type='text/css' rel='stylesheet' />
+</head>
+<body class='documentation m0'>
+    <div class='flex'>
+      <div id='split-left' class='overflow-auto fs0 height-viewport-100'>
+        <div class='py1 px2'>
+          <h3 class='mb0 no-anchor'></h3>
+          <div class='mb1'><code></code></div>
+          <input
+            placeholder='Filter'
+            id='filter-input'
+            class='col12 block input'
+            type='text' />
+          <div id='toc'>
+            <ul class='list-reset h5 py1-ul'>
+              
+                
+                <li><a
+                  href='#canvas_global_id'
+                  class="">
+                  CANVAS_GLOBAL_ID
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#attr_uuid'
+                  class="">
+                  ATTR_UUID
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#attr_rectangle'
+                  class="">
+                  ATTR_RECTANGLE
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#attr_last_checked_src'
+                  class="">
+                  ATTR_LAST_CHECKED_SRC
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#is_hidden'
+                  class="">
+                  IS_HIDDEN
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#is_toggled'
+                  class="">
+                  IS_TOGGLED
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#is_processed'
+                  class="">
+                  IS_PROCESSED
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#has_hover'
+                  class="">
+                  HAS_HOVER
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#has_hover_visual'
+                  class="">
+                  HAS_HOVER_VISUAL
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#has_load_listener'
+                  class="">
+                  HAS_LOAD_LISTENER
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#has_process_image_listener'
+                  class="">
+                  HAS_PROCESS_IMAGE_LISTENER
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#has_mouse_listeners'
+                  class="">
+                  HAS_MOUSE_LISTENERS
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#has_title_and_size'
+                  class="">
+                  HAS_TITLE_AND_SIZE
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#has_background_image'
+                  class="">
+                  HAS_BACKGROUND_IMAGE
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#attr_clear_hover_visual_timer'
+                  class="">
+                  ATTR_CLEAR_HOVER_VISUAL_TIMER
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#css_class_hide'
+                  class="">
+                  CSS_CLASS_HIDE
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#css_class_shade'
+                  class="">
+                  CSS_CLASS_SHADE
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#css_class_paypal_donation'
+                  class="">
+                  CSS_CLASS_PAYPAL_DONATION
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#css_class_background_pattern'
+                  class="">
+                  CSS_CLASS_BACKGROUND_PATTERN
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#css_class_background_light_pattern'
+                  class="">
+                  CSS_CLASS_BACKGROUND_LIGHT_PATTERN
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#addheadstyle'
+                  class="">
+                  addHeadStyle
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#removeheadstyle'
+                  class="">
+                  removeHeadStyle
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#addheadscript'
+                  class="">
+                  addHeadScript
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#addcssclass'
+                  class="">
+                  addCssClass
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#removecssclass'
+                  class="">
+                  removeCssClass
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#handlelisteners'
+                  class="">
+                  handleListeners
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#handlestyleclasses'
+                  class="">
+                  handleStyleClasses
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#addclasstostyle'
+                  class="">
+                  addClassToStyle
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#removeclassfromstyle'
+                  class="">
+                  removeClassFromStyle
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#createcanvas'
+                  class="">
+                  createCanvas
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#hideelement'
+                  class="">
+                  hideElement
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#handlesourceofimage'
+                  class="">
+                  handleSourceOfImage
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#handlebackgroundforelement'
+                  class="">
+                  handleBackgroundForElement
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#handleloadprocessimagelistener'
+                  class="">
+                  handleLoadProcessImageListener
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#handleloadeventlistener'
+                  class="">
+                  handleLoadEventListener
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#processdomimage'
+                  class="">
+                  processDomImage
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#processbackgroundimage'
+                  class="">
+                  processBackgroundImage
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#fetchandreadimage'
+                  class="">
+                  fetchAndReadImage
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#filterimageelementasbackground'
+                  class="">
+                  filterImageElementAsBackground
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#filterimageelement'
+                  class="">
+                  filterImageElement
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#findelementbyuuid'
+                  class="">
+                  findElementByUuid
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#filterskincolor'
+                  class="">
+                  filterSkinColor
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#addrandomwizuuid'
+                  class="">
+                  addRandomWizUuid
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#guid'
+                  class="">
+                  guid
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#ismousein'
+                  class="">
+                  isMouseIn
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#eye'
+                  class="">
+                  Eye
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#createeye'
+                  class="">
+                  createEye
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#getdomelement'
+                  class="">
+                  getDomElement
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#position'
+                  class="">
+                  position
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#hide'
+                  class="">
+                  hide
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#show'
+                  class="">
+                  show
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#setanchor'
+                  class="">
+                  setAnchor
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#attachto'
+                  class="">
+                  attachTo
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#detach'
+                  class="">
+                  detach
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#imagesdisplayer'
+                  class="">
+                  ImagesDisplayer
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#setshowall'
+                  class="">
+                  setShowAll
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#isshowall'
+                  class="">
+                  isShowAll
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#addiframe'
+                  class="">
+                  addIFrame
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#showimages'
+                  class="">
+                  showImages
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#processwin'
+                  class="">
+                  ProcessWin
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#seteverythingup'
+                  class="">
+                  setEverythingUp
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#windowscroll'
+                  class="">
+                  windowScroll
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#dockeydown'
+                  class="">
+                  docKeyDown
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#start'
+                  class="">
+                  start
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#doelements'
+                  class="">
+                  doElements
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#doiframe'
+                  class="">
+                  doIframe
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#processimage'
+                  class="">
+                  processImage
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#doelement'
+                  class="">
+                  doElement
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#checkmouseposition'
+                  class="">
+                  checkMousePosition
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#showelement'
+                  class="">
+                  showElement
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#togglehover'
+                  class="">
+                  toggleHover
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#togglehovervisual'
+                  class="">
+                  toggleHoverVisual
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#togglehovervisualcleartimer'
+                  class="">
+                  toggleHoverVisualClearTimer
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#togglemouseeventlisteners'
+                  class="">
+                  toggleMouseEventListeners
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#mouseentered'
+                  class="">
+                  mouseEntered
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#mouseleft'
+                  class="">
+                  mouseLeft
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#mousecontroller'
+                  class="">
+                  MouseController
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#watchdocument'
+                  class="">
+                  watchDocument
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#unwatchdocument'
+                  class="">
+                  unwatchDocument
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#haselement'
+                  class="">
+                  hasElement
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#clearelement'
+                  class="">
+                  clearElement
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#setelement'
+                  class="">
+                  setElement
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#getelement'
+                  class="">
+                  getElement
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#setattrelement'
+                  class="">
+                  setAttrElement
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#getattrvalueelement'
+                  class="">
+                  getAttrValueElement
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#hasthatelement'
+                  class="">
+                  hasThatElement
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#move'
+                  class="">
+                  move
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#unmove'
+                  class="">
+                  unmove
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#hasmoved'
+                  class="">
+                  hasMoved
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#hasevent'
+                  class="">
+                  hasEvent
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#getevent'
+                  class="">
+                  getEvent
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#suspects'
+                  class="">
+                  Suspects
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#applycallback'
+                  class="">
+                  applyCallback
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#addsuspect'
+                  class="">
+                  addSuspect
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#updatesuspectsrectangles'
+                  class="">
+                  updateSuspectsRectangles
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#findsuspectsundermouse'
+                  class="">
+                  findSuspectsUnderMouse
+                  
+                </a>
+                
+                </li>
+              
+            </ul>
+          </div>
+          <div class='mt1 h6 quiet'>
+            <a href='https://documentation.js.org/reading-documentation.html'>Need help reading this?</a>
+          </div>
+        </div>
+      </div>
+      <div id='split-right' class='relative overflow-auto height-viewport-100'>
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='canvas_global_id'>
+      CANVAS_GLOBAL_ID
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Identifier for the global
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement">canvas</a>
+to process the images of a webpage and gray them out.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>CANVAS_GLOBAL_ID</div>
+   
+  
+    <p>
+      Type:
+      <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
+    </p>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='attr_uuid'>
+      ATTR_UUID
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Attribute to set an uuid for an
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">element</a>
+that have to be processed. This attribute is set in the html tag.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>ATTR_UUID</div>
+   
+  
+    <p>
+      Type:
+      <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
+    </p>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='attr_rectangle'>
+      ATTR_RECTANGLE
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Attribute to set the bounding rectangle of an
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">element</a>.
+This attribute is set in the html tag.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>ATTR_RECTANGLE</div>
+   
+  
+    <p>
+      Type:
+      <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
+    </p>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='attr_last_checked_src'>
+      ATTR_LAST_CHECKED_SRC
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Attribute to set the background-image value of the css style of an
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">element</a>.
+This attribute is set in the javascript object.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>ATTR_LAST_CHECKED_SRC</div>
+   
+  
+    <p>
+      Type:
+      <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
+    </p>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='is_hidden'>
+      IS_HIDDEN
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Name of the flag to be set as an attribute in an
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">element</a>.
+This flag helps to determine if the element has been hidden.
+This flag is set in the javascript object.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>IS_HIDDEN</div>
+   
+  
+    <p>
+      Type:
+      <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
+    </p>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='is_toggled'>
+      IS_TOGGLED
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Name of the flag to be set as an attribute in an
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement">image</a>.
+This flag helps to determine if the src attribute of the image
+element has been toggled.
+This attribute is set in the html tag.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>IS_TOGGLED</div>
+   
+  
+    <p>
+      Type:
+      <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
+    </p>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='is_processed'>
+      IS_PROCESSED
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Name of the flag to be set as an attribute in an
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">element</a>.
+This flag helps to determine if the element has been already
+processed to filter the skin color. This flag is set in the
+javascript object as well as in the html tag.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>IS_PROCESSED</div>
+   
+  
+    <p>
+      Type:
+      <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
+    </p>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='has_hover'>
+      HAS_HOVER
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Name of the flag to be set as an attribute in an
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">element</a>.
+This flag is used when the mouse pointer is hovering the eleement.
+This flag is set in the javascript object.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>HAS_HOVER</div>
+   
+  
+    <p>
+      Type:
+      <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
+    </p>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='has_hover_visual'>
+      HAS_HOVER_VISUAL
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Name of the flag to be set as an attribute in an
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">element</a>.
+This flag is used to determine if the show icon has to be displayed
+in the element.
+This flag is set in the javascript object.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>HAS_HOVER_VISUAL</div>
+   
+  
+    <p>
+      Type:
+      <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
+    </p>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='has_load_listener'>
+      HAS_LOAD_LISTENER
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Name of the flag to be set as an attribute in an
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">element</a>.
+This flag is used to determine if the element as a listener to be
+called when the load event is triggered.
+This flag is set in the javascript object.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>HAS_LOAD_LISTENER</div>
+   
+  
+    <p>
+      Type:
+      <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
+    </p>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='has_process_image_listener'>
+      HAS_PROCESS_IMAGE_LISTENER
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Name of the flag to be set as an attribute in an
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">element</a>.
+This flag is used to determine if the element as a listener to be
+called when the load event is triggered. The listener is meant to
+do the skin filtering.
+This flag is set in the javascript object.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>HAS_PROCESS_IMAGE_LISTENER</div>
+   
+  
+    <p>
+      Type:
+      <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
+    </p>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='has_mouse_listeners'>
+      HAS_MOUSE_LISTENERS
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Name of the flag to be set as an attribute in an
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">element</a>.
+This flag is used to determine if the element has listeners for
+mouse events.
+This flag is set in the javascript object.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>HAS_MOUSE_LISTENERS</div>
+   
+  
+    <p>
+      Type:
+      <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
+    </p>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='has_title_and_size'>
+      HAS_TITLE_AND_SIZE
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Name of the flag to be set as an attribute in an
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement">image</a>.
+This flag is used to determine if the image element has title and
+size attributes.
+This flag is set in the javascript object.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>HAS_TITLE_AND_SIZE</div>
+   
+  
+    <p>
+      Type:
+      <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
+    </p>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='has_background_image'>
+      HAS_BACKGROUND_IMAGE
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Name of the flag to be set as an attribute in an
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">element</a>.
+This flag is used to determine if the element has a css class for
+that defines a background image for the element.
+This flag is set in the javascript object.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>HAS_BACKGROUND_IMAGE</div>
+   
+  
+    <p>
+      Type:
+      <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
+    </p>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='attr_clear_hover_visual_timer'>
+      ATTR_CLEAR_HOVER_VISUAL_TIMER
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Attribute to set a timeout in an
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">element</a>.
+The timeout is meant to collaborate in the positioning of the show
+icon.
+This flag is set in the javascript object.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>ATTR_CLEAR_HOVER_VISUAL_TIMER</div>
+   
+  
+    <p>
+      Type:
+      <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
+    </p>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='css_class_hide'>
+      CSS_CLASS_HIDE
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Css class name that hides an
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">element</a>.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>CSS_CLASS_HIDE</div>
+   
+  
+    <p>
+      Type:
+      <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
+    </p>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='css_class_shade'>
+      CSS_CLASS_SHADE
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Css class name that shades an
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">element</a>.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>CSS_CLASS_SHADE</div>
+   
+  
+    <p>
+      Type:
+      <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
+    </p>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='css_class_paypal_donation'>
+      CSS_CLASS_PAYPAL_DONATION
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Css class name for the paypal donation section</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>CSS_CLASS_PAYPAL_DONATION</div>
+   
+  
+    <p>
+      Type:
+      <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
+    </p>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='css_class_background_pattern'>
+      CSS_CLASS_BACKGROUND_PATTERN
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Css class name that puts a background image pattern in an
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">elements</a>.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>CSS_CLASS_BACKGROUND_PATTERN</div>
+   
+  
+    <p>
+      Type:
+      <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
+    </p>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='css_class_background_light_pattern'>
+      CSS_CLASS_BACKGROUND_LIGHT_PATTERN
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Css class name that puts a light background image pattern in an
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">elements</a>.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>CSS_CLASS_BACKGROUND_LIGHT_PATTERN</div>
+   
+  
+    <p>
+      Type:
+      <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>
+    </p>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='addheadstyle'>
+      addHeadStyle
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Add css style to the head of a
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Document">document</a>.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>addHeadStyle(doc: <a href="https://developer.mozilla.org/docs/Web/JavaScript">Document</a>, headStyles: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a>, styleName: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>, style: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>doc</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript">Document</a>)</code>
+	    Document to hold the style.
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>headStyles</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a>)</code>
+	    Object to keep reference of the style
+added.
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>styleName</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</code>
+	    Name of the css style.
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>style</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</code>
+	    Css style.
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'><span class="hljs-keyword">const</span> headStyles = {};
+<span class="hljs-keyword">const</span> styleName = <span class="hljs-string">'classA'</span>;
+<span class="hljs-keyword">const</span> style = <span class="hljs-string">'{background-image: none !important;}'</span>
+
+addHeadStyle(<span class="hljs-built_in">document</span>, headStyles, styleName, style);</pre>
+    
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='removeheadstyle'>
+      removeHeadStyle
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Remove css style from the head of a
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Document">document</a>.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>removeHeadStyle(doc: <a href="https://developer.mozilla.org/docs/Web/JavaScript">Document</a>, headStyles: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a>, styleName: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>doc</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript">Document</a>)</code>
+	    Document that holds the style to be
+removed.
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>headStyles</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a>)</code>
+	    Object that keeps the reference of the
+styles.
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>styleName</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</code>
+	    Name of the css style.
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'><span class="hljs-keyword">const</span> headStyles = {};
+<span class="hljs-keyword">const</span> styleName = <span class="hljs-string">'classA'</span>;
+<span class="hljs-keyword">const</span> style = <span class="hljs-string">'{background-image: none !important;}'</span>
+
+addHeadStyle(<span class="hljs-built_in">document</span>, headStyles, styleName, style);
+removeHeadStyle(<span class="hljs-built_in">document</span>, headStyles, styleName);</pre>
+    
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='addheadscript'>
+      addHeadScript
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Add script to the head of a
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Document">document</a>.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>addHeadScript(doc: <a href="https://developer.mozilla.org/docs/Web/JavaScript">Document</a>, src: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>?, code: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>?, onload: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function">function</a>?)</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>doc</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript">Document</a>)</code>
+	    Document to hold the script
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>src</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>?)</code>
+	    Path or url to the script.
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>code</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>?)</code>
+	    Code of the script.
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>onload</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function">function</a>?)</code>
+	    Callback to be called once the script element
+is loaded.
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'><span class="hljs-keyword">const</span> src = <span class="hljs-string">'./js/script.js'</span>;
+<span class="hljs-keyword">const</span> code = <span class="hljs-string">"const a = 'example'; console.log(a);"</span>
+<span class="hljs-keyword">const</span> onload = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+     <span class="hljs-comment">// do something</span>
+};
+
+addHeadScript(<span class="hljs-built_in">document</span>, src);
+addHeadScript(<span class="hljs-built_in">document</span>, src, code);
+addHeadScript(<span class="hljs-built_in">document</span>, src, code, onload);
+addHeadScript(<span class="hljs-built_in">document</span>, src, <span class="hljs-literal">null</span>, onload);
+addHeadScript(<span class="hljs-built_in">document</span>, <span class="hljs-literal">null</span>, code);</pre>
+    
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='addcssclass'>
+      addCssClass
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Add css class to an
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">element</a>.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>addCssClass(domElement: <a href="https://developer.mozilla.org/docs/Web/API/Element">Element</a>, className: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>domElement</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/API/Element">Element</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>className</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'><span class="hljs-keyword">const</span> domElement = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'id'</span>);
+<span class="hljs-keyword">const</span> className = <span class="hljs-string">'classA'</span>;
+addCssClass(domElement, className);</pre>
+    
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='removecssclass'>
+      removeCssClass
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Remove css class from an
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">element</a>.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>removeCssClass(domElement: <a href="https://developer.mozilla.org/docs/Web/API/Element">Element</a>, className: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>domElement</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/API/Element">Element</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>className</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'><span class="hljs-keyword">const</span> domElement = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'id'</span>);
+<span class="hljs-keyword">const</span> className = <span class="hljs-string">'classA'</span>;
+removeCssClass(domElement, className);</pre>
+    
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='handlelisteners'>
+      handleListeners
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Add|remove listeners to|from an
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">element</a>.
+for different types of
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Event">events</a>.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>handleListeners(domElement: <a href="https://developer.mozilla.org/docs/Web/API/Element">Element</a>, listeners: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a>, add: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a>, flag: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>domElement</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/API/Element">Element</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>listeners</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a>)</code>
+	    Object that define the events and the
+callbacks.
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>add</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a>)</code>
+	    Flag to add|remove the listeners.
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>flag</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</code>
+	    Name of the property to be added to the
+element. It is used to check if listeners have been added to the
+element.
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'><span class="hljs-keyword">const</span> mousemove = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+     <span class="hljs-comment">// do something</span>
+};
+<span class="hljs-keyword">const</span> mouseover = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+     <span class="hljs-comment">// do something</span>
+};
+<span class="hljs-keyword">const</span> listeners = {
+  <span class="hljs-string">'mousemove'</span>: mousemove,
+  <span class="hljs-string">'mouseover'</span>: mouseover
+};
+<span class="hljs-keyword">const</span> element = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'id'</span>);
+<span class="hljs-keyword">const</span> flag = <span class="hljs-string">'has-mouse-listeners'</span>;
+
+handleListeners(element, listeners, <span class="hljs-literal">true</span>, flag); <span class="hljs-comment">// add listeners</span>
+handleListeners(element, listeners, <span class="hljs-literal">false</span>, flag); <span class="hljs-comment">// remove listeners</span></pre>
+    
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='handlestyleclasses'>
+      handleStyleClasses
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Add|remove css classes to|from an
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">element</a>.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>handleStyleClasses(domElement: <a href="https://developer.mozilla.org/docs/Web/API/Element">Element</a>, classNames: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array">array</a>, add: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a>, flag: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>domElement</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/API/Element">Element</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>classNames</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array">array</a>)</code>
+	    List of css class names.
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>add</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a>)</code>
+	    Flag to add|remove the class names.
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>flag</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</code>
+	    Name of the property to be added to the
+element. It is used to check if css classes have been added to the
+element.
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'><span class="hljs-keyword">const</span> cssClasses = [<span class="hljs-string">'classA'</span>, <span class="hljs-string">'classB'</span>];
+<span class="hljs-keyword">const</span> element = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'id'</span>);
+<span class="hljs-keyword">const</span> flag = <span class="hljs-string">'has-extra-classes'</span>;
+
+handleStyleClasses(element, cssClasses, <span class="hljs-literal">true</span>, flag); <span class="hljs-comment">// adds css classes</span>
+handleStyleClasses(element, cssClasses, <span class="hljs-literal">false</span>, flag); <span class="hljs-comment">// removes css classes</span></pre>
+    
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='addclasstostyle'>
+      addClassToStyle
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Add a css class to an
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">element</a>.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>addClassToStyle(domElement: <a href="https://developer.mozilla.org/docs/Web/API/Element">Element</a>, className: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>domElement</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/API/Element">Element</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>className</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</code>
+	    Css class name.
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'><span class="hljs-keyword">const</span> element = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'id'</span>);
+<span class="hljs-keyword">const</span> cssClass = <span class="hljs-string">'classA'</span>;
+addClassToStyle(element, cssClass);</pre>
+    
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='removeclassfromstyle'>
+      removeClassFromStyle
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Remove a css class from an
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">element</a>.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>removeClassFromStyle(domElement: <a href="https://developer.mozilla.org/docs/Web/API/Element">Element</a>, className: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>domElement</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/API/Element">Element</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>className</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</code>
+	    Css class name.
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'><span class="hljs-keyword">const</span> element = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'id'</span>);
+<span class="hljs-keyword">const</span> cssClass = <span class="hljs-string">'classA'</span>;
+removeClassFromStyle(element, cssClass);</pre>
+    
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='createcanvas'>
+      createCanvas
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Create a
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement">canvas</a>.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>createCanvas(id: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>): Canvas</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>id</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</code>
+	    Identifier for the canvas.
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code>Canvas</code>:
+        
+
+      
+    
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'><span class="hljs-keyword">const</span> canvas = createCanvas(<span class="hljs-string">'new-canvas'</span>);</pre>
+    
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='hideelement'>
+      hideElement
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Hide|show an
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">element</a>.
+It works by handling the css style of the element by using the
+<a href="#css_class_hide">CSS_CLASS_HIDE</a> css class, the <a href="#is_hidden">IS_HIDDEN</a> flag, and
+the <a href="#handlestyleclasses">handleStyleClasses</a> function.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>hideElement(domElement: <a href="https://developer.mozilla.org/docs/Web/API/Element">Element</a>, toggle: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a>)</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>domElement</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/API/Element">Element</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>toggle</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'><span class="hljs-keyword">const</span> element = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'id'</span>);
+hideElement(element, <span class="hljs-literal">true</span>); <span class="hljs-comment">// hide</span>
+hideElement(element, <span class="hljs-literal">false</span>); <span class="hljs-comment">// show</span></pre>
+    
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='handlesourceofimage'>
+      handleSourceOfImage
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Swap the original srcset parameter of an
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement">image</a>.
+It uses the <a href="#is_toggled">IS_TOGGLED</a> flag.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>handleSourceOfImage(domElement: <a href="https://developer.mozilla.org/docs/Web/API/HTMLImageElement">HTMLImageElement</a>, toggle: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a>)</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>domElement</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/API/HTMLImageElement">HTMLImageElement</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>toggle</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'><span class="hljs-keyword">const</span> image = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'id'</span>);
+image.src = <span class="hljs-string">'imageA.jpg'</span>
+image.srcset = <span class="hljs-string">'imageA_4x.jpg 4x, imageA_2x.jpg 2x'</span>
+
+handleSourceOfImage(element, <span class="hljs-literal">true</span>);
+
+<span class="hljs-built_in">console</span>.log(image.src); <span class="hljs-comment">// 'imageA.jpg'</span>
+<span class="hljs-built_in">console</span>.log(image.srcset); <span class="hljs-comment">// ''</span>
+
+handleSourceOfImage(element, <span class="hljs-literal">false</span>);
+
+<span class="hljs-built_in">console</span>.log(image.src); <span class="hljs-comment">// 'imageA.jpg'</span>
+<span class="hljs-built_in">console</span>.log(image.srcset); <span class="hljs-comment">// 'imageA_4x.jpg 4x, imageA_2x.jpg 2x'</span></pre>
+    
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='handlebackgroundforelement'>
+      handleBackgroundForElement
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Sets the <a href="#has_background_image">HAS_BACKGROUND_IMAGE</a> flag in an
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">element</a>
+by setting the <a href="#handlestyleclasses">handleStyleClasses</a> function.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>handleBackgroundForElement(domElement: <a href="https://developer.mozilla.org/docs/Web/API/Element">Element</a>, toggle: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a>)</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>domElement</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/API/Element">Element</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>toggle</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'><span class="hljs-keyword">const</span> element = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'id'</span>);
+<span class="hljs-built_in">console</span>.log(element[HAS_BACKGROUND_IMAGE]); <span class="hljs-comment">// undefined</span>
+
+handleBackgroundForElement(element, <span class="hljs-literal">true</span>);
+<span class="hljs-built_in">console</span>.log(element[HAS_BACKGROUND_IMAGE]); <span class="hljs-comment">// true</span>
+
+handleBackgroundForElement(element, <span class="hljs-literal">false</span>);
+<span class="hljs-built_in">console</span>.log(element[HAS_BACKGROUND_IMAGE]); <span class="hljs-comment">// false</span></pre>
+    
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='handleloadprocessimagelistener'>
+      handleLoadProcessImageListener
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Add|remove a listener for load event in an
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement">image</a>.
+The listener is meant to process the actual bitmap of the image.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>handleLoadProcessImageListener(domElement: <a href="https://developer.mozilla.org/docs/Web/API/HTMLImageElement">HTMLImageElement</a>, callback: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function">function</a>, toggle: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a>)</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>domElement</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/API/HTMLImageElement">HTMLImageElement</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>callback</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function">function</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>toggle</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'><span class="hljs-keyword">const</span> element = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'id'</span>);
+<span class="hljs-keyword">const</span> processImage = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+     <span class="hljs-comment">// Do stuff to process the image</span>
+};
+
+handleLoadProcessImageListener(element, processImage, <span class="hljs-literal">true</span>); <span class="hljs-comment">// Add listener</span>
+handleLoadProcessImageListener(element, processImage, <span class="hljs-literal">false</span>); <span class="hljs-comment">// Remove listener</span></pre>
+    
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='handleloadeventlistener'>
+      handleLoadEventListener
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Add|remove a listener for load event in an
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement">image</a>.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>handleLoadEventListener(domElement: <a href="https://developer.mozilla.org/docs/Web/API/HTMLImageElement">HTMLImageElement</a>, callback: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function">function</a>, toggle: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a>)</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>domElement</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/API/HTMLImageElement">HTMLImageElement</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>callback</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function">function</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>toggle</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'><span class="hljs-keyword">const</span> element = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'id'</span>);
+<span class="hljs-keyword">const</span> listener = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+     <span class="hljs-comment">// Do stuff</span>
+};
+
+handleLoadProcessImageListener(element, listener, <span class="hljs-literal">true</span>); <span class="hljs-comment">// Add listener</span>
+handleLoadProcessImageListener(element, listener, <span class="hljs-literal">false</span>); <span class="hljs-comment">// Remove listener</span></pre>
+    
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='processdomimage'>
+      processDomImage
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Process the bitmap in an
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement">image</a>.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>processDomImage(domElement: <a href="https://developer.mozilla.org/docs/Web/API/HTMLImageElement">HTMLImageElement</a>, canvas: <a href="https://developer.mozilla.org/docs/Web/API/HTMLCanvasElement">HTMLCanvasElement</a>)</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>domElement</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/API/HTMLImageElement">HTMLImageElement</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>canvas</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/API/HTMLCanvasElement">HTMLCanvasElement</a>)</code>
+	    Canvas to make the processing.
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'><span class="hljs-keyword">const</span> image = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'image-to-process'</span>);
+<span class="hljs-keyword">const</span> canvas = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'canvas-to-do-processing'</span>);
+processDomImage(image, canvas);</pre>
+    
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='processbackgroundimage'>
+      processBackgroundImage
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Process the bitmap of an
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">element</a>
+that has been passed as url in the background-image css attribute.
+The url is used to retrieve the image with an
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest">XHR</a>
+object.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>processBackgroundImage(domElement: <a href="https://developer.mozilla.org/docs/Web/API/Element">Element</a>, url: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>, canvas: <a href="https://developer.mozilla.org/docs/Web/API/HTMLCanvasElement">HTMLCanvasElement</a>)</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>domElement</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/API/Element">Element</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>url</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</code>
+	    Url obtained from the background-image css
+attribute in the style of the element.
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>canvas</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/API/HTMLCanvasElement">HTMLCanvasElement</a>)</code>
+	    Canvas to do the processing.
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'><span class="hljs-keyword">const</span> element = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'id'</span>);
+<span class="hljs-keyword">const</span> url = <span class="hljs-string">'http://example.com/image.jpg'</span>;
+<span class="hljs-keyword">const</span> canvas = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'canvas-id'</span>);
+
+processBackgroundImage(element, url, canvas);</pre>
+    
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='fetchandreadimage'>
+      fetchAndReadImage
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Fetch and read an image from an url.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>fetchAndReadImage(url: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a></div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>url</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a></code>:
+        
+
+      
+    
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'><span class="hljs-keyword">const</span> url = <span class="hljs-string">'http://example.com/image.jpg'</span>;
+fetchAndReadImage(url).then(<span class="hljs-function"><span class="hljs-params">image</span> =&gt;</span> {
+     <span class="hljs-comment">// do something</span>
+});</pre>
+    
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='filterimageelementasbackground'>
+      filterImageElementAsBackground
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Filter the bitmap in an
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement">image</a>.
+and update the background-image attribute in the style of the
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">element</a>
+identified with an uuid.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>filterImageElementAsBackground(imgElement: <a href="https://developer.mozilla.org/docs/Web/API/HTMLImageElement">HTMLImageElement</a>, uuid: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>, canvas: <a href="https://developer.mozilla.org/docs/Web/API/HTMLCanvasElement">HTMLCanvasElement</a>)</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>imgElement</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/API/HTMLImageElement">HTMLImageElement</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>uuid</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</code>
+	    Unique identifier of the element which
+background-image style attribute will be updated.
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>canvas</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/API/HTMLCanvasElement">HTMLCanvasElement</a>)</code>
+	    Canvas to do the filtering.
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'><span class="hljs-keyword">const</span> element = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'id'</span>);
+<span class="hljs-keyword">const</span> uuid = <span class="hljs-string">'some-unique-identifier'</span>;
+<span class="hljs-keyword">const</span> canvas = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'canvas-id'</span>);
+
+filterImageElementAsBackground(element, uuid, canvas);</pre>
+    
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='filterimageelement'>
+      filterImageElement
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Filter the bitmap in an
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement">image</a>.
+and update the src attribute in the
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">element</a>
+identified with an uuid.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>filterImageElement(imgElement: <a href="https://developer.mozilla.org/docs/Web/API/HTMLImageElement">HTMLImageElement</a>, uuid: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a>, canvas: <a href="https://developer.mozilla.org/docs/Web/API/HTMLCanvasElement">HTMLCanvasElement</a>)</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>imgElement</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/API/HTMLImageElement">HTMLImageElement</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>uuid</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a>)</code>
+	    Unique identifier of the element which
+src attribute will be updated.
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>canvas</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/API/HTMLCanvasElement">HTMLCanvasElement</a>)</code>
+	    Canvas to do the filtering.
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'><span class="hljs-keyword">const</span> element = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'id'</span>);
+<span class="hljs-keyword">const</span> uuid = <span class="hljs-string">'some-unique-identifier'</span>;
+<span class="hljs-keyword">const</span> canvas = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'canvas-id'</span>);
+
+filterImageElement(element, uuid, canvas);</pre>
+    
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='findelementbyuuid'>
+      findElementByUuid
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Find the
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">element</a>
+in the corresponding
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Document">document</a>
+by using element's uuid.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>findElementByUuid(doc: <a href="https://developer.mozilla.org/docs/Web/JavaScript">Document</a>, uuid: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>): <a href="https://developer.mozilla.org/docs/Web/API/Element">Element</a></div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>doc</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript">Document</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>uuid</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://developer.mozilla.org/docs/Web/API/Element">Element</a></code>:
+        
+
+      
+    
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'><span class="hljs-keyword">const</span> uuid = <span class="hljs-string">'some-unique-identifier'</span>;
+<span class="hljs-keyword">const</span> actualElement = findElementByUuid(<span class="hljs-built_in">document</span>, uuid);</pre>
+    
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='filterskincolor'>
+      filterSkinColor
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Filter the pixels with skin color in the bitmap of an
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement">image</a>.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>filterSkinColor(imgElement: <a href="https://developer.mozilla.org/docs/Web/API/HTMLImageElement">HTMLImageElement</a>, uuid: any, canvas: <a href="https://developer.mozilla.org/docs/Web/API/HTMLCanvasElement">HTMLCanvasElement</a>, uuis: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>imgElement</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/API/HTMLImageElement">HTMLImageElement</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>uuid</span> <code class='quiet'>(any)</code>
+	    
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>canvas</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/API/HTMLCanvasElement">HTMLCanvasElement</a>)</code>
+	    Canvas to do the filtering.
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>uuis</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></code>:
+        Base64 string encoding the filtered bitmap.
+
+      
+    
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'><span class="hljs-keyword">const</span> element = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'id'</span>);
+<span class="hljs-keyword">const</span> uuid = <span class="hljs-string">'some-unique-identifier'</span>;
+<span class="hljs-keyword">const</span> canvas = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'canvas-id'</span>);
+
+<span class="hljs-keyword">const</span> base64Image = filterSkinColor(element, uuid, canvas);</pre>
+    
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='addrandomwizuuid'>
+      addRandomWizUuid
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Add a random uuid to an
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">element</a>.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>addRandomWizUuid(domElement: <a href="https://developer.mozilla.org/docs/Web/API/Element">Element</a>)</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>domElement</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/API/Element">Element</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'><span class="hljs-keyword">const</span> element = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'id'</span>);
+addRandomWizUuid(element);</pre>
+    
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='guid'>
+      guid
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Generate an uuid.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>guid(): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></code>:
+        
+
+      
+    
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'><span class="hljs-keyword">const</span> uuid = guid();</pre>
+    
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='ismousein'>
+      isMouseIn
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Determine if a
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent">mouse event</a>
+ocurred within the boundaries of a rectangle.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>isMouseIn(event: <a href="https://developer.mozilla.org/docs/Web/API/Event">Event</a>, coords: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a>)</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>event</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/API/Event">Event</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>coords</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a>)</code>
+	    Object defining the coordinates of a
+rectangle.
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'><span class="hljs-keyword">const</span> event = <span class="hljs-keyword">new</span> MouseEvent();
+event.x = <span class="hljs-number">50</span>;
+event.y = <span class="hljs-number">50</span>;
+<span class="hljs-keyword">const</span> coords = {<span class="hljs-attr">left</span>: <span class="hljs-number">10</span>, <span class="hljs-attr">top</span>: <span class="hljs-number">10</span>, <span class="hljs-attr">right</span>: <span class="hljs-number">100</span>, <span class="hljs-attr">bottom</span>: <span class="hljs-number">100</span>};
+
+<span class="hljs-built_in">console</span>.log(isMouseIn(event, coords)); <span class="hljs-comment">// true</span></pre>
+    
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='eye'>
+      Eye
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Factory function to create the
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">eye</a>
+that allows to display the original filtered images.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>new Eye(doc: <a href="https://developer.mozilla.org/docs/Web/JavaScript">Document</a>)</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>doc</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript">Document</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='createeye'>
+      createEye
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Create the
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">eye</a>
+that is positioned accordingly in elements with filtered images
+to show the original unfiltered images.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>createEye(doc: <a href="https://developer.mozilla.org/docs/Web/JavaScript">Document</a>): <a href="https://developer.mozilla.org/docs/Web/API/Element">Element</a></div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>doc</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript">Document</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://developer.mozilla.org/docs/Web/API/Element">Element</a></code>:
+        
+
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='getdomelement'>
+      getDomElement
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Get the
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">eye</a>
+to show to original unfiltered images.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>getDomElement(): <a href="https://developer.mozilla.org/docs/Web/API/Element">Element</a></div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://developer.mozilla.org/docs/Web/API/Element">Element</a></code>:
+        
+
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='position'>
+      position
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Position the
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">eye</a>
+in the top right corner of an
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">element</a>.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>position(domElement: <a href="https://developer.mozilla.org/docs/Web/API/Element">Element</a>, coords: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a>, doc: <a href="https://developer.mozilla.org/docs/Web/JavaScript">Document</a>)</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>domElement</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/API/Element">Element</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>coords</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>doc</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript">Document</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='hide'>
+      hide
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Hide the
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">eye</a>.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>hide()</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='show'>
+      show
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Show the
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">eye</a>.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>show()</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='setanchor'>
+      setAnchor
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Set the
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">element</a>.
+which original unfiltered image might be show.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>setAnchor(domElement: <a href="https://developer.mozilla.org/docs/Web/API/Element">Element</a>, domElementCallback: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function">Function</a>, eyeCSSUrl: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>domElement</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/API/Element">Element</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>domElementCallback</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function">Function</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>eyeCSSUrl</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='attachto'>
+      attachTo
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Attach the
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">eye</a>
+to an
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">element</a>.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>attachTo(domElement: <a href="https://developer.mozilla.org/docs/Web/API/Element">Element</a>)</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>domElement</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/API/Element">Element</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='detach'>
+      detach
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Detach the
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">eye</a>
+from the current
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">element</a>
+it is currently attached to.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>detach()</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='imagesdisplayer'>
+      ImagesDisplayer
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Factory function to handle the visibility of images in a
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Window">window</a>
+and within its
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLIFrameElement">iframes</a>.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>new ImagesDisplayer()</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='setshowall'>
+      setShowAll
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Set the flag used to show the images.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>setShowAll(show: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a>)</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>show</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='isshowall'>
+      isShowAll
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Get the flag used to shoe the images.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>isShowAll(): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></code>:
+        
+
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='addiframe'>
+      addIFrame
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Add an
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLIFrameElement">iframe</a>.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>addIFrame(iframe: any, HTMLIFrameElement: any)</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>iframe</span> <code class='quiet'>(any)</code>
+	    
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>HTMLIFrameElement</span> <code class='quiet'>(any)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='showimages'>
+      showImages
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Display images in a
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Window">window</a>
+and in its
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLIFrameElement">iframes</a>.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>showImages()</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='processwin'>
+      ProcessWin
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Factory function to do the process to filter the skin in
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">elements</a>
+within a
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Window">window</a></p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>new ProcessWin(win: <a href="https://developer.mozilla.org/docs/Web/API/Window">Window</a>, winContentLoaded: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a>)</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>win</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/API/Window">Window</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>winContentLoaded</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='seteverythingup'>
+      setEverythingUp
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Set listeners, styles and local variables.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>setEverythingUp()</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='windowscroll'>
+      windowScroll
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Listener for <a href="https://developer.mozilla.org/en-US/docs/Web/API/MouseScrollEvent">scroll</a>
+event for the local
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Window">window</a>.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>windowScroll()</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='dockeydown'>
+      docKeyDown
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Listener for the <a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent">keydown</a>
+event for the local
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Document">document</a>.
+Controls logic to pause the extension and show original
+unfiltered images.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>docKeyDown(event: any)</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>event</span> <code class='quiet'>(any)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='start'>
+      start
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Start the process to filter images. Observes the changes in the
+DOM tree to filter images in new
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">elements</a>.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>start()</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='doelements'>
+      doElements
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Do the process to filter images in an
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">element</a>
+and its children.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>doElements(domElement: <a href="https://developer.mozilla.org/docs/Web/API/Element">Element</a>, includeChildren: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a>)</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>domElement</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/API/Element">Element</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>includeChildren</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='doiframe'>
+      doIframe
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Do the process to filter the skin in an
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLIFrameElement">iframe</a>.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>doIframe(iframe: <a href="https://developer.mozilla.org/docs/Web/API/HTMLIFrameElement">HTMLIFrameElement</a>)</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>iframe</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/API/HTMLIFrameElement">HTMLIFrameElement</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='processimage'>
+      processImage
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Listener for the load event of an
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">element</a>.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>processImage()</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='doelement'>
+      doElement
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Analyse an
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">element</a>.
+to process the related images.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>doElement()</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='checkmouseposition'>
+      checkMousePosition
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Check the position of the mouse to display the <a href="#eye">eye</a>
+element.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>checkMousePosition()</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='showelement'>
+      showElement
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Show the original unfiltered image of an
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">element</a>.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>showElement(domElement: <a href="https://developer.mozilla.org/docs/Web/API/Element">Element</a>)</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>domElement</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/API/Element">Element</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='togglehover'>
+      toggleHover
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Control the visuals when the mouse pointer is over an
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">element</a>.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>toggleHover(domElement: <a href="https://developer.mozilla.org/docs/Web/API/Element">Element</a>, toggle: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a>, event: <a href="https://developer.mozilla.org/docs/Web/API/Event">Event</a>)</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>domElement</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/API/Element">Element</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>toggle</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>event</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/API/Event">Event</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='togglehovervisual'>
+      toggleHoverVisual
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Position and display the eye icon ver the image hovered by the
+mouse pointer.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>toggleHoverVisual(domElement: <a href="https://developer.mozilla.org/docs/Web/API/Element">Element</a>, toggle: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a>, coords: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a>)</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>domElement</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/API/Element">Element</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>toggle</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>coords</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='togglehovervisualcleartimer'>
+      toggleHoverVisualClearTimer
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Stop the execution of <a href="#togglehovervisual">toggleHoverVisual</a>.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>toggleHoverVisualClearTimer(domElement: any, toggle: any)</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>domElement</span> <code class='quiet'>(any)</code>
+	    
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>toggle</span> <code class='quiet'>(any)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='togglemouseeventlisteners'>
+      toggleMouseEventListeners
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Add|remove <a href="https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent">mouse event</a>
+listeners, which are <a href="#mouseentered">mouseEntered</a> <a href="#mouseleft">mouseLeft</a></p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>toggleMouseEventListeners(domElement: <a href="https://developer.mozilla.org/docs/Web/API/Element">Element</a>, toggle: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a>)</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>domElement</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/API/Element">Element</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>toggle</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='mouseentered'>
+      mouseEntered
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Listener for the mouseover event of an
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">element</a>.
+Used to control the position of the <a href="#eye">Eye</a></p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>mouseEntered(event: <a href="https://developer.mozilla.org/docs/Web/API/Event">Event</a>)</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>event</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/API/Event">Event</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='mouseleft'>
+      mouseLeft
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Listener for the mouseout event of an
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">element</a>.
+Used to control the position of the <a href="#eye">Eye</a></p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>mouseLeft(event: <a href="https://developer.mozilla.org/docs/Web/API/Event">Event</a>)</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>event</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/API/Event">Event</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='mousecontroller'>
+      MouseController
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Factory function to handle the movement of a mouse.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>new MouseController()</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='watchdocument'>
+      watchDocument
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Watch the movement of the mouse in a
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Document">document</a>.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>watchDocument(doc: <a href="https://developer.mozilla.org/docs/Web/JavaScript">Document</a>)</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>doc</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript">Document</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='unwatchdocument'>
+      unwatchDocument
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Unwatch the movement of the mouse in a
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Document">document</a>.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>unwatchDocument(doc: <a href="https://developer.mozilla.org/docs/Web/JavaScript">Document</a>)</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>doc</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript">Document</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='haselement'>
+      hasElement
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Determine if the local
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">element</a>
+has been set.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>hasElement(): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></code>:
+        
+
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='clearelement'>
+      clearElement
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Reset the local
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">element</a>.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>clearElement()</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='setelement'>
+      setElement
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Set the local
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">element</a>.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>setElement(domElement: <a href="https://developer.mozilla.org/docs/Web/API/Element">Element</a>)</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>domElement</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/API/Element">Element</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='getelement'>
+      getElement
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Get the local
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">element</a>.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>getElement(): <a href="https://developer.mozilla.org/docs/Web/API/Element">Element</a></div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://developer.mozilla.org/docs/Web/API/Element">Element</a></code>:
+        
+
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='setattrelement'>
+      setAttrElement
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Set an attribute in the local
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">element</a>.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>setAttrElement(name: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>, value: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>name</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>value</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='getattrvalueelement'>
+      getAttrValueElement
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Get an attribute's value in the local
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">element</a>.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>getAttrValueElement(name: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>): any</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>name</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code>any</code>:
+        value
+
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='hasthatelement'>
+      hasThatElement
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Determine if the local
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">element</a>
+is the same passed in the argument</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>hasThatElement(domElement: any): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>domElement</span> <code class='quiet'>(any)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></code>:
+        
+
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='move'>
+      move
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Set the local flag to determine that the mouse has moved.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>move()</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='unmove'>
+      unmove
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Set the local flag to determine that the mouse has not moved.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>unmove()</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='hasmoved'>
+      hasMoved
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Get the local flag to determine that the mouse has moved.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>hasMoved(): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></code>:
+        
+
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='hasevent'>
+      hasEvent
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Determine if the local
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent">mouse event</a>
+is set.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>hasEvent()</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='getevent'>
+      getEvent
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Get the local
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent">mouse event</a></p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>getEvent(): <a href="https://developer.mozilla.org/docs/Web/API/MouseEvent">MouseEvent</a></div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://developer.mozilla.org/docs/Web/API/MouseEvent">MouseEvent</a></code>:
+        
+
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='suspects'>
+      Suspects
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Factory function to handle a list of potential
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">elements</a>.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>new Suspects()</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='applycallback'>
+      applyCallback
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Apply a callback to the list of
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">elements</a>.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>applyCallback(callback: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function">function</a>)</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>callback</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function">function</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='addsuspect'>
+      addSuspect
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Add an
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">element</a>
+to the list.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>addSuspect(domElement: <a href="https://developer.mozilla.org/docs/Web/API/Element">Element</a>)</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>domElement</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/API/Element">Element</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='updatesuspectsrectangles'>
+      updateSuspectsRectangles
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Update the bounding rectangles of the
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">elements</a>
+in the list.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>updateSuspectsRectangles()</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='findsuspectsundermouse'>
+      findSuspectsUnderMouse
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Find the
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">elements</a>
+that are under the mouse pointer.</p>
+
+ 
+  
+    <div class='pre p1 fill-light mt0'>findSuspectsUnderMouse(defaultElement: <a href="https://developer.mozilla.org/docs/Web/API/Element">Element</a>, mouseEvent: <a href="https://developer.mozilla.org/docs/Web/API/MouseEvent">MouseEvent</a>)</div>
+   
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>defaultElement</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/API/Element">Element</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>mouseEvent</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/API/MouseEvent">MouseEvent</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+        
+      </div>
+    </div>
+  <script src='assets/anchor.js'></script>
+  <script src='assets/split.js'></script>
+  <script src='assets/site.js'></script>
+</body>
+</html>
