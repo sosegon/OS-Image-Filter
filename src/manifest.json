@@ -1,14 +1,15 @@
 {
     "name": "OS Image Filter",
     "short_name": "OSIMAGEFILTER",
-    "version": "3.3",
+    "version": "0.0.1-alpha1",
     "manifest_version": 2,
     "description": "This extension filters images by analyzing their pixels, those within the human skin range are replaced by a grayscale tone",
     "icons":
     {
         "16": "./images/icon16.png",
         "48": "./images/icon48.png",
-        "128": "./images/icon128.png"
+        "128": "./images/icon128.png",
+        "512": "./images/icon512.png"
     },
     "browser_action":
     {
