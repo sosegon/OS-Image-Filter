@@ -1,7 +1,7 @@
 /**
  * Factory function to handle the movement of a mouse.
  */
-function MouseController() {
+export default function MouseController() {
     let mMoved = false;
     let mEvent = null;
     let mElement = null;

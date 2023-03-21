@@ -1,8 +1,10 @@
+import { isMouseIn } from './domManipulation';
+import { HAS_BACKGROUND_IMAGE, ATTR_RECTANGLE } from "./constants";
 /**
  * Factory function to handle a list of potential
  * {@link https://developer.mozilla.org/en-US/docs/Web/API/Element|elements}.
  */
-function Suspects() {
+export default function Suspects() {
 
     let mList = [];
     /**

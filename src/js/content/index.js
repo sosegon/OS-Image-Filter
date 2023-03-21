@@ -1,3 +1,42 @@
+import {
+  addHeadStyle,
+  removeHeadStyle,
+  addCssClass,
+  removeCssClass,
+  handleListeners,
+  createCanvas,
+  hideElement,
+  handleSourceOfImage,
+  handleBackgroundForElement,
+  handleLoadProcessImageListener,
+  handleLoadEventListener,
+  processDomImage,
+  processBackgroundImage,
+  addRandomWizUuid,
+  isMouseIn
+} from './domManipulation';
+import {
+  ATTR_LAST_CHECKED_SRC,
+  IS_PROCESSED,
+  HAS_HOVER,
+  HAS_HOVER_VISUAL,
+  HAS_MOUSE_LISTENERS,
+  HAS_TITLE_AND_SIZE,
+  HAS_BACKGROUND_IMAGE,
+  ATTR_CLEAR_HOVER_VISUAL_TIMER,
+  CSS_CLASS_HIDE,
+  CSS_CLASS_SHADE,
+  CSS_CLASS_PAYPAL_DONATION,
+  CSS_CLASS_BACKGROUND_PATTERN,
+  CSS_CLASS_BACKGROUND_LIGHT_PATTERN,
+  CANVAS_GLOBAL_ID,
+  ATTR_RECTANGLE,
+} from "./constants";
+import Eye from "./Eye";
+import ImagesDisplayer from './ImagesDisplayer';
+import MouseController from './MouseController';
+import Suspects from './Suspects';
+
 // Global variables.
 let extensionUrl = chrome.extension.getURL('');
 let urlExtensionUrl = 'url("' + extensionUrl;

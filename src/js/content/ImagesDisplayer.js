@@ -4,7 +4,7 @@
  * and within its
  * {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLIFrameElement|iframes}.
  */
-function ImagesDisplayer() {
+export default function ImagesDisplayer() {
     let mShowAll = false;
     let mIframes = [];
     /**

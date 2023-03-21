@@ -1,3 +1,13 @@
+import {
+  IS_HIDDEN,
+  IS_TOGGLED,
+  IS_PROCESSED,
+  HAS_LOAD_LISTENER,
+  HAS_PROCESS_IMAGE_LISTENER,
+  HAS_BACKGROUND_IMAGE,
+  CSS_CLASS_HIDE,
+  ATTR_UUID,
+} from "./constants";
 /**
  * Add css style to the head of a
  * {@link https://developer.mozilla.org/en-US/docs/Web/API/Document|document}.
@@ -15,7 +25,7 @@
  *
  * addHeadStyle(document, headStyles, styleName, style);
  */
-function addHeadStyle(doc, headStyles, styleName, style) {
+export function addHeadStyle(doc, headStyles, styleName, style) {
     const styleElement = doc.createElement('style');
     styleElement.type = 'text/css';
     styleElement.appendChild(doc.createTextNode(styleName + style));
@@ -40,7 +50,7 @@ function addHeadStyle(doc, headStyles, styleName, style) {
  * addHeadStyle(document, headStyles, styleName, style);
  * removeHeadStyle(document, headStyles, styleName);
  */
-function removeHeadStyle(doc, headStyles, styleName) {
+export function removeHeadStyle(doc, headStyles, styleName) {
     doc.head.removeChild(headStyles[styleName]);
     delete headStyles[styleName];
 }
@@ -93,7 +103,7 @@ function addHeadScript(doc, src, code, onload) {
  * const className = 'classA';
  * addCssClass(domElement, className);
  */
-function addCssClass(domElement, className) {
+export function addCssClass(domElement, className) {
     domElement.className += ' ' + className;
 }
 /**
@@ -108,7 +118,7 @@ function addCssClass(domElement, className) {
  * const className = 'classA';
  * removeCssClass(domElement, className);
  */
-function removeCssClass(domElement, className) {
+export function removeCssClass(domElement, className) {
     const oldClass = domElement.className;
     const newClass = domElement.className.replace(new RegExp('\\b' + className + '\\b'), '');
 
@@ -147,7 +157,7 @@ function removeCssClass(domElement, className) {
  * handleListeners(element, listeners, true, flag); // add listeners
  * handleListeners(element, listeners, false, flag); // remove listeners
  */
-function handleListeners(domElement, listeners, add, flag) {
+export function handleListeners(domElement, listeners, add, flag) {
     if (add && !domElement[flag]) {
         for (const key of Object.keys(listeners)) {
             domElement.addEventListener(key, listeners[key]);
@@ -236,7 +246,7 @@ function removeClassFromStyle(domElement, className) {
  * @example
  * const canvas = createCanvas('new-canvas');
  */
-function createCanvas(id) {
+export function createCanvas(id) {
     const canvas = document.createElement('canvas');
     canvas.setAttribute('id', id);
     canvas.style.display = 'none';
@@ -257,7 +267,7 @@ function createCanvas(id) {
  * hideElement(element, true); // hide
  * hideElement(element, false); // show
  */
-function hideElement(domElement, toggle) {
+export function hideElement(domElement, toggle) {
     handleStyleClasses(domElement, [CSS_CLASS_HIDE], toggle, IS_HIDDEN);
 }
 /**
@@ -283,7 +293,7 @@ function hideElement(domElement, toggle) {
  * console.log(image.src); // 'imageA.jpg'
  * console.log(image.srcset); // 'imageA_4x.jpg 4x, imageA_2x.jpg 2x'
  */
-function handleSourceOfImage(domElement, toggle) {
+export function handleSourceOfImage(domElement, toggle) {
     if (toggle && !domElement.getAttribute(IS_TOGGLED)) {
         domElement.oldsrc = domElement.src;
         domElement.oldsrcset = domElement.srcset;
@@ -320,7 +330,7 @@ function handleSourceOfImage(domElement, toggle) {
  * handleBackgroundForElement(element, false);
  * console.log(element[HAS_BACKGROUND_IMAGE]); // false
  */
-function handleBackgroundForElement(domElement, toggle) {
+export function handleBackgroundForElement(domElement, toggle) {
     handleStyleClasses(domElement, [], toggle, HAS_BACKGROUND_IMAGE)
 }
 /**
@@ -341,7 +351,7 @@ function handleBackgroundForElement(domElement, toggle) {
  * handleLoadProcessImageListener(element, processImage, true); // Add listener
  * handleLoadProcessImageListener(element, processImage, false); // Remove listener
  */
-function handleLoadProcessImageListener(domElement, callback, toggle) {
+export function handleLoadProcessImageListener(domElement, callback, toggle) {
     handleListeners(domElement, {
         'load': callback
     }, toggle, HAS_PROCESS_IMAGE_LISTENER);
@@ -364,7 +374,7 @@ function handleLoadProcessImageListener(domElement, callback, toggle) {
  * handleLoadProcessImageListener(element, listener, false); // Remove listener
  *
  */
-function handleLoadEventListener(domElement, callback, toggle) {
+export function handleLoadEventListener(domElement, callback, toggle) {
     handleListeners(domElement, {
         'load': callback
     }, toggle, HAS_LOAD_LISTENER);
@@ -381,7 +391,7 @@ function handleLoadEventListener(domElement, callback, toggle) {
  * const canvas = document.getElementById('canvas-to-do-processing');
  * processDomImage(image, canvas);
  */
-function processDomImage(domElement, canvas) {
+export function processDomImage(domElement, canvas) {
     const uuid = domElement.getAttribute(ATTR_UUID);
 
     try {
@@ -412,7 +422,7 @@ function processDomImage(domElement, canvas) {
  *
  * processBackgroundImage(element, url, canvas);
  */
-function processBackgroundImage(domElement, url, canvas) {
+export function processBackgroundImage(domElement, url, canvas) {
     const uuid = domElement.getAttribute(ATTR_UUID);
 
     fetchAndReadImage(url).then(image => {
@@ -616,7 +626,7 @@ function filterSkinColor(imgElement, uuid, canvas) {
  * const element = document.getElementById('id');
  * addRandomWizUuid(element);
  */
-function addRandomWizUuid(domElement) {
+export function addRandomWizUuid(domElement) {
 
     if (domElement.getAttribute(ATTR_UUID) === null) {
 
@@ -659,6 +669,6 @@ function guid() {
  *
  * console.log(isMouseIn(event, coords)); // true
  */
-function isMouseIn(event, coords) {
+export function isMouseIn(event, coords) {
     return event.x >= coords.left && event.x < coords.right && event.y >= coords.top && event.y < coords.bottom;
 }

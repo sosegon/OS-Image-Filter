@@ -5,7 +5,7 @@
  *
  * @param {Document} doc
  */
-function Eye(doc) {
+export default function Eye(doc) {
 
     let mDomElement = createEye(doc);
     /**
