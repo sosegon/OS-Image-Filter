@@ -12,7 +12,7 @@ module.exports = (env, argv) => {
 
   return {
     entry: {
-      js: "./src/js/content/js.js",
+      index: "./src/js/content/index.js",
       popup: "./src/js/popup.js",
       options: "./src/js/options.js",
       background: "./src/js/background.js",
@@ -21,7 +21,7 @@ module.exports = (env, argv) => {
       path: path.resolve(__dirname, isDevelopment ? "dev" : "dist"),
       filename: (pathData) => {
         const { chunk } = pathData;
-        return chunk.name === "js" ? "js/content/[name].js" : "js/[name].js";
+        return chunk.name === "index" ? "js/content/[name].js" : "js/[name].js";
       },
     },
     devtool: isDevelopment ? "inline-source-map" : "source-map",

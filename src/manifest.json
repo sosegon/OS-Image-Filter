@@ -30,7 +30,7 @@
             "./js/content/Suspects.js",
             "./js/content/Eye.js",
             "./js/content/ImagesDisplayer.js",
-            "./js/content/js.js",
+            "./js/content/index.js",
             "./js/content/constants.js",
             "./js/content/domManipulation.js"
         ],
