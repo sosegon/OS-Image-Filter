@@ -645,23 +645,3 @@ export function addRandomWizUuid(domElement) {
 function guid() {
     return crypto.randomUUID();
 }
-/**
- * Determine if a
- * {@link https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent|mouse event}
- * ocurred within the boundaries of a rectangle.
- *
- * @param {Event} event
- * @param {object} coords - Object defining the coordinates of a
- * rectangle.
- *
- * @example
- * const event = new MouseEvent();
- * event.x = 50;
- * event.y = 50;
- * const coords = {left: 10, top: 10, right: 100, bottom: 100};
- *
- * console.log(isMouseIn(event, coords)); // true
- */
-export function isMouseIn(event, coords) {
-    return event.x >= coords.left && event.x < coords.right && event.y >= coords.top && event.y < coords.bottom;
-}

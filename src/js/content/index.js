@@ -13,7 +13,6 @@ import {
   processDomImage,
   processBackgroundImage,
   addRandomWizUuid,
-  isMouseIn
 } from './domManipulation';
 import {
   ATTR_LAST_CHECKED_SRC,
@@ -34,7 +33,7 @@ import {
 } from "./constants";
 import Eye from "./Eye";
 import ImagesDisplayer from './ImagesDisplayer';
-import MouseController from './MouseController';
+import MouseController, { isMouseIn } from './MouseController';
 import Suspects from './Suspects';
 
 // Global variables.

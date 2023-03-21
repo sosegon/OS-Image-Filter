@@ -1,4 +1,4 @@
-import { isMouseIn } from './domManipulation';
+import { isMouseIn } from './MouseController';
 import { HAS_BACKGROUND_IMAGE, ATTR_RECTANGLE } from "./constants";
 /**
  * Factory function to handle a list of potential
