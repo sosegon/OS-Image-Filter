@@ -12,7 +12,7 @@ module.exports = (env, argv) => {
 
   return {
     entry: {
-      index: "./src/js/content/index.js",
+      index: "./src/js/content/index.jsx",
       popup: "./src/js/popup.js",
       options: "./src/js/options.js",
       background: "./src/js/background.js",
@@ -28,12 +28,12 @@ module.exports = (env, argv) => {
     module: {
       rules: [
         {
-          test: /\.js$/,
+          test: /\.(js|jsx)$/,
           exclude: /node_modules/,
           use: {
             loader: "babel-loader",
             options: {
-              presets: ["@babel/preset-env"],
+              configFile: path.resolve(__dirname, "babel.config.js"),
             },
           },
         },
@@ -51,6 +51,9 @@ module.exports = (env, argv) => {
         },
       ],
     },
+    resolve: {
+      extensions: [".js", ".jsx"],
+    },
     plugins: [
       new CleanWebpackPlugin(),
       new HtmlWebpackPlugin({
@@ -64,9 +67,7 @@ module.exports = (env, argv) => {
         chunks: ["options"],
       }),
       new CopyWebpackPlugin({
-        patterns: [
-          { from: "./src/images", to: "images" },
-        ],
+        patterns: [{ from: "./src/images", to: "images" }],
       }),
       new WebpackManifestPlugin({
         fileName: "manifest.json",
@@ -83,7 +84,10 @@ module.exports = (env, argv) => {
               {
                 matches: ["<all_urls>"],
                 js: files
-                  .filter((file) => file.name.endsWith(".js") && file.path.includes("content"))
+                  .filter(
+                    (file) =>
+                      file.name.endsWith(".js") && file.path.includes("content")
+                  )
                   .map((file) => `./js/content/${file.name}`),
                 run_at: "document_start",
                 all_frames: true,
