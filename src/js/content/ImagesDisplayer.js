@@ -5,24 +5,9 @@
  * {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLIFrameElement|iframes}.
  */
 export default function ImagesDisplayer() {
-    let mShowAll = false;
-    let mIframes = [];
-    /**
-     * Set the flag used to show the images.
-     *
-     * @param {boolean} show
-     */
-    function setShowAll(show) {
-        mShowAll = show;
-    }
-    /**
-     * Get the flag used to shoe the images.
-     *
-     * @returns {boolean}
-     */
-    function isShowAll() {
-        return mShowAll;
-    }
+    let showAll = false;
+    let iframes = [];
+
     /**
      * Add an
      * {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLIFrameElement|iframe}.
@@ -30,7 +15,7 @@ export default function ImagesDisplayer() {
      * @param {HTMLIFrameElement}
      */
     function addIFrame(iframe) {
-        mIframes.push(iframe);
+        iframes.push(iframe);
     }
     /**
      * Display images in a
@@ -39,11 +24,11 @@ export default function ImagesDisplayer() {
      * {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLIFrameElement|iframes}.
      */
     function showImages() {
-        if (mShowAll) {
+        if (showAll) {
             return;
         }
 
-        mShowAll = true;
+        showAll = true;
 
         if (window === top) {
             chrome.runtime.sendMessage({
@@ -56,7 +41,7 @@ export default function ImagesDisplayer() {
             window.skfShowImages();
         }
 
-        mIframes.map(iframe => {
+        iframes.map(iframe => {
             try {
                 if (iframe.contentWindow && iframe.contentWindow.skfShowImages) {
                     iframe.contentWindow.skfShowImages();
@@ -68,10 +53,15 @@ export default function ImagesDisplayer() {
         });
     }
 
-    return Object.freeze({
-        setShowAll,
-        isShowAll,
+    return {
+        showAll,
+        get showAllFlag() {
+            return showAll;
+        },
+        set showAllFlag(isShowAll) {
+            showAll = isShowAll;
+        },
         addIFrame,
         showImages
-    });
+    };
 }

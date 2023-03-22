@@ -112,7 +112,7 @@ export default function WindowScanner(win, displayer) {
         const pollID = setInterval(function() {
             // Nothing to add. All images will be shown. Stop the
             // iteration.
-            if (displayer.isShowAll()) {
+            if (displayer.showAll) {
 
                 clearInterval(pollID);
 
@@ -445,7 +445,7 @@ export default function WindowScanner(win, displayer) {
     function doElement() {
         // No need to do anything when all the images are going to be
         // displayed.
-        if (displayer.isShowAll()) {
+        if (displayer.showAll) {
 
             return;
 
@@ -619,7 +619,7 @@ export default function WindowScanner(win, displayer) {
         if (!mMouseController.hasMoved() ||
             !mMouseController.hasEvent() ||
             !readinessValidator.pageContentLoaded ||
-            displayer.isShowAll()) {
+            displayer.showAll) {
             return;
         }
 
@@ -701,7 +701,7 @@ export default function WindowScanner(win, displayer) {
 
         handleBackgroundForElement(domElement, false);
 
-        if (displayer.isShowAll()) {
+        if (displayer.showAll) {
 
             toggleMouseEventListeners(domElement, false);
 
