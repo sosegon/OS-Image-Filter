@@ -40,9 +40,8 @@ import Suspects from './Suspects';
  * {@link https://developer.mozilla.org/en-US/docs/Web/API/Window|window}
  *
  * @param {Window} win
- * @param {boolean} winContentLoaded
  */
-export default function WindowScanner(win, winContentLoaded, displayer) {
+export default function WindowScanner(win, displayer) {
 
     // Global variables.
     let extensionUrl = chrome.extension.getURL('');
@@ -77,38 +76,32 @@ export default function WindowScanner(win, winContentLoaded, displayer) {
     // structure to find the elements and process the images has
     // started.
     let mHasStarted = false;
-    let mContentLoaded = winContentLoaded;
-    let settings;
 
-    function setSettings(newSettings) {
-        settings = newSettings;
+    // There are two conditions to start the filtering:
+    // 1. The page content has been loaded.
+    // 2. The settings have been loaded.
+    const readinessValidator = new Proxy({pageContentLoaded: false, settings: undefined}, {
+        get: function(target, property, receiver) {
+            return Reflect.get(target, property, receiver);
+        },
+        set: function(target, property, value, receiver) {
+            Reflect.set(target, property, value, receiver);
+            checkReadiness(target);
+            return true;
+        }
+    });
+
+    function checkReadiness(attrs) {
+        if (attrs.pageContentLoaded && !!attrs.settings) {
+          setEverythingUp();
+        }
     }
 
-    // setEverythingUp();
     /**
      * Set listeners, styles and local variables.
      */
     function setEverythingUp() {
-        // Start, or register start. There is no way to control the order
-        // in which the listener for DOMContentLoaded and the callback
-        // to get the settings from background are executed. This
-        // condition is the way to handle that situation. **ProcessWin** is
-        // called after receiving the settings from the background.
-        // However, at that moment, the listener for DOMContentLoaded
-        // that sets the flag contentLoaded passed here as
-        // winContentLoaded has been already triggered. In short, the
-        // listener was executed first.
-        if (mContentLoaded) {
-
-            start();
-
-        }
-        // The callback was executed first
-        else {
-
-            mWin.addEventListener('DOMContentLoaded', start);
-
-        }
+        start();
 
         // Set some css as soon as possible. These styles are going to be
         // used in the elements containing images, and other additional
@@ -139,8 +132,8 @@ export default function WindowScanner(win, winContentLoaded, displayer) {
 
                 for (let i = 0; i < 8; i++) {
 
-                    addHeadStyle(mDoc, mHeadStyles, '.' + CSS_CLASS_BACKGROUND_PATTERN + '.' + CSS_CLASS_SHADE + i, '{background-image: ' + (settings.isNoPattern ? 'none' : 'url(' + extensionUrl + "pattern" + i + ".png" + ')') + ' !important; }');
-                    addHeadStyle(mDoc, mHeadStyles, '.' + CSS_CLASS_BACKGROUND_PATTERN + '.' + CSS_CLASS_BACKGROUND_LIGHT_PATTERN + '.' + CSS_CLASS_SHADE + i, '{background-image: ' + (settings.isNoPattern ? 'none' : 'url(' + extensionUrl + "pattern-light" + i + ".png" + ')') + ' !important; }');
+                    addHeadStyle(mDoc, mHeadStyles, '.' + CSS_CLASS_BACKGROUND_PATTERN + '.' + CSS_CLASS_SHADE + i, '{background-image: ' + (readinessValidator.settings.isNoPattern ? 'none' : 'url(' + extensionUrl + "pattern" + i + ".png" + ')') + ' !important; }');
+                    addHeadStyle(mDoc, mHeadStyles, '.' + CSS_CLASS_BACKGROUND_PATTERN + '.' + CSS_CLASS_BACKGROUND_LIGHT_PATTERN + '.' + CSS_CLASS_SHADE + i, '{background-image: ' + (readinessValidator.settings.isNoPattern ? 'none' : 'url(' + extensionUrl + "pattern-light" + i + ".png" + ')') + ' !important; }');
 
                 }
 
@@ -200,9 +193,9 @@ export default function WindowScanner(win, winContentLoaded, displayer) {
      * unfiltered images.
      */
     function docKeyDown(event) {
-        if (event.altKey && event.keyCode == 80 && !settings.isPaused) { //ALT-p
+        if (event.altKey && event.keyCode == 80 && !readinessValidator.settings.isPaused) { //ALT-p
 
-            settings.isPaused = true;
+            readinessValidator.settings.isPaused = true;
             chrome.runtime.sendMessage({ r: 'pause', toggle: true });
             displayer.showImages();
 
@@ -261,7 +254,7 @@ export default function WindowScanner(win, winContentLoaded, displayer) {
 
         // Create temporary div, to eager load background img light
         // for noEye to avoid flicker.
-        if (settings.isNoEye) {
+        if (readinessValidator.settings.isNoEye) {
 
             for (let i = 0; i < 8; i++) {
 
@@ -409,6 +402,12 @@ export default function WindowScanner(win, winContentLoaded, displayer) {
 
         }
 
+        const windowScanner = new WindowScanner(win, displayer);
+
+        win.addEventListener('DOMContentLoaded', () => {
+            windowScanner.readinessValidator.pageContentLoaded = true;
+        })
+
         // Similar to the main page. The logic is set to be executed
         // until the iframe is ready to be processed.
         let pollNum = 0;
@@ -416,9 +415,7 @@ export default function WindowScanner(win, winContentLoaded, displayer) {
             if (mDoc.body) {
 
                 clearInterval(pollID);
-                const windowScanner = new WindowScanner(win, true, displayer);
-                windowScanner.setSettings(settings);
-                windowScanner.setEverythingUp();
+                windowScanner.readinessValidator.settings = settings;
 
             }
 
@@ -502,7 +499,7 @@ export default function WindowScanner(win, winContentLoaded, displayer) {
             // An image greater than the dimensions in settings needs
             // to be filtered. We need to catch 0 too, as sometimes
             // images start off as zero.
-            else if ((width == 0 || width > settings.maxSafe) && (height == 0 || height > settings.maxSafe)) {
+            else if ((width == 0 || width > readinessValidator.settings.maxSafe) && (height == 0 || height > readinessValidator.settings.maxSafe)) {
 
                 toggleMouseEventListeners(this, true);
 
@@ -567,7 +564,7 @@ export default function WindowScanner(win, winContentLoaded, displayer) {
             // Image greater than the dimensions in the settings needs
             // to be filtered. We need to catch 0 too, as sometimes
             // images start off as zero.
-            if (bgImg != 'none' && (width == 0 || width > settings.maxSafe) && (height == 0 || height > settings.maxSafe) &&
+            if (bgImg != 'none' && (width == 0 || width > readinessValidator.settings.maxSafe) && (height == 0 || height > readinessValidator.settings.maxSafe) &&
                 bgImg.indexOf('url(') != -1 &&
                 !bgImg.startsWith(urlExtensionUrl) && bgImg != urlBlankImg &&
                 !this[IS_PROCESSED]
@@ -595,7 +592,7 @@ export default function WindowScanner(win, winContentLoaded, displayer) {
                     image.onload = () => {
                         const { height, width } = this;
 
-                        if (height <= settings.maxSafe || width <= settings.maxSafe) {
+                        if (height <= readinessValidator.settings.maxSafe || width <= readinessValidator.settings.maxSafe) {
 
                             showElement(this.owner);
 
@@ -621,7 +618,7 @@ export default function WindowScanner(win, winContentLoaded, displayer) {
     function checkMousePosition() {
         if (!mMouseController.hasMoved() ||
             !mMouseController.hasEvent() ||
-            !mContentLoaded ||
+            !readinessValidator.pageContentLoaded ||
             displayer.isShowAll()) {
             return;
         }
@@ -756,7 +753,7 @@ export default function WindowScanner(win, winContentLoaded, displayer) {
     function toggleHoverVisual(domElement, toggle, coords) {
         if (toggle && !domElement[HAS_HOVER_VISUAL] && domElement[HAS_BACKGROUND_IMAGE]) {
 
-            if (!settings.isNoEye) {
+            if (!readinessValidator.settings.isNoEye) {
 
                 mEye.position(domElement, coords, mDoc);
                 mEye.show();
@@ -773,7 +770,7 @@ export default function WindowScanner(win, winContentLoaded, displayer) {
 
         } else if (!toggle && domElement[HAS_HOVER_VISUAL]) {
 
-            if (!settings.isNoEye) {
+            if (!readinessValidator.settings.isNoEye) {
 
                 mEye.hide();
 
@@ -840,8 +837,10 @@ export default function WindowScanner(win, winContentLoaded, displayer) {
         toggleHover(this, false, event);
     }
 
-    return Object.freeze({
-        setSettings,
-        setEverythingUp,
-    })
+    return {
+        readinessValidator,
+        get readinessValidatorObject() {
+            return readinessValidator;
+        }
+    };
 }

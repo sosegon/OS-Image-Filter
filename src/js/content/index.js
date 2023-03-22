@@ -7,15 +7,9 @@ import {
 import ImagesDisplayer from './ImagesDisplayer';
 import WindowScanner from './WindowScanner';
 
-// Flag that triggers the process of iterating over the entire
-// structure to process the images and add elements like the eye
-// icon.
-let contentLoaded = false;
-let settings = null;
 let quotesRegex = /['"]/g;
-
 const displayer = new ImagesDisplayer();
-const windowScanner = new WindowScanner(window, contentLoaded, displayer);
+const windowScanner = new WindowScanner(window, displayer);
 
 // Detect if the script is being executed within an iframe. It is
 // useful when trying to accomplish something just in the main page
@@ -32,32 +26,26 @@ function inIframe() {
     }
 }
 
-// Keep track of flag contentLoaded. Once the DOM tree is ready we
+// Once the DOM tree is ready we
 // can start to modify it. In this case, we add the canvas element to
 // process images fetched with XHR and the container for the canvas
 // elements to process images fetched directly.
 window.addEventListener('DOMContentLoaded', () => {
-
     document.body.appendChild(createCanvas(CANVAS_GLOBAL_ID));
-    contentLoaded = true;
-
+    windowScanner.readinessValidator.pageContentLoaded = true;
 });
 
 // Get settings to check status of extension.
 chrome.runtime.sendMessage({
     r: 'getSettings'
-}, (s) => {
-    settings = s;
+}, (settings) => {
     // If it is active, do the stuff
     if (settings && !settings.isExcluded && !settings.isExcludedForTab && !settings.isPaused && !settings.isPausedForTab) {
-
         chrome.runtime.sendMessage({
             r: 'setColorIcon',
             toggle: true
         });
-        windowScanner.setSettings(settings);
-        windowScanner.setEverythingUp();
-
+        windowScanner.readinessValidator.settings = settings;
     }
 });
 
