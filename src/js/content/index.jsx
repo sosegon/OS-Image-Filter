@@ -3,10 +3,13 @@ import { createRoot } from "react-dom/client";
 import { CANVAS_GLOBAL_ID, ROOT_GLOBAL_ID } from "./constants";
 import ImagesDisplayer from "./ImagesDisplayer";
 import WindowScanner from "./WindowScanner";
+import Styler from "./Styler";
+
+const displayer = new ImagesDisplayer();
+const styler = new Styler();
+const windowScanner = new WindowScanner(window, displayer, styler);
 
 function App() {
-  const displayer = new ImagesDisplayer();
-  const windowScanner = new WindowScanner(window, displayer);
   windowScanner.readinessValidator.pageContentLoaded = true;
 
   useEffect(() => {
@@ -41,6 +44,12 @@ function App() {
 }
 
 window.addEventListener("DOMContentLoaded", () => {
+  styler.initStyles(document);
+
+  if(!displayer.showAll) {
+    styler.hide(document.body);
+  }
+
   const rootDom = document.createElement("div");
   rootDom.id = ROOT_GLOBAL_ID;
   document.body.appendChild(rootDom);

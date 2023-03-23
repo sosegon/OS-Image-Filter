@@ -1,6 +1,4 @@
 import {
-  addHeadStyle,
-  removeHeadStyle,
   addCssClass,
   removeCssClass,
   handleListeners,
@@ -22,9 +20,7 @@ import {
   HAS_TITLE_AND_SIZE,
   HAS_BACKGROUND_IMAGE,
   ATTR_CLEAR_HOVER_VISUAL_TIMER,
-  CSS_CLASS_HIDE,
   CSS_CLASS_SHADE,
-  CSS_CLASS_PAYPAL_DONATION,
   CSS_CLASS_BACKGROUND_PATTERN,
   CSS_CLASS_BACKGROUND_LIGHT_PATTERN,
   CANVAS_GLOBAL_ID,
@@ -41,7 +37,7 @@ import Suspects from './Suspects';
  *
  * @param {Window} win
  */
-export default function WindowScanner(win, displayer) {
+export default function WindowScanner(win, displayer, styler) {
 
     // Global variables.
     let extensionUrl = chrome.extension.getURL('');
@@ -103,44 +99,6 @@ export default function WindowScanner(win, displayer) {
     function setEverythingUp() {
         start();
 
-        // Set some css as soon as possible. These styles are going to be
-        // used in the elements containing images, and other additional
-        // items added by the chrome extension. The logic is set to repeat
-        // every 1ms. At this point we do not know if the DOM tree is
-        // ready for manipulation. The variable doc.head is check to see
-        // if the styles can be added.
-        const pollID = setInterval(function() {
-            // Nothing to add. All images will be shown. Stop the
-            // iteration.
-            if (displayer.showAll) {
-
-                clearInterval(pollID);
-
-            } else if (mDoc.head) {
-                // If process has not started. Make the webpage
-                // transparent. That way no images are displayed.
-                if (!mHasStarted) {
-
-                    addHeadStyle(mDoc, mHeadStyles, 'body', '{opacity: 0 !important; }');
-
-                }
-
-                addHeadStyle(mDoc, mHeadStyles, 'body ', '{background-image: none !important;}');
-                addHeadStyle(mDoc, mHeadStyles, '.' + CSS_CLASS_HIDE, '{opacity: 0 !important;}');
-                addHeadStyle(mDoc, mHeadStyles, '.' + CSS_CLASS_BACKGROUND_PATTERN, '{ background-repeat: repeat !important;text-indent:0 !important;}'); //text-indent to show alt text
-                addHeadStyle(mDoc, mHeadStyles, '.' + CSS_CLASS_PAYPAL_DONATION, '{left: 0px; bottom: 0px; width: 100%; z-index: 9000; background: #d09327}');
-
-                for (let i = 0; i < 8; i++) {
-
-                    addHeadStyle(mDoc, mHeadStyles, '.' + CSS_CLASS_BACKGROUND_PATTERN + '.' + CSS_CLASS_SHADE + i, '{background-image: ' + (readinessValidator.settings.isNoPattern ? 'none' : 'url(' + extensionUrl + "pattern" + i + ".png" + ')') + ' !important; }');
-                    addHeadStyle(mDoc, mHeadStyles, '.' + CSS_CLASS_BACKGROUND_PATTERN + '.' + CSS_CLASS_BACKGROUND_LIGHT_PATTERN + '.' + CSS_CLASS_SHADE + i, '{background-image: ' + (readinessValidator.settings.isNoPattern ? 'none' : 'url(' + extensionUrl + "pattern-light" + i + ".png" + ')') + ' !important; }');
-
-                }
-
-                clearInterval(pollID);
-            }
-        }, 1);
-
         //ALT-a, ALT-z
         mMouseController.watchDocument(mDoc);
         mDoc.addEventListener('keydown', docKeyDown);
@@ -153,12 +111,7 @@ export default function WindowScanner(win, displayer) {
             mSuspects.applyCallback(showElement);
 
             mWin.removeEventListener('DOMContentLoaded', start);
-
-            for (let s in mHeadStyles) {
-
-                removeHeadStyle(mDoc, mHeadStyles, s);
-
-            }
+            styler.removeStyles();
 
             if (mMouseController.hasElement()) {
 
@@ -246,7 +199,7 @@ export default function WindowScanner(win, displayer) {
         // Once body has been done, show it.
         if (mHeadStyles['body']) {
 
-            removeHeadStyle(mDoc, mHeadStyles, 'body');
+            styler.show(mDoc.body);
 
         }
 
@@ -402,7 +355,7 @@ export default function WindowScanner(win, displayer) {
 
         }
 
-        const windowScanner = new WindowScanner(win, displayer);
+        const windowScanner = new WindowScanner(win, displayer, styler);
 
         win.addEventListener('DOMContentLoaded', () => {
             windowScanner.readinessValidator.pageContentLoaded = true;

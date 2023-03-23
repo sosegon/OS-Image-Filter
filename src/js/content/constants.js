@@ -121,6 +121,11 @@ export const ATTR_CLEAR_HOVER_VISUAL_TIMER = "skf-clear-hover-visual-timer";
  */
 export const CSS_CLASS_HIDE = "skf-hide";
 /**
+ * Css class name that hides the background image in an
+ * {@link https://developer.mozilla.org/en-US/docs/Web/API/Element|element}.
+ */
+export const CSS_CLASS_NO_BACKGROUND_IMAGE = "skf-no-bg-img";
+/**
  * Css class name that shades an
  * {@link https://developer.mozilla.org/en-US/docs/Web/API/Element|element}.
  */
