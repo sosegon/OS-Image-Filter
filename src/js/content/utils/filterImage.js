@@ -1,3 +1,6 @@
+import '@tensorflow/tfjs-backend-webgl';
+import * as bodyPix from '@tensorflow-models/body-pix';
+
 function filterSkinColor(imgElement, canvas) {
   const { width, height } = imgElement;
   canvas.setAttribute('width', width);
@@ -42,14 +45,45 @@ function filterSkinColor(imgElement, canvas) {
   return base64Img;
 }
 
-export function processDomImg(imgElement, canvas) {
-  const urlData = filterSkinColor(imgElement, canvas);
+async function segmentPeople(imgElement, canvas) {
+  const model = await bodyPix.load();
+  const person = await model.segmentPerson(imgElement);
+
+  canvas.width = imgElement.width;
+  canvas.height = imgElement.height;
+
+  const coloredPartImage = bodyPix.toMask(
+    person,
+    { r: 127, g: 127, b: 127, a: 255 },
+    { r: 0, g: 0, b: 0, a: 0 },
+    false
+  );
+
+  const opacity = 1;
+  const flipHorizontal = false;
+  const maskBlurAmount = 0;
+
+  bodyPix.drawMask(
+    canvas,
+    imgElement,
+    coloredPartImage,
+    opacity,
+    maskBlurAmount,
+    flipHorizontal
+  );
+
+  const base64Img = canvas.toDataURL('image/png');
+  return base64Img;
+}
+
+export async function processDomImg(imgElement, canvas) {
+  const urlData = await segmentPeople(imgElement, canvas);
   imgElement.src = urlData;
   imgElement.srcset = '';
   imgElement.onload = () => {
     imgElement.setAttribute('skf-already-processed', 'true');
     imgElement.classList.remove('skf-hide-class');
-  }
+  };
 }
 
 function fetchAndReadImage(url) {
