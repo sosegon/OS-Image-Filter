@@ -33,4 +33,13 @@ window.addEventListener('DOMContentLoaded', () => {
 
   const root = createRoot(rootDom);
   root.render(<App />);
+
+  // Defines styles
+  const style = document.createElement('style');
+  style.innerHTML = `
+    .skf-hide-class {
+      opacity: 0 !important;
+    }
+  `;
+  document.head.appendChild(style);
 });

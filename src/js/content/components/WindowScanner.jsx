@@ -14,6 +14,9 @@ const urlBlankImg = 'url("' + blankImg + '")';
 const processElement = (domElement, callbacks) => {
   const { processIMG, processNoIMG } = callbacks;
   if (domElement.tagName === 'IMG') {
+    // Hide until the image is processed
+    domElement.classList.add('skf-hide-class');
+
     if(!domElement.getAttribute('skf-id')) {
       addSkfId(domElement);
     }
@@ -32,6 +35,9 @@ const processElement = (domElement, callbacks) => {
     const alreadyProcessed = hasBeenProcessed(domElement);
 
     if (isValidBgImg && !alreadyProcessed) {
+      // Hide until the image is processed
+      domElement.classList.add('skf-hide-class');
+
       // Used to fetch image with xhr.
       const bgImgUrl = bgImg.slice(5, -2);
       // Avoids quick display of original image
