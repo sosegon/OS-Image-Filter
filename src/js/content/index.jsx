@@ -1,57 +1,34 @@
-import React, { useEffect } from "react";
-import { createRoot } from "react-dom/client";
-import { CANVAS_GLOBAL_ID, ROOT_GLOBAL_ID } from "./constants";
-import ImagesDisplayer from "./ImagesDisplayer";
-import WindowScanner from "./WindowScanner";
-import Styler from "./Styler";
-
-const displayer = new ImagesDisplayer();
-const styler = new Styler();
-const windowScanner = new WindowScanner(window, displayer, styler);
+import React, { useEffect, useState } from 'react';
+import { createRoot } from 'react-dom/client';
+import { WindowScanner } from 'Components';
+import { ExtensionSettingsProvider } from 'Hooks/useExtensionSettingsContext';
 
 function App() {
-  windowScanner.readinessValidator.pageContentLoaded = true;
+
+  const [initialSettings, setInitialSettings] = useState({});
 
   useEffect(() => {
     chrome.runtime.sendMessage(
       {
-        r: "getSettings",
+        r: 'getSettings',
       },
       (settings) => {
-        if (
-          settings &&
-          !settings.isExcluded &&
-          !settings.isExcludedForTab &&
-          !settings.isPaused &&
-          !settings.isPausedForTab
-        ) {
-          chrome.runtime.sendMessage({
-            r: "setColorIcon",
-            toggle: true,
-          });
-          windowScanner.readinessValidator.settings = settings;
-        }
+        setInitialSettings(settings);
       }
     );
-    chrome.runtime.onMessage.addListener((request) => {
-      if (request.r === "showImages") {
-        displayer.showImages();
-      }
-    });
   }, []);
 
-  return <canvas id={CANVAS_GLOBAL_ID} style={{ display: "none" }} />;
+  return (
+    <ExtensionSettingsProvider settings={initialSettings}>
+      <WindowScanner />
+    </ExtensionSettingsProvider>
+  );
 }
 
-window.addEventListener("DOMContentLoaded", () => {
-  styler.initStyles(document);
 
-  if(!displayer.showAll) {
-    styler.hide(document.body);
-  }
-
-  const rootDom = document.createElement("div");
-  rootDom.id = ROOT_GLOBAL_ID;
+window.addEventListener('DOMContentLoaded', () => {
+  const rootDom = document.createElement('div');
+  rootDom.id = 'skf-root';
   document.body.appendChild(rootDom);
 
   const root = createRoot(rootDom);
