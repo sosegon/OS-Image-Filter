@@ -13,10 +13,8 @@
   },
   "dependencies": {
     "@babel/preset-react": "^7.18.6",
-    "@tensorflow-models/body-segmentation": "^1.0.1",
-    "@tensorflow/tfjs-backend-webgl": "^4.3.0",
-    "@tensorflow/tfjs-converter": "^4.3.0",
-    "@tensorflow/tfjs-core": "^4.3.0",
+    "@tensorflow-models/body-pix": "^2.2.0",
+    "@tensorflow/tfjs": "^4.2.0",
     "jquery": "^3.6.4",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
