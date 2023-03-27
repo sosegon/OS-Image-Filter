@@ -1,0 +1,24 @@
+ 
+#!/usr/bin/env bash
+
+# lint check for style rules
+
+if yarn lint:staged
+then
+  echo "Passed lint check ✨"
+else
+  echo "Failed lint check 🚨"
+  exit 1
+fi
+
+# prettify staged files
+# (script taken from prettier docs https://prettier.io/docs/en/precommit.html)
+
+FILES=$(git diff --cached --name-only --diff-filter=ACMR "*.js" "*.jsx" "*.ts" "*.tsx" | sed 's| |// |g')
+[ -z "$FILES" ] && exit 0
+
+echo "$FILES" | xargs ./node_modules/.bin/prettier --write # prettify
+
+echo "$FILES" | xargs git add # add to staging
+
+exit 0
