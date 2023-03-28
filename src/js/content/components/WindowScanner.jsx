@@ -1,15 +1,16 @@
 import React, { useEffect, useCallback, useRef } from 'react';
-import CanvasImageFilterer from './CanvasImageFilterer';
+import { processDomImg, processBgImg } from 'Utils/filterImage';
 import validTags from 'Utils/validTags';
 import hasBeenProcessed from 'Utils/hasBeenProcessed';
 import addSkfId from 'Utils/addSkfId';
-import { processDomImg, processBgImg } from 'Utils/filterImage';
+import CanvasImageFilterer from './CanvasImageFilterer';
 
+// eslint-disable-next-line no-undef
 const extensionUrl = chrome.extension.getURL('');
-const urlExtensionUrl = 'url("' + extensionUrl;
+const urlExtensionUrl = `url("${extensionUrl}`;
 const blankImg =
   'data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
-const urlBlankImg = 'url("' + blankImg + '")';
+const urlBlankImg = `url("${blankImg}")`;
 
 const processElement = (domElement, callbacks) => {
   const { processIMG, processNoIMG } = callbacks;
@@ -17,18 +18,26 @@ const processElement = (domElement, callbacks) => {
     // Hide until the image is processed
     domElement.classList.add('skf-hide-class');
 
-    if(!domElement.getAttribute('skf-id')) {
+    if (!domElement.getAttribute('skf-id')) {
       addSkfId(domElement);
     }
+
     if (domElement.complete) {
       processIMG(domElement);
+    } else {
+      const self = domElement;
+      domElement.addEventListener('load', () => {
+        if (!hasBeenProcessed(self)) {
+          processIMG(self);
+        }
+      });
     }
   } else {
     // For these elements the images are in the background-image property
     const computedStyle = getComputedStyle(domElement);
-    const bgImg = computedStyle.backgroundImage;
-
-    const isValidBgImg = bgImg !== 'none' &&
+    const bgImg = computedStyle.getPropertyValue('background-image');
+    const isValidBgImg =
+      bgImg !== 'none' &&
       bgImg.includes('url(') &&
       !bgImg.startsWith(urlExtensionUrl) &&
       bgImg !== urlBlankImg;
@@ -40,36 +49,38 @@ const processElement = (domElement, callbacks) => {
 
       // Used to fetch image with xhr.
       const bgImgUrl = bgImg.slice(5, -2);
+
       // Avoids quick display of original image
       domElement.style.backgroundImage = "url('')";
       addSkfId(domElement);
       processNoIMG(domElement, bgImgUrl);
     }
   }
-}
+};
 
 const scanElements = (domElement, callbacks, includeChildren = false) => {
   if (validTags.includes(domElement.tagName)) {
     processElement(domElement, callbacks);
   }
 
-  if(includeChildren){
-    domElement.querySelectorAll(validTags.join(',')).forEach((domElement) => {
-      processElement(domElement, callbacks);
-    });
+  if (includeChildren) {
+    domElement
+      .querySelectorAll(validTags.join(','))
+      .forEach(childDomElement => {
+        processElement(childDomElement, callbacks);
+      });
   }
-}
+};
 
 const useScanWindow = (window, canvasRef) => {
-
   const processIMG = useCallback(
-    (domElement) => {
+    domElement => {
       if (!canvasRef?.current) {
         return;
       }
       processDomImg(domElement, canvasRef.current);
     },
-    [canvasRef]
+    [canvasRef],
   );
 
   const processNoIMG = useCallback(
@@ -79,12 +90,12 @@ const useScanWindow = (window, canvasRef) => {
       }
       processBgImg(domElement, bgImgUrl, canvasRef.current);
     },
-    [canvasRef]
+    [canvasRef],
   );
 
   useEffect(() => {
-    if(!canvasRef?.current) {
-      return; 
+    if (!canvasRef?.current) {
+      return;
     }
 
     // Scan the body to filter any images on it.
@@ -94,19 +105,53 @@ const useScanWindow = (window, canvasRef) => {
         processIMG,
         processNoIMG,
       },
-      true
+      true,
     );
 
-  }, [window, canvasRef]);
+    // Observe changes in the DOM to filter new images.
+    const observer = new MutationObserver(mutations => {
+      mutations.forEach(m => {
+        if (m.type === 'childList') {
+          m.addedNodes.forEach(domElement => {
+            // TODO: Handle iframes, is it necessary?
+            if (
+              domElement.tagName !== 'CANVAS' &&
+              domElement.tagName !== 'IFRAME'
+            ) {
+              scanElements(domElement, {
+                processIMG,
+                processNoIMG,
+              });
+            }
+          });
+        } else if (m.type === 'attributes') {
+          if (
+            m.attributeName === 'style' &&
+            m.target.style.backgroundImage.includes('url(')
+          ) {
+            scanElements(m.target, {
+              processIMG,
+              processNoIMG,
+            });
+          }
+        }
+      });
+    });
+
+    observer.observe(window.document, {
+      subtree: true,
+      childList: true,
+      attributes: true,
+      attributeOldValue: true,
+    });
+  }, [window, canvasRef, processIMG, processNoIMG]);
 };
 
 function WindowScanner() {
   const canvasRef = useRef(null);
   useScanWindow(window, canvasRef);
 
-  return (
-    <CanvasImageFilterer id="skf-canvas-filterer" ref={canvasRef}/>
-  );
+  return <CanvasImageFilterer id="skf-canvas-filterer" ref={canvasRef} />;
 }
 
 export default WindowScanner;
