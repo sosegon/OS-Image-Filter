@@ -34,6 +34,7 @@ async function getImageData(imgElement) {
   return { imageData, canvas };
 }
 
+// eslint-disable-next-line no-unused-vars
 async function filterSkinColor(imgElement) {
   const { imageData, canvas } = await getImageData(imgElement);
 
@@ -78,8 +79,18 @@ async function filterSkinColor(imgElement) {
   return base64Img;
 }
 
-async function grayoutPeople(model, imgElement, canvas, imgElementToGrayout) {
-  const person = await model.segmentPerson(imgElement);
+async function grayoutPeople(model, imgElement, imgElementToGrayout) {
+  // Process on the actual image size
+  const naturalDimensionsImgElement = new Image();
+  naturalDimensionsImgElement.width = imgElement.naturalWidth;
+  naturalDimensionsImgElement.height = imgElement.naturalHeight;
+  naturalDimensionsImgElement.crossOrigin = 'anonymous';
+  naturalDimensionsImgElement.src = imgElement.src;
+  await new Promise(resolve => {
+    naturalDimensionsImgElement.onload = resolve;
+  });
+
+  const person = await model.segmentPerson(naturalDimensionsImgElement);
 
   if (person.allPoses.length === 0) {
     throw new Error('No person detected');
@@ -92,14 +103,15 @@ async function grayoutPeople(model, imgElement, canvas, imgElementToGrayout) {
     false,
   );
 
-  canvas.width = imgElement.width;
-  canvas.heigh = imgElement.height;
+  const canvas = document.createElement('canvas');
+  canvas.width = naturalDimensionsImgElement.width;
+  canvas.heigh = naturalDimensionsImgElement.height;
 
   const opacity = 1;
   const flipHorizontal = false;
   const maskBlurAmount = 0;
 
-  const imgToDraw = imgElementToGrayout || imgElement;
+  const imgToDraw = naturalDimensionsImgElement || imgElementToGrayout;
 
   bodyPix.drawMask(
     canvas,
@@ -109,31 +121,43 @@ async function grayoutPeople(model, imgElement, canvas, imgElementToGrayout) {
     maskBlurAmount,
     flipHorizontal,
   );
+
+  const originalSizedCanvas = document.createElement('canvas');
+  originalSizedCanvas.width = imgElement.width;
+  originalSizedCanvas.height = imgElement.height;
+  originalSizedCanvas
+    .getContext('2d')
+    .drawImage(canvas, 0, 0, imgElement.width, imgElement.height);
+
+  return originalSizedCanvas;
 }
 
 // eslint-disable-next-line no-unused-vars
-async function segmentPeople(imgElement, canvas) {
-  const originalImgWidth = imgElement.width;
-  const originalImgHeight = imgElement.height;
+async function segmentPeople(imgElement) {
+  const originalImgWidth = imgElement.naturalWidth;
+  const originalImgHeight = imgElement.naturalHeight;
   if (originalImgWidth === 0 || originalImgHeight === 0) {
     throw new Error('Image width or height is 0');
   }
   const model = await bodyPix.load();
 
+  // Check size of image to perform segmentation
   const originalImgRatio = originalImgWidth / originalImgHeight;
   const originalImgArea = originalImgWidth * originalImgHeight;
 
   const fasterImgWidth = 512;
   const fasterImgHeight = Math.ceil(fasterImgWidth / originalImgRatio);
-  const fasterImgArea = fasterImgWidth ** 2;
+  const fasterImgArea = fasterImgWidth * fasterImgHeight;
 
   // For small enough images, process the original image
   if (originalImgArea < fasterImgArea) {
     try {
-      await grayoutPeople(model, imgElement, canvas);
+      const canvas = await grayoutPeople(model, imgElement);
       return canvas.toDataURL('image/png');
     } catch (error) {
-      throw new Error('Error graying people out in ORIGINAL image');
+      throw new Error(
+        [error, 'Error graying people out in ORIGINAL image'].join(', '),
+      );
     }
   }
 
@@ -143,22 +167,34 @@ async function segmentPeople(imgElement, canvas) {
   newImgElement.width = fasterImgWidth;
   newImgElement.height = fasterImgHeight;
   newImgElement.src = imgElement.src;
+  await new Promise(resolve => {
+    newImgElement.onload = resolve;
+  });
 
   // Get the image data to draw the segmentation
-  canvas.width = fasterImgWidth;
-  canvas.height = fasterImgHeight;
-  canvas
+  const cloneImgElement = newImgElement.cloneNode(false);
+  const preCanvas = document.createElement('canvas');
+  preCanvas.width = fasterImgWidth;
+  preCanvas.height = fasterImgHeight;
+  preCanvas
     .getContext('2d')
-    .drawImage(imgElement, 0, 0, fasterImgWidth, fasterImgHeight);
+    .drawImage(cloneImgElement, 0, 0, fasterImgWidth, fasterImgHeight);
 
   // Image where the segmentation is going to be drawn
   const imgElementToApplyGray = new Image();
   imgElementToApplyGray.width = fasterImgWidth;
   imgElementToApplyGray.height = fasterImgHeight;
-  imgElementToApplyGray.src = canvas.toDataURL('image/png');
+  imgElementToApplyGray.src = preCanvas.toDataURL('image/png');
+  await new Promise(resolve => {
+    imgElementToApplyGray.onload = resolve;
+  });
 
   try {
-    await grayoutPeople(model, newImgElement, canvas, imgElementToApplyGray);
+    const canvas = await grayoutPeople(
+      model,
+      newImgElement,
+      imgElementToApplyGray,
+    );
     // Resize the canvas to the original image size
     const originalSizedCanvas = document.createElement('canvas');
     originalSizedCanvas.width = originalImgWidth;
@@ -176,7 +212,7 @@ async function segmentPeople(imgElement, canvas) {
 
 export async function processDomImg(imgElement) {
   try {
-    const urlData = await filterSkinColor(imgElement);
+    const urlData = await segmentPeople(imgElement);
     imgElement.crossOrigin = 'anonymous';
     imgElement.src = urlData;
     imgElement.srcset = '';
@@ -191,17 +227,22 @@ export async function processDomImg(imgElement) {
   }
 }
 
-async function filterImageElementAsBackground(imgElement, domElement) {
-  const base64Img = await filterSkinColor(imgElement);
-  const newBackgroundImgUrl = `url(${base64Img})`;
-
-  domElement.style.backgroundImage = newBackgroundImgUrl;
-  domElement.setAttribute('skf-already-processed', 'true');
-  domElement.classList.remove('skf-hide-class');
+async function filterImageElementAsBackground(imgElement, domElement, bgUrl) {
+  try {
+    const base64Img = await segmentPeople(imgElement);
+    domElement.style.backgroundImage = `url(${base64Img})`;
+  } catch (error) {
+    // Either the processing failed or there was no person detected,
+    // set the original image
+    domElement.style.backgroundImage = `url(${bgUrl})`;
+  } finally {
+    domElement.setAttribute('skf-already-processed', 'true');
+    domElement.classList.remove('skf-hide-class');
+  }
 }
 
 export function processBgImg(domElement, bgUrl) {
   fetchAndReadImage(bgUrl).then(image => {
-    filterImageElementAsBackground(image, domElement);
+    filterImageElementAsBackground(image, domElement, bgUrl);
   });
 }
