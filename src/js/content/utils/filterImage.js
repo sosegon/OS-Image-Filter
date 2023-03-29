@@ -200,8 +200,8 @@ async function filterImageElementAsBackground(imgElement, domElement) {
   domElement.classList.remove('skf-hide-class');
 }
 
-export function processBgImg(domElement, bgUrl, canvas) {
+export function processBgImg(domElement, bgUrl) {
   fetchAndReadImage(bgUrl).then(image => {
-    filterImageElementAsBackground(image, domElement, canvas);
+    filterImageElementAsBackground(image, domElement);
   });
 }
