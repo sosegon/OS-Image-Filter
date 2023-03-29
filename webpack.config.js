@@ -15,7 +15,10 @@ module.exports = (env, argv) => {
       background: './src/js/background.js',
     },
     output: {
-      path: path.resolve(__dirname, isDevelopment ? 'dev' : 'dist'),
+      path: path.resolve(
+        __dirname,
+        isDevelopment ? 'dev-segmentation' : 'dist',
+      ),
       filename: pathData => {
         const { chunk } = pathData;
         return chunk.name === 'index' ? 'js/content/[name].js' : 'js/[name].js';
@@ -63,8 +66,8 @@ module.exports = (env, argv) => {
           const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf-8'));
           return {
             ...manifest,
-            name: packageJson.name,
-            short_name: packageJson.short_name,
+            name: `${packageJson.name}-segmentation`,
+            short_name: `${packageJson.short_name}SEGMENTATION`,
             description: packageJson.description,
             version: packageJson.version,
             content_scripts: [
