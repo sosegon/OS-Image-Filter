@@ -1,39 +1,36 @@
 // webpack.config.js
-const packageJson = require("./package.json");
-const fs = require("fs");
-const path = require("path");
-const { WebpackManifestPlugin } = require("webpack-manifest-plugin");
-const { CleanWebpackPlugin } = require("clean-webpack-plugin");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const CopyWebpackPlugin = require("copy-webpack-plugin");
+const fs = require('fs');
+const path = require('path');
+const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const packageJson = require('./package.json');
 
 module.exports = (env, argv) => {
-  const isDevelopment = argv.mode === "development";
+  const isDevelopment = argv.mode === 'development';
 
   return {
     entry: {
-      index: "./src/js/content/index.jsx",
-      popup: "./src/js/popup.js",
-      options: "./src/js/options.js",
-      background: "./src/js/background.js",
+      index: './src/js/content/index.jsx',
+      background: './src/js/background.js',
     },
     output: {
-      path: path.resolve(__dirname, isDevelopment ? "dev" : "dist"),
-      filename: (pathData) => {
+      path: path.resolve(__dirname, isDevelopment ? 'dev' : 'dist'),
+      filename: pathData => {
         const { chunk } = pathData;
-        return chunk.name === "index" ? "js/content/[name].js" : "js/[name].js";
+        return chunk.name === 'index' ? 'js/content/[name].js' : 'js/[name].js';
       },
     },
-    devtool: isDevelopment ? "inline-source-map" : "source-map",
+    devtool: isDevelopment ? 'inline-source-map' : 'source-map',
     module: {
       rules: [
         {
           test: /\.(js|jsx)$/,
           exclude: /node_modules/,
           use: {
-            loader: "babel-loader",
+            loader: 'babel-loader',
             options: {
-              configFile: path.resolve(__dirname, "babel.config.js"),
+              configFile: path.resolve(__dirname, 'babel.config.js'),
             },
           },
         },
@@ -41,10 +38,10 @@ module.exports = (env, argv) => {
           test: /\.png$/,
           use: [
             {
-              loader: "file-loader",
+              loader: 'file-loader',
               options: {
-                name: "[name].[ext]",
-                outputPath: "images",
+                name: '[name].[ext]',
+                outputPath: 'images',
               },
             },
           ],
@@ -52,28 +49,18 @@ module.exports = (env, argv) => {
       ],
     },
     resolve: {
-      extensions: [".js", ".jsx"],
+      extensions: ['.js', '.jsx'],
     },
     plugins: [
       new CleanWebpackPlugin(),
-      new HtmlWebpackPlugin({
-        template: "./src/popup.htm",
-        filename: "popup.htm",
-        chunks: ["popup"],
-      }),
-      new HtmlWebpackPlugin({
-        template: "./src/options.htm",
-        filename: "options.htm",
-        chunks: ["options"],
-      }),
       new CopyWebpackPlugin({
-        patterns: [{ from: "./src/images", to: "images" }],
+        patterns: [{ from: './src/images', to: 'images' }],
       }),
       new WebpackManifestPlugin({
-        fileName: "manifest.json",
+        fileName: 'manifest.json',
         generate: (seed, files) => {
-          const manifestPath = path.resolve(__dirname, "src/manifest.json");
-          const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf-8"));
+          const manifestPath = path.resolve(__dirname, 'src/manifest.json');
+          const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf-8'));
           return {
             ...manifest,
             name: packageJson.name,
@@ -82,14 +69,15 @@ module.exports = (env, argv) => {
             version: packageJson.version,
             content_scripts: [
               {
-                matches: ["<all_urls>"],
+                matches: ['<all_urls>'],
                 js: files
                   .filter(
-                    (file) =>
-                      file.name.endsWith(".js") && file.path.includes("content")
+                    file =>
+                      file.name.endsWith('.js') &&
+                      file.path.includes('content'),
                   )
-                  .map((file) => `./js/content/${file.name}`),
-                run_at: "document_start",
+                  .map(file => `./js/content/${file.name}`),
+                run_at: 'document_start',
                 all_frames: true,
               },
             ],
@@ -99,7 +87,7 @@ module.exports = (env, argv) => {
     ],
     devServer: {
       static: {
-        directory: path.join(__dirname, "dev"),
+        directory: path.join(__dirname, 'dev'),
       },
       hot: true,
     },
