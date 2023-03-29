@@ -22,54 +22,26 @@ function fetchAndReadImage(url) {
     });
 }
 
-async function getImageData(imgElement, canvas) {
-  canvas.width = imgElement.width;
-  canvas.height = imgElement.height;
-  let imageData;
-  let untaintedCanvas = canvas;
-  try {
-    const context = canvas.getContext('2d');
-    context.drawImage(imgElement, 0, 0);
-    context.getImageData(0, 0, canvas.width, canvas.height);
-    imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-  } catch (e) {
-    if (!imgElement.src.includes('data:image')) {
-      const newImgElement = await fetchAndReadImage(imgElement.src).then(
-        outputImgElement => outputImgElement,
-      );
-      newImgElement.width = imgElement.width;
-      newImgElement.height = imgElement.height;
-
-      const ghostCanvas = document.createElement('canvas');
-      ghostCanvas.width = newImgElement.width;
-      ghostCanvas.height = newImgElement.height;
-      untaintedCanvas = ghostCanvas;
-
-      const context = ghostCanvas.getContext('2d');
-      context.drawImage(newImgElement, 0, 0);
-      imageData = context.getImageData(
-        0,
-        0,
-        ghostCanvas.width,
-        ghostCanvas.height,
-      );
-    }
-  }
-  return { imageData, untaintedCanvas };
+async function getImageData(imgElement) {
+  // Make the canvas the same size as the actual image
+  const canvas = document.createElement('canvas');
+  canvas.width = imgElement.naturalWidth;
+  canvas.height = imgElement.naturalWidth;
+  const context = canvas.getContext('2d');
+  context.drawImage(imgElement, 0, 0);
+  context.getImageData(0, 0, canvas.width, canvas.height);
+  const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+  return { imageData, canvas };
 }
 
-async function filterSkinColor(imgElement, canvas) {
-  const { width, height } = imgElement;
-  canvas.setAttribute('width', width);
-  canvas.setAttribute('height', height);
-
-  const { imageData, untaintedCanvas } = await getImageData(imgElement, canvas);
+async function filterSkinColor(imgElement) {
+  const { imageData, canvas } = await getImageData(imgElement);
 
   if (!imageData) {
     throw new Error('No image data when filtering skin color');
   }
 
-  const context = untaintedCanvas.getContext('2d');
+  const context = canvas.getContext('2d');
 
   const rgbaArray = imageData.data;
 
@@ -101,7 +73,7 @@ async function filterSkinColor(imgElement, canvas) {
 
   imageData.data.set(rgbaArray);
   context.putImageData(imageData, 0, 0);
-  const base64Img = untaintedCanvas.toDataURL('image/png');
+  const base64Img = canvas.toDataURL('image/png');
 
   return base64Img;
 }
@@ -202,9 +174,9 @@ async function segmentPeople(imgElement, canvas) {
   }
 }
 
-export async function processDomImg(imgElement, canvas) {
+export async function processDomImg(imgElement) {
   try {
-    const urlData = await filterSkinColor(imgElement, canvas);
+    const urlData = await filterSkinColor(imgElement);
     imgElement.crossOrigin = 'anonymous';
     imgElement.src = urlData;
     imgElement.srcset = '';
@@ -219,8 +191,8 @@ export async function processDomImg(imgElement, canvas) {
   }
 }
 
-async function filterImageElementAsBackground(imgElement, domElement, canvas) {
-  const base64Img = await filterSkinColor(imgElement, canvas);
+async function filterImageElementAsBackground(imgElement, domElement) {
+  const base64Img = await filterSkinColor(imgElement);
   const newBackgroundImgUrl = `url(${base64Img})`;
 
   domElement.style.backgroundImage = newBackgroundImgUrl;

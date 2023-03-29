@@ -1,9 +1,8 @@
-import React, { useEffect, useCallback, useRef } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { processDomImg, processBgImg } from 'Utils/filterImage';
 import validTags from 'Utils/validTags';
 import hasBeenProcessed from 'Utils/hasBeenProcessed';
 import addSkfId from 'Utils/addSkfId';
-import CanvasImageFilterer from './CanvasImageFilterer';
 
 // eslint-disable-next-line no-undef
 const extensionUrl = chrome.extension.getURL('');
@@ -72,32 +71,16 @@ const scanElements = (domElement, callbacks, includeChildren = false) => {
   }
 };
 
-const useScanWindow = (window, canvasRef) => {
-  const processIMG = useCallback(
-    domElement => {
-      if (!canvasRef?.current) {
-        return;
-      }
-      processDomImg(domElement, canvasRef.current);
-    },
-    [canvasRef],
-  );
+const useScanWindow = window => {
+  const processIMG = useCallback(domElement => {
+    processDomImg(domElement);
+  }, []);
 
-  const processNoIMG = useCallback(
-    (domElement, bgImgUrl) => {
-      if (!canvasRef?.current) {
-        return;
-      }
-      processBgImg(domElement, bgImgUrl, canvasRef.current);
-    },
-    [canvasRef],
-  );
+  const processNoIMG = useCallback((domElement, bgImgUrl) => {
+    processBgImg(domElement, bgImgUrl);
+  }, []);
 
   useEffect(() => {
-    if (!canvasRef?.current) {
-      return;
-    }
-
     // Scan the body to filter any images on it.
     scanElements(
       window.document.body,
@@ -144,14 +127,12 @@ const useScanWindow = (window, canvasRef) => {
       attributes: true,
       attributeOldValue: true,
     });
-  }, [window, canvasRef, processIMG, processNoIMG]);
+  }, [window, processIMG, processNoIMG]);
 };
 
 function WindowScanner() {
-  const canvasRef = useRef(null);
-  useScanWindow(window, canvasRef);
-
-  return <CanvasImageFilterer id="skf-canvas-filterer" ref={canvasRef} />;
+  useScanWindow(window);
+  return <div id="skf-window-scanner" />;
 }
 
 export default WindowScanner;
