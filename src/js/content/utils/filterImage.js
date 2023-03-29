@@ -79,6 +79,36 @@ async function filterSkinColor(imgElement) {
   return base64Img;
 }
 
+async function hasPeople(model, imgElement) {
+  // Detect on the actual image size
+  const naturalDimensionsImgElement = new Image();
+  naturalDimensionsImgElement.width = imgElement.naturalWidth;
+  naturalDimensionsImgElement.height = imgElement.naturalHeight;
+  naturalDimensionsImgElement.crossOrigin = 'anonymous';
+  naturalDimensionsImgElement.src = imgElement.src;
+  await new Promise(resolve => {
+    naturalDimensionsImgElement.onload = resolve;
+  });
+
+  const person = await model.segmentPerson(naturalDimensionsImgElement);
+
+  return person.allPoses.length > 0;
+}
+
+async function detectPeopleAndFilterSkinColor(imgElement) {
+  const model = await bodyPix.load();
+
+  const hasHumans = await hasPeople(model, imgElement);
+
+  if (!hasHumans) {
+    throw new Error('No person detected');
+  }
+
+  const base64Img = await filterSkinColor(imgElement);
+
+  return base64Img;
+}
+
 async function grayoutPeople(model, imgElement, imgElementToGrayout) {
   // Process on the actual image size
   const naturalDimensionsImgElement = new Image();
@@ -212,7 +242,7 @@ async function segmentPeople(imgElement) {
 
 export async function processDomImg(imgElement) {
   try {
-    const urlData = await segmentPeople(imgElement);
+    const urlData = await detectPeopleAndFilterSkinColor(imgElement);
     imgElement.crossOrigin = 'anonymous';
     imgElement.src = urlData;
     imgElement.srcset = '';
@@ -229,7 +259,7 @@ export async function processDomImg(imgElement) {
 
 async function filterImageElementAsBackground(imgElement, domElement, bgUrl) {
   try {
-    const base64Img = await segmentPeople(imgElement);
+    const base64Img = await detectPeopleAndFilterSkinColor(imgElement);
     domElement.style.backgroundImage = `url(${base64Img})`;
   } catch (error) {
     // Either the processing failed or there was no person detected,
