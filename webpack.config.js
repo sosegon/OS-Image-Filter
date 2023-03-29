@@ -17,7 +17,7 @@ module.exports = (env, argv) => {
     output: {
       path: path.resolve(
         __dirname,
-        isDevelopment ? 'dev-segmentation' : 'dist',
+        isDevelopment ? 'dev-simple-segmentation' : 'dist',
       ),
       filename: pathData => {
         const { chunk } = pathData;
@@ -66,8 +66,8 @@ module.exports = (env, argv) => {
           const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf-8'));
           return {
             ...manifest,
-            name: `${packageJson.name}-segmentation`,
-            short_name: `${packageJson.short_name}SEGMENTATION`,
+            name: `${packageJson.name}-simple-segmentation`,
+            short_name: `${packageJson.short_name}SIMPLESEGMENTATION`,
             description: packageJson.description,
             version: packageJson.version,
             content_scripts: [
